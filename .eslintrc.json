@@ -1,0 +1,171 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
+    "plugin:import/recommended",
+    "airbnb",
+    "prettier",
+    "plugin:import/typescript"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint"],
+
+  "rules": {
+    "no-undef": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-props-no-spreading": "off",
+    "class-methods-use-this": "off",
+    "import/no-unresolved": "off",
+    "no-absolute-path": "off",
+    "react/jsx-first-prop-new-line": [1, "multiline"],
+    "react/destructuring-assignment": ["error", "never"],
+    "no-tabs": ["error", { "allowIndentationTabs": true }],
+    "max-lines": ["error", 3000],
+    "semi": ["error", "always"],
+    "import/prefer-default-export": "off",
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "react/jsx-indent": ["error", 2],
+    "react/jsx-indent-props": ["error", 2],
+    "@typescript-eslint/indent": ["error", 2],
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    "comma-spacing": ["error", { "before": false, "after": true }],
+    "semi-spacing": ["error", { "before": false, "after": true }],
+    "no-multi-spaces": "error",
+    "object-curly-spacing": ["error", "never"],
+    "object-curly-newline": ["error", { "multiline": true }],
+    "array-bracket-newline": ["error", { "multiline": true }],
+    "@typescript-eslint/typedef": [
+      "error",
+      {
+        "arrayDestructuring": false,
+        "arrowCallSignature": true,
+        "arrowParameter": true,
+        "callSignature": true,
+        "memberVariableDeclaration": true,
+        "parameter": true,
+        "propertyDeclaration": true,
+        "objectDestructuring": true
+      }
+    ],
+    "@typescript-eslint/no-inferrable-types": 0,
+    "space-in-parens": ["error", "never"],
+    "key-spacing": ["error", { "beforeColon": false }],
+    "space-infix-ops": ["error", { "int32Hint": false }],
+    "space-unary-ops": [
+      1,
+      {
+        "words": true,
+        "nonwords": false,
+        "overrides": { "new": false }
+      }
+    ],
+    "no-trailing-spaces": "error",
+    "arrow-spacing": "error",
+    "quotes": ["error", "double"],
+    "@typescript-eslint/explicit-member-accessibility": [
+      "error",
+      {
+        "accessibility": "explicit",
+        "overrides": {
+          "accessors": "explicit",
+          "constructors": "no-public",
+          "methods": "explicit",
+          "properties": "explicit",
+          "parameterProperties": "explicit"
+        }
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true
+      }
+    ],
+    "lines-between-class-members": ["error", "always"],
+    "padded-blocks": ["error", { "classes": "always" }],
+    "no-multiple-empty-lines": "error",
+    "max-len": ["error", { "code": 130 }],
+    "max-params": ["error", 7],
+    "curly": "error",
+    "comma-dangle": ["error", "always-multiline"],
+    "brace-style": "error",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-mixed-operators": "error",
+    "eqeqeq": "error",
+    "dot-notation": ["off"],
+    "react/jsx-tag-spacing": [
+      "error",
+      {
+        "beforeClosing": "never",
+        "beforeSelfClosing": "always",
+        "afterOpening": "never",
+        "closingSlash": "never"
+      }
+    ],
+    "react/jsx-curly-spacing": "error",
+    "react/jsx-key": "error",
+    "react/jsx-max-props-per-line": ["error", { "maximum": 2 }],
+    "react/jsx-no-duplicate-props": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+    "react/jsx-filename-extension": ["error", { "extensions": [".ts", ".tsx"] }],
+    "react/jsx-closing-bracket-location": [1, "tag-aligned"],
+    "react/no-unknown-property": "error",
+    "react/self-closing-comp": "error",
+    "react/jsx-wrap-multilines": "error",
+    "react/jsx-one-expression-per-line": "error",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "labelComponents": ["CustomInputLabel"],
+        "labelAttributes": ["label"],
+        "controlComponents": ["CustomInput"],
+        "depth": 3
+      }
+    ],
+    "arrow-body-style": ["error", "always"],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
+}
