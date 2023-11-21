@@ -1,7 +1,6 @@
 import React from "react";
 import clsx from "clsx";
 import styles from "src/app/logic/footer/Footer.module.scss";
-import {Button} from "src/app/components/button/Button";
 
 /**
  * Footer component
@@ -11,7 +10,6 @@ export const Footer: React.FC = () => {
   const FOOTER_TOP_STYLES = clsx(styles.footer__top);
   const FOOTER_BOTTOM_STYLES = clsx(styles.footer__bottom);
   const MAIL_STYLES = clsx(styles.mail);
-  const BUTTONS_STYLES = clsx(styles.buttons);
 
   return (
     <footer className={FOOTER_STYLES}>
@@ -28,11 +26,6 @@ export const Footer: React.FC = () => {
         </section>
         <section>
           <h3>Download App</h3>
-          <div className={BUTTONS_STYLES}>
-            <Button text="Steam" className="steam" />
-            <Button text="Nintendo" className="nintendo" />
-            <Button text="Google Play" className="market" />
-          </div>
         </section>
         <section>
           <h3>Contact Info</h3>
