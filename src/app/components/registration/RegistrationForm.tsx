@@ -2,6 +2,9 @@
 /* eslint-disable @typescript-eslint/typedef */
 import React, {forwardRef, useState} from "react";
 import {Message, useForm} from "react-hook-form";
+// import {useDispatch} from "react-redux";
+// import {setUser} from "src/app/store/slices/userSlice";
+import {getAuth, createUserWithEmailAndPassword} from "firebase/auth";
 import {Icon} from "react-icons-kit";
 import {eye} from "react-icons-kit/feather/eye";
 import {eyeOff} from "react-icons-kit/feather/eyeOff";
@@ -36,6 +39,8 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
     formState: {errors},
   } = useForm<FieldsForm>({mode: "onBlur"});
 
+  // const dispatch = useDispatch();
+
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     reset();
 
@@ -45,6 +50,11 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
       // setFormData(data, reset);
       // eslint-disable-next-line no-console
       console.log(data);
+
+      const auth = getAuth();
+      createUserWithEmailAndPassword(auth, data.email, data.confirmPassword)
+        .then(console.log)
+        .catch(console.error);
     }
   };
 

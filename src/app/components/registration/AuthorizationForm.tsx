@@ -1,5 +1,9 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/typedef */
 import React, {forwardRef, useState} from "react";
+import {useDispatch} from "react-redux";
+import {setUser} from "src/app/store/slices/userSlice";
+import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {Message, useForm} from "react-hook-form";
 import {Icon} from "react-icons-kit";
 import {eye} from "react-icons-kit/feather/eye";
@@ -32,11 +36,27 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
     formState: {errors},
   } = useForm<FieldsForm>({mode: "onBlur"});
 
+  const dispatch = useDispatch();
+
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     // setFormData(data, reset);
     reset();
     // eslint-disable-next-line no-console
     console.log(data);
+
+    const auth = getAuth();
+
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then(({user}) => {
+        console.log(user);
+        console.log(user.getIdToken);
+        dispatch(setUser({
+          email: user.email,
+          id: user.uid,
+          token: user.getIdToken(),
+        }));
+      })
+      .catch(console.error);
   };
 
   const [type, setType] = useState("password");
