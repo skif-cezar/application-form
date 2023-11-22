@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import clsx from "clsx";
 import styles from "src/app/components/registration/Registration.module.scss";
 import {RegistrationForm} from "./RegistrationForm";
+import {AuthorizationForm} from "./AuthorizationForm";
 
 /**
  * Regestration component
@@ -10,7 +11,6 @@ export const Regestration: React.FC = () => {
   const FLEX_STYLES = clsx(styles.flex);
   const TITLE_STYLES = clsx(styles.title);
   const HIDDEN_STYLES = clsx(styles.hidden);
-  const FORM_STYLES = clsx(styles.form);
   const CONTAINER_STYLES = clsx(styles.container);
   const PANEL_ACTIVE_STYLES = clsx(styles.container, styles.right_panel_active);
   const SIGN_UP_STYLES = clsx(styles.form__container, styles.sign_up);
@@ -19,7 +19,6 @@ export const Regestration: React.FC = () => {
   const OVERLAY_STYLES = clsx(styles.overlay);
   const PANEL_LEFT_STYLES = clsx(styles.overlay__panel, styles.overlay__left);
   const PANEL_RIGHT_STYLES = clsx(styles.overlay__panel, styles.overlay__right);
-  const BUTTON_STYLES = clsx(styles.button);
   const GHOST_STYLES = clsx(styles.button, styles.ghost);
 
   const [isActive, setIsActive] = useState(true);
@@ -43,15 +42,7 @@ export const Regestration: React.FC = () => {
           <RegistrationForm />
         </div>
         <div className={SIGN_IN_STYLES}>
-          <form className={FORM_STYLES} action="#">
-            <h2 className={TITLE_STYLES}>Войти</h2>
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <a href="/">Забыли пароль?</a>
-            <button className={BUTTON_STYLES} type="button">
-              Войти
-            </button>
-          </form>
+          <AuthorizationForm />
         </div>
         <div className={OVERLAY_CONTAINER_STYLES}>
           <div className={OVERLAY_STYLES}>
