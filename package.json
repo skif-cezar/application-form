@@ -1,5 +1,5 @@
 {
-  "name": "Служба оформления заявки",
+  "name": "applicationform",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,6 +12,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",
     "react-icons": "^4.7.1",
+    "react-icons-kit": "^2.0.0",
     "react-router-dom": "^6.16.0",
     "react-scripts": "5.0.1"
   },

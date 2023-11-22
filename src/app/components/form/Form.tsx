@@ -56,7 +56,7 @@ export const Form: React.FC = forwardRef((props: any, ref: any) => {
         placeholder="Название заявки"
         maxLength={40}
       />
-      {errors["title"] && <span className={ERRORS_STYLES}>{errors["title"].message}</span>}
+      {errors.title && <span className={ERRORS_STYLES}>{errors.title.message}</span>}
 
       <textarea
         className={REQUIRED_STYLES}
@@ -69,8 +69,8 @@ export const Form: React.FC = forwardRef((props: any, ref: any) => {
         })}
         placeholder="Описание"
       />
-      {errors["description"] && (
-        <span className={ERRORS_STYLES}>{errors["description"].message}</span>
+      {errors.description && (
+        <span className={ERRORS_STYLES}>{errors.description.message}</span>
       )}
 
       <input
@@ -86,7 +86,7 @@ export const Form: React.FC = forwardRef((props: any, ref: any) => {
         placeholder="Какой кабинет?"
         maxLength={40}
       />
-      {errors["parlor"] && <span className={ERRORS_STYLES}>{errors["parlor"].message}</span>}
+      {errors.parlor && <span className={ERRORS_STYLES}>{errors.parlor.message}</span>}
 
       <textarea
         {...register("comment", {
@@ -97,7 +97,7 @@ export const Form: React.FC = forwardRef((props: any, ref: any) => {
         })}
         placeholder="Добавить комментарий"
       />
-      {errors["comment"] && <span className={ERRORS_STYLES}>{errors["comment"].message}</span>}
+      {errors.comment && <span className={ERRORS_STYLES}>{errors.comment.message}</span>}
 
       <button className={BUTTON_STYLES} type="submit">
         Оформить заявку
