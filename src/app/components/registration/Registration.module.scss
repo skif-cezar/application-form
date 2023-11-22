@@ -195,6 +195,32 @@
   }
 }
 
+.errors {
+  position: relative;
+  background-color: #f37778;
+  margin-top: -10px;
+  font-size: 0.8rem;
+  color: #ffffff;
+  padding: 0 10px;
+  border-radius: 14px;
+
+  &::after {
+    content: "";
+    width: 0;
+    height: 0;
+    display: block;
+    position: absolute;
+    z-index: 10;
+    border: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    margin-left: -10px;
+    left: 50%;
+    border-bottom: 10px solid #f37778;
+    top: -10px;
+  }
+}
+
 @keyframes show {
   0%,
   49.99% {

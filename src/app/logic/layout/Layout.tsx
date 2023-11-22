@@ -1,8 +1,8 @@
 import React from "react";
 import clsx from "clsx";
 import styles from "src/app/logic/layout/Layout.module.scss";
-// import {Regestration} from "src/app/components/regestration/Regestration";
-import {Form} from "src/app/components/form/Form";
+import {Regestration} from "src/app/components/registration/Registration";
+// import {Form} from "src/app/components/form/Form";
 
 /**
  *  Path to main page
@@ -19,8 +19,8 @@ export const Layout: React.FC = () => {
   return (
     <div className={WRAPPER_STYLES}>
       <main className={MAIN_STYLES}>
-        {/* <Regestration /> */}
-        <Form />
+        <Regestration />
+        {/* <Form /> */}
       </main>
     </div>
   );

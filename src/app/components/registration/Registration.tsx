@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import clsx from "clsx";
-import styles from "src/app/components/regestration/Regestration.module.scss";
+import styles from "src/app/components/registration/Registration.module.scss";
+import {RegistrationForm} from "./RegistrationForm";
 
 /**
  * Regestration component
@@ -39,15 +40,7 @@ export const Regestration: React.FC = () => {
       <article className={isActive ? CONTAINER_STYLES : PANEL_ACTIVE_STYLES}>
         <h2 className={HIDDEN_STYLES}>Регистрация и авторизация!</h2>
         <div className={SIGN_UP_STYLES}>
-          <form className={FORM_STYLES} action="#">
-            <h2 className={TITLE_STYLES}>Создать аккаунт</h2>
-            <input type="text" placeholder="Name" />
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button className={BUTTON_STYLES} type="button">
-              Зарегистрироваться
-            </button>
-          </form>
+          <RegistrationForm />
         </div>
         <div className={SIGN_IN_STYLES}>
           <form className={FORM_STYLES} action="#">
