@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/typedef */
 import React, {forwardRef} from "react";
 import {Message, useForm} from "react-hook-form";
@@ -25,15 +26,24 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
     register,
     handleSubmit,
     reset,
+    watch,
+    setError,
     formState: {errors},
   } = useForm<FieldsForm>({mode: "onBlur"});
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
-    // setFormData(data, reset);
     reset();
-    // eslint-disable-next-line no-console
-    console.log(data);
+
+    if (data.password !== data.confirmPassword) {
+      setError("confirmPassword", {type: "manual", message: "Пароли не совпадают"});
+    } else {
+      // setFormData(data, reset);
+      // eslint-disable-next-line no-console
+      console.log(data);
+    }
   };
+
+  const password = watch("password");
 
   return (
     <form
@@ -70,7 +80,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
         placeholder="Пароль"
         maxLength={40}
       />
-      {errors["password"] && <span className={ERRORS_STYLES}>{errors["password"].message}</span>}
+      {errors.password && <span className={ERRORS_STYLES}>{errors.password.message}</span>}
 
       <input
         className={REQUIRED_STYLES}
@@ -80,14 +90,13 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
             message: "Минимум 8 символов",
           },
           required: "Это поле обязательно",
+          validate: (value) => {return value === password;},
         })}
         type="password"
         placeholder="Повторите пароль"
         maxLength={40}
       />
-      {errors["confirmPassword"] && (
-        <span className={ERRORS_STYLES}>{errors["confirmPassword"].message}</span>
-      )}
+      {errors.confirmPassword && <span className={ERRORS_STYLES}>Пароли не совпадают</span>}
 
       <button className={BUTTON_STYLES} type="submit">
         Зарегистрироваться
