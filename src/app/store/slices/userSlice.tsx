@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 interface UserState {
   email: string | null;
-  token: Promise<string> | null;
+  token: string | null;
   id: string | null;
 }
 
@@ -17,18 +17,14 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser(state: any, action: PayloadAction<UserState>) {
-      const newState = {...state};
-
-      newState.email = action.payload.email;
-      newState.token = action.payload.token;
-      newState.id = action.payload.id;
+      state.email = action.payload.email;
+      state.token = action.payload.token;
+      state.id = action.payload.id;
     },
     removeUser(state: any) {
-      const newState = {...state};
-
-      newState.email = null;
-      newState.token = null;
-      newState.id = null;
+      state.email = null;
+      state.token = null;
+      state.id = null;
     },
   },
 });

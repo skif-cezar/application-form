@@ -2,12 +2,14 @@
 /* eslint-disable @typescript-eslint/typedef */
 import React, {forwardRef, useState} from "react";
 import {Message, useForm} from "react-hook-form";
-// import {useDispatch} from "react-redux";
-// import {setUser} from "src/app/store/slices/userSlice";
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setUser} from "src/app/store/slices/userSlice";
 import {getAuth, createUserWithEmailAndPassword} from "firebase/auth";
 import {Icon} from "react-icons-kit";
 import {eye} from "react-icons-kit/feather/eye";
 import {eyeOff} from "react-icons-kit/feather/eyeOff";
+import {USER_PAGE_URL} from "src/app/logic/pages/user/UserPage";
 import clsx from "clsx";
 import styles from "src/app/components/registration/Registration.module.scss";
 
@@ -39,7 +41,9 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
     formState: {errors},
   } = useForm<FieldsForm>({mode: "onBlur"});
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate ();
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     reset();
@@ -53,7 +57,16 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
 
       const auth = getAuth();
       createUserWithEmailAndPassword(auth, data.email, data.confirmPassword)
-        .then(console.log)
+        .then(({user}) => {
+          console.log(user);
+          console.log(user.getIdToken);
+          dispatch(setUser({
+            email: user.email,
+            id: user.uid,
+            token: "user.getIdToken()",
+          }));
+          navigate(USER_PAGE_URL);
+        })
         .catch(console.error);
     }
   };

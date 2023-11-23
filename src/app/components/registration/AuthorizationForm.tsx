@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/typedef */
 import React, {forwardRef, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setUser} from "src/app/store/slices/userSlice";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
@@ -8,6 +9,7 @@ import {Message, useForm} from "react-hook-form";
 import {Icon} from "react-icons-kit";
 import {eye} from "react-icons-kit/feather/eye";
 import {eyeOff} from "react-icons-kit/feather/eyeOff";
+import {USER_PAGE_URL} from "src/app/logic/pages/user/UserPage";
 import clsx from "clsx";
 import styles from "src/app/components/registration/Registration.module.scss";
 
@@ -38,6 +40,8 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
   const dispatch = useDispatch();
 
+  const navigate = useNavigate ();
+
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     // setFormData(data, reset);
     reset();
@@ -45,16 +49,17 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
     console.log(data);
 
     const auth = getAuth();
+    console.log(auth);
 
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(({user}) => {
         console.log(user);
-        console.log(user.getIdToken);
         dispatch(setUser({
           email: user.email,
           id: user.uid,
-          token: user.getIdToken(),
+          token: "user.getIdToken()",
         }));
+        navigate(USER_PAGE_URL);
       })
       .catch(console.error);
   };

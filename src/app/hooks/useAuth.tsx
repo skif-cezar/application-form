@@ -1,6 +1,6 @@
 import {useSelector} from "react-redux";
 
-interface UserState {
+export interface UserState {
   isAuth: boolean;
   email: string | null;
   token: string | null;
@@ -11,7 +11,8 @@ export const useAuth = (): UserState => {
   const {email, token, id}: { email: string; token: string; id: string } = useSelector(
     (state: any) => {return state.user;},
   );
-
+  // eslint-disable-next-line no-console
+  console.log(email);
   return {
     isAuth: !!email,
     email,
