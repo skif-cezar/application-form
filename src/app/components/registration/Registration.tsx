@@ -5,9 +5,14 @@ import {RegistrationForm} from "./RegistrationForm";
 import {AuthorizationForm} from "./AuthorizationForm";
 
 /**
- * Regestration component
+ *  Path to registrtion page
  */
-export const Regestration: React.FC = () => {
+export const REGISTRATION_PAGE_PATH = "/registration";
+
+/**
+ * Registration component
+ */
+export const Registration: React.FC = () => {
   const FLEX_STYLES = clsx(styles.flex);
   const TITLE_STYLES = clsx(styles.title);
   const HIDDEN_STYLES = clsx(styles.hidden);

@@ -2,7 +2,7 @@
 import React, {forwardRef} from "react";
 import {Message, useForm} from "react-hook-form";
 import clsx from "clsx";
-import styles from "src/app/components/form/Form.module.scss";
+import styles from "src/app/components/applicationForm/ApplicationForm.module.scss";
 
 export type FieldsForm = {
   title: string;
@@ -13,9 +13,14 @@ export type FieldsForm = {
 };
 
 /**
- * Form component
+ *  Path to application form
  */
-export const Form: React.FC = forwardRef((props: any, ref: any) => {
+export const APPLICATION_FORM_URL = "/user/new-application";
+
+/**
+ * Application form component
+ */
+export const ApplicationForm: React.FC = forwardRef((props: any, ref: any) => {
   const FORM_STYLES = clsx(styles.form);
   const TITLE_STYLES = clsx(styles.title);
   const ERRORS_STYLES = clsx(styles.errors);
