@@ -10,6 +10,7 @@ import {Icon} from "react-icons-kit";
 import {eye} from "react-icons-kit/feather/eye";
 import {eyeOff} from "react-icons-kit/feather/eyeOff";
 import {USER_PAGE_URL} from "src/app/logic/pages/user/UserPage";
+import {ADMIN_PAGE_URL} from "src/app/logic/pages/admin/AdminPage";
 import clsx from "clsx";
 import styles from "src/app/components/registration/Registration.module.scss";
 
@@ -59,9 +60,14 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
           id: user.uid,
           token: "user.getIdToken()",
         }));
-        navigate(USER_PAGE_URL);
+
+        if(data.email === "admin@mail.ru") {
+          navigate(ADMIN_PAGE_URL);
+        } else {
+          navigate(USER_PAGE_URL);
+        }
       })
-      .catch(console.error);
+      .catch(() => {return alert("Пользователь не зарегистрирован!");});
   };
 
   const [type, setType] = useState("password");
