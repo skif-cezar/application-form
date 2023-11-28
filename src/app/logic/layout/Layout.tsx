@@ -1,5 +1,5 @@
 import React from "react";
-import {Outlet} from "react-router-dom";
+import {MainLayout} from "src/app/logic/main/MainLayout";
 import clsx from "clsx";
 import styles from "src/app/logic/layout/Layout.module.scss";
 
@@ -16,7 +16,7 @@ export const Layout: React.FC = () => {
 
   return (
     <div className={WRAPPER_STYLES}>
-      <Outlet />
+      <MainLayout />
     </div>
   );
 };
