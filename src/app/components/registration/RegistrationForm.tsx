@@ -4,7 +4,7 @@ import React, {forwardRef, useState} from "react";
 import {Message, useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {setUser} from "src/app/store/slices/userSlice";
+import {setUser} from "src/app/store/user/slices/userSlice";
 import {getAuth, createUserWithEmailAndPassword} from "firebase/auth";
 import {Icon} from "react-icons-kit";
 import {eye} from "react-icons-kit/feather/eye";
@@ -43,7 +43,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
 
   const dispatch = useDispatch();
 
-  const navigate = useNavigate ();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     reset();
@@ -60,11 +60,13 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
         .then(({user}) => {
           console.log(user);
           console.log(user.getIdToken);
-          dispatch(setUser({
-            email: user.email,
-            id: user.uid,
-            token: "user.getIdToken()",
-          }));
+          dispatch(
+            setUser({
+              email: user.email,
+              id: user.uid,
+              token: "user.getIdToken()",
+            }),
+          );
           navigate(USER_PAGE_URL);
         })
         .catch(console.error);
@@ -76,10 +78,10 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
   const [icon, setIcon] = useState(eyeOff);
 
   const handleToggle = (): void => {
-    if(type === "password"){
+    if (type === "password") {
       setIcon(eye);
       setType("text");
-    } else{
+    } else {
       setIcon(eyeOff);
       setType("password");
     }
@@ -87,9 +89,8 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
 
   return (
     <form
-      className={FORM_STYLES}
-      onSubmit={handleSubmit(onSubmit)} ref={ref}
-      {...props}
+      className={FORM_STYLES} onSubmit={handleSubmit(onSubmit)}
+      ref={ref} {...props}
     >
       <h2 className={TITLE_STYLES}>Создать аккаунт</h2>
       <input
@@ -131,7 +132,9 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
               message: "Минимум 8 символов",
             },
             required: "Это поле обязательно",
-            validate: (value) => {return value === password;},
+            validate: (value) => {
+              return value === password;
+            },
           })}
           type={type}
           placeholder="Повторите пароль"

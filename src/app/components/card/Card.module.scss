@@ -8,6 +8,12 @@
   letter-spacing: 1px;
   background-color: #F7F6FE;
   box-shadow: 0px 1px 1px 0px #c9cfda;
+  transition: all 0.15s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-7px);
+  }
 }
 
 .employee,

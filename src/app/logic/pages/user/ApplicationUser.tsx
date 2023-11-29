@@ -1,4 +1,6 @@
 import React from "react";
+import {collection, query, where, getDocs} from "firebase/firestore";
+import {db} from "src/firebase";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/user/UserPage.module.scss";
 import {Card} from "src/app/components/card/Card";
@@ -20,6 +22,18 @@ export const ApplicationUser: React.FC = () => {
   const TITLE_PARLOR_STYLES = clsx(styles.title_parlor);
   const TITLE_STATUS_STYLES = clsx(styles.title_status);
   const CONTAINER_STYLES = clsx(styles.container);
+
+  const q = query(collection(db, "applications"), where("author", "==", "skif.cezar@gmail.com"));
+
+  const getApplicationData = async (): Promise<void> => {
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc: any) => {
+      // doc.data() is never undefined for query doc snapshots
+      // eslint-disable-next-line no-console
+      console.log(doc.id, " => ", doc.data());
+      return (doc.id, " => ", doc.data());
+    });
+  };
 
   return (
     <div className={TABLE_STYLES}>

@@ -3,7 +3,7 @@
 import React, {forwardRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {setUser} from "src/app/store/slices/userSlice";
+import {setUser} from "src/app/store/user/slices/userSlice";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {Message, useForm} from "react-hook-form";
 import {Icon} from "react-icons-kit";
@@ -41,7 +41,7 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
   const dispatch = useDispatch();
 
-  const navigate = useNavigate ();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     // setFormData(data, reset);
@@ -55,29 +55,31 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(({user}) => {
         console.log(user);
-        dispatch(setUser({
-          email: user.email,
-          id: user.uid,
-          token: "user.getIdToken()",
-        }));
+        dispatch(
+          setUser({
+            email: user.email,
+            id: user.uid,
+            token: "user.getIdToken()",
+          }),
+        );
 
-        if(data.email === "admin@mail.ru") {
+        if (data.email === "admin@mail.ru") {
           navigate(ADMIN_PAGE_URL);
         } else {
           navigate(USER_PAGE_URL);
         }
       })
-      .catch(() => {return alert("Пользователь не зарегистрирован!");});
+      .catch(() => alert("Пользователь не зарегистрирован!"));
   };
 
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eyeOff);
 
   const handleToggle = (): void => {
-    if(type === "password"){
+    if (type === "password") {
       setIcon(eye);
       setType("text");
-    } else{
+    } else {
       setIcon(eyeOff);
       setType("password");
     }
@@ -85,9 +87,8 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
   return (
     <form
-      className={FORM_STYLES}
-      onSubmit={handleSubmit(onSubmit)} ref={ref}
-      {...props}
+      className={FORM_STYLES} onSubmit={handleSubmit(onSubmit)}
+      ref={ref} {...props}
     >
       <h2 className={TITLE_STYLES}>Войти</h2>
       <input

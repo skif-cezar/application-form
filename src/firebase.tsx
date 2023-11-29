@@ -1,5 +1,6 @@
 import {initializeApp} from "firebase/app";
 import {getAnalytics} from "firebase/analytics";
+import {getFirestore} from "firebase/firestore";
 
 // eslint-disable-next-line no-console
 console.log(process.env["REACT_APP_FIREBASE_API_KEY"]);
@@ -26,4 +27,7 @@ const app = initializeApp(firebaseConfig);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const analytics = getAnalytics(app);
 
-export {analytics};
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
+
+export {analytics, db};

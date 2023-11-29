@@ -153,7 +153,7 @@
         "depth": 3
       }
     ],
-    "arrow-body-style": ["error", "always"],
+    "arrow-body-style": ["error", "as-needed"],
     "react/function-component-definition": [
       2,
       {

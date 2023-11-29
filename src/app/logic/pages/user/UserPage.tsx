@@ -2,7 +2,7 @@ import {NavLink, Outlet, useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {useAuth, UserState} from "src/app/hooks/useAuth";
 import {MAIN_PAGE_PATH} from "src/app/logic/layout/Layout";
-import {removeUser} from "src/app/store/slices/userSlice";
+import {removeUser} from "src/app/store/user/slices/userSlice";
 import {APPLICATION_FORM_URL} from "src/app/components/applicationForm/ApplicationForm";
 import {APPLICATION_USER_URL} from "src/app/logic/pages/user/ApplicationUser";
 import clsx from "clsx";
@@ -40,7 +40,9 @@ export const UserPage = (): any => {
             <li className={ITEM_STYLES}>
               <NavLink
                 to={APPLICATION_FORM_URL}
-                className={({isActive}: {isActive: boolean}) => {return (isActive ? LINK_ACTIVE__STYLES : LINK_STYLES);}}
+                className={({isActive}: { isActive: boolean }) => {
+                  return isActive ? LINK_ACTIVE__STYLES : LINK_STYLES;
+                }}
               >
                 Новая заявка
               </NavLink>
@@ -48,7 +50,9 @@ export const UserPage = (): any => {
             <li className={ITEM_STYLES}>
               <NavLink
                 to={APPLICATION_USER_URL}
-                className={({isActive}: {isActive: boolean}) => {return (isActive ? LINK_ACTIVE__STYLES : LINK_STYLES);}}
+                className={({isActive}: { isActive: boolean }) => {
+                  return isActive ? LINK_ACTIVE__STYLES : LINK_STYLES;
+                }}
               >
                 Мои заявки
               </NavLink>
