@@ -3,7 +3,7 @@ import {useCallback, memo, useState, useEffect} from "react";
 import {useDispatch} from "react-redux";
 import {collection, query, where, orderBy, getDocs} from "firebase/firestore";
 import {db} from "src/firebase";
-import {ApplicationState, addApplication} from "src/app/store/applications/slices/applicationSlice";
+import {ApplicationState, addApplication, clearApplication} from "src/app/store/applications/slices/applicationSlice";
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
 import {useAuth, UserState} from "src/app/hooks/useAuth";
 import {MAIN_PAGE_PATH} from "src/app/logic/layout/Layout";
@@ -70,7 +70,7 @@ export const UserPage = memo((): any => {
   useEffect(() => {
     getApplicationData();
   },
-  [dispatch]);
+  [getDocs, dispatch]);
 
   if (isAuth) {
     return (
@@ -81,6 +81,7 @@ export const UserPage = memo((): any => {
               <NavLink
                 to={APPLICATION_FORM_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
+                onClick={() => dispatch(clearApplication())}
               >
                 Новая заявка
               </NavLink>
@@ -98,7 +99,10 @@ export const UserPage = memo((): any => {
           <button
             className={BUTTON_STYLES}
             type="button"
-            onClick={() => dispatch(removeUser())}
+            onClick={() => {
+              dispatch(removeUser());
+              dispatch(clearApplication());
+            }}
           >
             Выйти из аккаунта
           </button>

@@ -63,7 +63,7 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
           navigate(USER_PAGE_URL);
         }
       })
-      .catch(() => alert("Пользователь не зарегистрирован!"));
+      .catch(() => alert("Пользователь не зарегистрирован или неверно введены данные!"));
   };
 
   const [type, setType] = useState("password");
