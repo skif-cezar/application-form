@@ -1,51 +1,40 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export interface ApplicationState {
+  id: string | null;
   author: string | null;
   title: string | null;
   description: string | null;
   parlor: string | null;
-  date: Date | null;
-  comment: string | null;
+  date: string | null;
+  comment: string | null | undefined;
   status: string | null;
 }
 
-const initialState: ApplicationState = {
-  author: null,
-  title: null,
-  description: null,
-  parlor: null,
-  date: null,
-  comment: null,
-  status: null,
-};
+export interface ApplicationArrState {
+  applications: ApplicationState[] | null;
+}
 
-export const applicationSlice = createSlice({
-  name: "application",
+const initialState: ApplicationArrState = {applications: []};
+
+export const applicationsSlice = createSlice({
+  name: "applications",
   initialState,
   reducers: {
     addApplication(state: any, action: PayloadAction<ApplicationState>) {
-      state.author = action.payload.author;
-      state.title = action.payload.title;
-      state.description = action.payload.description;
-      state.parlor = action.payload.parlor;
-      state.date = action.payload.date;
-      state.comment = action.payload.comment;
-      state.status = action.payload.status;
+      const isDuplicate = state.applications.some((app: ApplicationState) => app.id === action.payload.id);
+
+      if (!isDuplicate) {
+        state.applications = [...state.applications, action.payload];
+      }
     },
-    removeApplication(state: any) {
-      state.author = null;
-      state.title = null;
-      state.description = null;
-      state.parlor = null;
-      state.date = null;
-      state.comment = null;
-      state.status = null;
+    removeApplication(state: any, action: PayloadAction<ApplicationState>) {
+      state.applications = state.applications.filter((app: ApplicationState) => app.id !== action.payload.id);
     },
   },
 });
 
 // eslint-disable-next-line @typescript-eslint/typedef
-export const {addApplication, removeApplication} = applicationSlice.actions;
+export const {addApplication, removeApplication} = applicationsSlice.actions;
 
-export default applicationSlice.reducer;
+export default applicationsSlice.reducer;

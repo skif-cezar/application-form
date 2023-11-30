@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/typedef */
 import React, {forwardRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -46,15 +45,11 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     // setFormData(data, reset);
     reset();
-    // eslint-disable-next-line no-console
-    console.log(data);
 
     const auth = getAuth();
-    console.log(auth);
 
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(({user}) => {
-        console.log(user);
         dispatch(
           setUser({
             email: user.email,

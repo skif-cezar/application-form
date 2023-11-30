@@ -1,5 +1,9 @@
-import {NavLink, Outlet, useNavigate} from "react-router-dom";
+import {useCallback, memo} from "react";
 import {useDispatch} from "react-redux";
+import {collection, query, where, getDocs} from "firebase/firestore";
+import {db} from "src/firebase";
+import {ApplicationState, addApplication} from "src/app/store/applications/slices/applicationSlice";
+import {NavLink, Outlet, useNavigate} from "react-router-dom";
 import {useAuth, UserState} from "src/app/hooks/useAuth";
 import {MAIN_PAGE_PATH} from "src/app/logic/layout/Layout";
 import {removeUser} from "src/app/store/user/slices/userSlice";
@@ -16,7 +20,7 @@ export const USER_PAGE_URL = "/user";
 /**
  * User page
  */
-export const UserPage = (): any => {
+export const UserPage = memo((): any => {
   const BUTTON_STYLES = clsx(styles.button);
   const MENU_STYLES = clsx(styles.menu);
   const LIST_STYLES = clsx(styles.list);
@@ -27,10 +31,36 @@ export const UserPage = (): any => {
   const {isAuth, email}: UserState = useAuth();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // eslint-disable-next-line no-console
-  console.log(isAuth);
-  // eslint-disable-next-line no-console
-  console.log(email);
+
+  // Получение данных из Firestore по условию
+  const q = query(collection(db, "applications"), where("author", "==", email));
+
+  const getApplicationData = useCallback(async (): Promise<void> => {
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc: any) => {
+      // id заявки
+      const {id}: ApplicationState = doc;
+      const {author, title, description, parlor, comment, status}: ApplicationState = doc.data();
+
+      // Перевод даты из Firestore в строку
+      const dateToString = new Date(doc.data().date.seconds * 1000);
+      const date = dateToString.toLocaleString();
+
+      // Добавление данных заявки в store
+      dispatch(
+        addApplication({
+          id,
+          author,
+          title,
+          description,
+          parlor,
+          date,
+          comment,
+          status,
+        }),
+      );
+    });
+  }, [getDocs, dispatch]);
 
   if (isAuth) {
     return (
@@ -40,9 +70,7 @@ export const UserPage = (): any => {
             <li className={ITEM_STYLES}>
               <NavLink
                 to={APPLICATION_FORM_URL}
-                className={({isActive}: { isActive: boolean }) => {
-                  return isActive ? LINK_ACTIVE__STYLES : LINK_STYLES;
-                }}
+                className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
               >
                 Новая заявка
               </NavLink>
@@ -50,9 +78,8 @@ export const UserPage = (): any => {
             <li className={ITEM_STYLES}>
               <NavLink
                 to={APPLICATION_USER_URL}
-                className={({isActive}: { isActive: boolean }) => {
-                  return isActive ? LINK_ACTIVE__STYLES : LINK_STYLES;
-                }}
+                className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
+                onClick={() => getApplicationData()}
               >
                 Мои заявки
               </NavLink>
@@ -61,9 +88,7 @@ export const UserPage = (): any => {
           <button
             className={BUTTON_STYLES}
             type="button"
-            onClick={() => {
-              return dispatch(removeUser());
-            }}
+            onClick={() => dispatch(removeUser())}
           >
             Выйти из аккаунта
           </button>
@@ -73,4 +98,4 @@ export const UserPage = (): any => {
     );
   }
   return navigate(MAIN_PAGE_PATH);
-};
+});

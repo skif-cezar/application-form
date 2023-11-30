@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/typedef */
-import React, {forwardRef} from "react";
+import React, {forwardRef, memo} from "react";
 import {useSelector} from "react-redux";
 import {Message, useForm} from "react-hook-form";
 import {collection, addDoc, serverTimestamp} from "firebase/firestore";
@@ -12,7 +12,7 @@ export type FieldsForm = {
   title: string;
   description: string;
   parlor: string;
-  comment?: string;
+  comment?: string | null;
   message?: Message;
 };
 
@@ -24,13 +24,14 @@ export const APPLICATION_FORM_URL = "/user/new-application";
 /**
  * Application form component
  */
-export const ApplicationForm: React.FC = forwardRef((props: any, ref: any) => {
+export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) => {
   const FORM_STYLES = clsx(styles.form);
   const TITLE_STYLES = clsx(styles.title);
   const ERRORS_STYLES = clsx(styles.errors);
   const REQUIRED_STYLES = clsx(styles.required);
   const BUTTON_STYLES = clsx(styles.button);
 
+  // user.email - email авторизированного пользователя из store
   const userEmail = useSelector((state: AppState) => state.user.email);
 
   const {
@@ -44,6 +45,7 @@ export const ApplicationForm: React.FC = forwardRef((props: any, ref: any) => {
     reset();
 
     try {
+      // Добавление данных в Firestore db
       const docRef = await addDoc(collection(db, "applications"), {
         author: userEmail,
         title: data.title,
@@ -53,6 +55,7 @@ export const ApplicationForm: React.FC = forwardRef((props: any, ref: any) => {
         comment: data.comment,
         status: "Открыта",
       });
+
       // eslint-disable-next-line no-console
       console.log("Заявка создана с ID: ", docRef.id);
     } catch (e) {
@@ -128,4 +131,4 @@ export const ApplicationForm: React.FC = forwardRef((props: any, ref: any) => {
       </button>
     </form>
   );
-});
+}));

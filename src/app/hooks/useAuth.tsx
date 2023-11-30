@@ -9,10 +9,8 @@ export interface UserState {
 
 export const useAuth = (): UserState => {
   const {email, token, id}: { email: string; token: string; id: string } = useSelector(
-    (state: any) => {return state.user;},
+    (state: any) => state.user,
   );
-  // eslint-disable-next-line no-console
-  console.log(email);
   return {
     isAuth: !!email,
     email,

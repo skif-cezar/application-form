@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/typedef */
 import React from "react";
-import {collection, query, where, getDocs} from "firebase/firestore";
-import {db} from "src/firebase";
+import {useSelector} from "react-redux";
+import {AppState} from "src/app/store";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/user/UserPage.module.scss";
 import {Card} from "src/app/components/card/Card";
@@ -23,17 +24,10 @@ export const ApplicationUser: React.FC = () => {
   const TITLE_STATUS_STYLES = clsx(styles.title_status);
   const CONTAINER_STYLES = clsx(styles.container);
 
-  const q = query(collection(db, "applications"), where("author", "==", "skif.cezar@gmail.com"));
-
-  const getApplicationData = async (): Promise<void> => {
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc: any) => {
-      // doc.data() is never undefined for query doc snapshots
-      // eslint-disable-next-line no-console
-      console.log(doc.id, " => ", doc.data());
-      return (doc.id, " => ", doc.data());
-    });
-  };
+  // Получение всех заявок пользователя из store
+  const apps = useSelector((state: AppState) => state.applications);
+  // eslint-disable-next-line no-console
+  console.log(apps);
 
   return (
     <div className={TABLE_STYLES}>
