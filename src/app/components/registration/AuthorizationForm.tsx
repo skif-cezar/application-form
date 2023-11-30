@@ -43,7 +43,6 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
   const navigate = useNavigate();
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
-    // setFormData(data, reset);
     reset();
 
     const auth = getAuth();

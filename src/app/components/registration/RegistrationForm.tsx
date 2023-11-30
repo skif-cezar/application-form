@@ -132,9 +132,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
               message: "Минимум 8 символов",
             },
             required: "Это поле обязательно",
-            validate: (value) => {
-              return value === password;
-            },
+            validate: (value) => value === password,
           })}
           type={type}
           placeholder="Повторите пароль"

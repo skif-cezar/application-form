@@ -57,9 +57,7 @@ export const Registration: React.FC = () => {
               <button
                 className={GHOST_STYLES}
                 type="button"
-                onClick={(e: React.MouseEvent<HTMLElement>) => {
-                  return onClickButton(e, "sign-in");
-                }}
+                onClick={(e: React.MouseEvent<HTMLElement>) => onClickButton(e, "sign-in")}
               >
                 Войти
               </button>
@@ -70,9 +68,7 @@ export const Registration: React.FC = () => {
               <button
                 className={GHOST_STYLES}
                 type="button"
-                onClick={(e: React.MouseEvent<HTMLElement>) => {
-                  return onClickButton(e, "sign-up");
-                }}
+                onClick={(e: React.MouseEvent<HTMLElement>) => onClickButton(e, "sign-up")}
               >
                 Зарегистрироваться
               </button>

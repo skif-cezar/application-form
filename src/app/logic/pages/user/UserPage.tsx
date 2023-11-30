@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import {useCallback, memo, useState, useEffect} from "react";
 import {useDispatch} from "react-redux";
-import {collection, query, where, getDocs} from "firebase/firestore";
+import {collection, query, where, orderBy, getDocs} from "firebase/firestore";
 import {db} from "src/firebase";
 import {ApplicationState, addApplication} from "src/app/store/applications/slices/applicationSlice";
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
@@ -35,7 +35,7 @@ export const UserPage = memo((): any => {
   const navigate = useNavigate();
 
   // Получение данных из Firestore по условию
-  const q = query(collection(db, "applications"), where("author", "==", email));
+  const q = query(collection(db, "applications"), where("author", "==", email), orderBy("date", "desc"));
   const [loading, setLoading] = useState(false);
 
   const getApplicationData = useCallback(async (): Promise<void> => {
