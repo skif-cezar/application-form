@@ -5,6 +5,7 @@ import {AppState} from "src/app/store";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/user/UserPage.module.scss";
 import {Card} from "src/app/components/card/Card";
+import {ApplicationState} from "src/app/store/applications/slices/applicationSlice";
 
 /**
  *  Path to application user
@@ -39,41 +40,16 @@ export const ApplicationUser: React.FC = () => {
         <p className={TITLE_STATUS_STYLES}>Статус</p>
       </div>
       <div className={CONTAINER_STYLES}>
-        <Card
-          employee="skif.cezar-8282hhbs2@gmil.com"
-          date="13.09.2015 14:45"
-          name="Не работает принтер и ксерокс"
-          parlor="Кабинет 456"
-          status="Открыта"
-        />
-        <Card
-          employee="skif.cezar-8282hhbs2@gmil.com"
-          date="13.09.2015 14:45"
-          name="Не работает принтер и ксерокс"
-          parlor="Кабинет 456"
-          status="Открыта"
-        />
-        <Card
-          employee="skif.cezar-8282hhbs2@gmil.com"
-          date="13.09.2015 14:45"
-          name="Не работает принтер и ксерокс"
-          parlor="Кабинет 456"
-          status="Открыта"
-        />
-        <Card
-          employee="skif.cezar-8282hhbs2@gmil.com"
-          date="13.09.2015 14:45"
-          name="Не работает принтер и ксерокс"
-          parlor="Кабинет 456"
-          status="Открыта"
-        />
-        <Card
-          employee="skif.cezar-8282hhbs2@gmil.com"
-          date="13.09.2015 14:45"
-          name="Не работает принтер и ксерокс"
-          parlor="Кабинет 456"
-          status="Открыта"
-        />
+        {(apps!.applications!.map((app: ApplicationState) => (
+          <Card
+            key = {app.id}
+            employee={app.author}
+            date={app.date}
+            name={app.title}
+            parlor={app.parlor}
+            status={app.status}
+          />
+        )))}
       </div>
     </div>
   );

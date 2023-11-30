@@ -1,4 +1,5 @@
-import {useCallback, memo} from "react";
+/* eslint-disable no-console */
+import {useCallback, memo, useState, useEffect} from "react";
 import {useDispatch} from "react-redux";
 import {collection, query, where, getDocs} from "firebase/firestore";
 import {db} from "src/firebase";
@@ -9,6 +10,7 @@ import {MAIN_PAGE_PATH} from "src/app/logic/layout/Layout";
 import {removeUser} from "src/app/store/user/slices/userSlice";
 import {APPLICATION_FORM_URL} from "src/app/components/applicationForm/ApplicationForm";
 import {APPLICATION_USER_URL} from "src/app/logic/pages/user/ApplicationUser";
+import {Spinner} from "src/app/components/spinner/Spinner";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/user/UserPage.module.scss";
 
@@ -34,8 +36,10 @@ export const UserPage = memo((): any => {
 
   // Получение данных из Firestore по условию
   const q = query(collection(db, "applications"), where("author", "==", email));
+  const [loading, setLoading] = useState(false);
 
   const getApplicationData = useCallback(async (): Promise<void> => {
+    setLoading(true);
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc: any) => {
       // id заявки
@@ -60,7 +64,13 @@ export const UserPage = memo((): any => {
         }),
       );
     });
+    setLoading(false);
   }, [getDocs, dispatch]);
+
+  useEffect(() => {
+    getApplicationData();
+  },
+  [dispatch]);
 
   if (isAuth) {
     return (
@@ -93,7 +103,7 @@ export const UserPage = memo((): any => {
             Выйти из аккаунта
           </button>
         </nav>
-        <Outlet />
+        {loading ? (<Spinner />) : (<Outlet />)}
       </>
     );
   }

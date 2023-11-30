@@ -6,11 +6,11 @@ import styles from "src/app/components/card/Card.module.scss";
  * Card props
  */
 export interface CardProps {
-  employee: string;
-  date: string;
-  name: string;
-  parlor: string;
-  status: string;
+  employee: string | null;
+  date: string | null;
+  name: string | null;
+  parlor: string | null;
+  status: string | null;
 }
 
 /**
