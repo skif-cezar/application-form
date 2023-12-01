@@ -13,9 +13,10 @@ export interface ApplicationState {
 
 export interface ApplicationArrState {
   applications: ApplicationState[] | null;
+  appLastVisible: any | undefined;
 }
 
-const initialState: ApplicationArrState = {applications: []};
+const initialState: ApplicationArrState = {applications: [], appLastVisible: null};
 
 export const applicationsSlice = createSlice({
   name: "applications",
@@ -33,11 +34,15 @@ export const applicationsSlice = createSlice({
     },
     clearApplication(state: any) {
       state.applications = [];
+      state.appLastVisible = null;
+    },
+    addAppLastVisible(state: any, action: PayloadAction<any>) {
+      state.appLastVisible = action.payload;
     },
   },
 });
 
 // eslint-disable-next-line @typescript-eslint/typedef
-export const {addApplication, removeApplication, clearApplication} = applicationsSlice.actions;
+export const {addApplication, removeApplication, clearApplication, addAppLastVisible} = applicationsSlice.actions;
 
 export default applicationsSlice.reducer;

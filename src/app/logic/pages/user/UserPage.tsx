@@ -1,9 +1,14 @@
 /* eslint-disable no-console */
 import {useCallback, memo, useState, useEffect} from "react";
 import {useDispatch} from "react-redux";
-import {collection, query, where, orderBy, getDocs} from "firebase/firestore";
+import {collection, query, where, orderBy, limit, getDocs} from "firebase/firestore";
 import {db} from "src/firebase";
-import {ApplicationState, addApplication, clearApplication} from "src/app/store/applications/slices/applicationSlice";
+import {
+  ApplicationState,
+  addApplication,
+  clearApplication,
+  addAppLastVisible,
+} from "src/app/store/applications/slices/applicationSlice";
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
 import {useAuth, UserState} from "src/app/hooks/useAuth";
 import {MAIN_PAGE_PATH} from "src/app/logic/layout/Layout";
@@ -34,13 +39,23 @@ export const UserPage = memo((): any => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Получение данных из Firestore по условию
-  const q = query(collection(db, "applications"), where("author", "==", email), orderBy("date", "desc"));
+  // Получение данных из Firestore по условию с лимитом по 6 записей
+  const appData = query(collection(db, "applications"), where("author", "==", email), orderBy("date", "desc"), limit(6));
   const [loading, setLoading] = useState(false);
 
   const getApplicationData = useCallback(async (): Promise<void> => {
     setLoading(true);
-    const querySnapshot = await getDocs(q);
+    const querySnapshot = await getDocs(appData);
+
+    // Получение последних видимых записей
+    const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+    console.log("last", lastVisible);
+
+    // Добавление последних видимых данных заявки в store
+    dispatch(
+      addAppLastVisible(lastVisible),
+    );
+
     querySnapshot.forEach((doc: any) => {
       // id заявки
       const {id}: ApplicationState = doc;
