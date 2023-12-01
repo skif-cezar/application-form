@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/typedef */
 import React, {forwardRef, memo} from "react";
 import {useSelector} from "react-redux";
-import {Message, useForm} from "react-hook-form";
+import {Message, UseFormReturn, useForm} from "react-hook-form";
 import {collection, addDoc, serverTimestamp} from "firebase/firestore";
 import clsx from "clsx";
 import styles from "src/app/components/applicationForm/ApplicationForm.module.scss";
@@ -39,9 +38,10 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
     handleSubmit,
     reset,
     formState: {errors},
-  } = useForm<FieldsForm>({mode: "onBlur"});
+  }: UseFormReturn<FieldsForm> = useForm<FieldsForm>({mode: "onBlur"});
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
+    // Очищает поля input
     reset();
 
     try {
@@ -59,7 +59,7 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
       // eslint-disable-next-line no-console
       console.log("Заявка создана с ID: ", docRef.id);
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.error("Ошибка добавления документа: ", e);
     }
   };
 

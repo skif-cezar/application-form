@@ -65,6 +65,8 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
               email: user.email,
               id: user.uid,
               token: "user.getIdToken()",
+              isLoggedIn: true,
+              isAdmin: false,
             }),
           );
           navigate(USER_PAGE_URL);

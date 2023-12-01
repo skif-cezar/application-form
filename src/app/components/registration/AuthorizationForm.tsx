@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/typedef */
 import React, {forwardRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setUser} from "src/app/store/user/slices/userSlice";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
-import {Message, useForm} from "react-hook-form";
+import {Message, UseFormReturn, useForm} from "react-hook-form";
 import {Icon} from "react-icons-kit";
 import {eye} from "react-icons-kit/feather/eye";
 import {eyeOff} from "react-icons-kit/feather/eyeOff";
@@ -31,33 +30,48 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
   const SHOW_ICON_STYLES = clsx(styles.icon);
   const BUTTON_STYLES = clsx(styles.button);
 
+  // Проверка на вход админа
+  const isAdminLogged = (userEmail: string): boolean => {
+    if (userEmail === "admin@mail.ru") {
+      return true;
+    }
+    return false;
+  };
+
   const {
     register,
     handleSubmit,
     reset,
     formState: {errors},
-  } = useForm<FieldsForm>({mode: "onBlur"});
+  }: UseFormReturn<FieldsForm> = useForm<FieldsForm>({mode: "onBlur"});
 
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
+    // Очищает поля input
     reset();
 
     const auth = getAuth();
 
+    // Логика авторизации пользователя и добавления его данных в store
     signInWithEmailAndPassword(auth, data.email, data.password)
-      .then(({user}) => {
+      .then(({user}: {user: any}) => {
+        // eslint-disable-next-line no-console
+        console.log(user);
         dispatch(
           setUser({
             email: user.email,
             id: user.uid,
             token: "user.getIdToken()",
+            isLoggedIn: true,
+            isAdmin: isAdminLogged(data.email),
           }),
         );
 
-        if (data.email === "admin@mail.ru") {
+        // Проверка на вход админа
+        if (isAdminLogged(data.email)) {
           navigate(ADMIN_PAGE_URL);
         } else {
           navigate(USER_PAGE_URL);
