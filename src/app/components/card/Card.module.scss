@@ -25,11 +25,9 @@
 .parlor,
 .status {
   padding: 14px 12px;
-  display: -webkit-inline-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
   overflow: hidden;
-  vertical-align: middle;
+  text-overflow: ellipsis;
 }
 
 .status {
@@ -53,9 +51,18 @@
   width: 130px;
 }
 
-.status_open {
+.status_open,
+.status_closed {
   padding: 8px 12px;
   border-radius: 22px;
+}
+
+.status_open {
   color: #1f9254;
   background-color: #c6ffd2;
+}
+
+.status_closed {
+  color: #c54849;
+  background-color: #ffb4b5;
 }

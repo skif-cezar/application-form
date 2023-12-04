@@ -1,7 +1,5 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/typedef */
 import React, {forwardRef, useState} from "react";
-import {Message, useForm} from "react-hook-form";
+import {Message, UseFormReturn, useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setUser} from "src/app/store/user/slices/userSlice";
@@ -39,27 +37,26 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
     watch,
     setError,
     formState: {errors},
-  } = useForm<FieldsForm>({mode: "onBlur"});
+  }: UseFormReturn<FieldsForm> = useForm<FieldsForm>({mode: "onBlur"});
 
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
+    // Очистить поля input
     reset();
 
+    // Проверка на совпадение паролей
     if (data.password !== data.confirmPassword) {
+      alert("Пароли не совпадают");
       setError("confirmPassword", {type: "manual", message: "Пароли не совпадают"});
     } else {
-      // setFormData(data, reset);
-      // eslint-disable-next-line no-console
-      console.log(data);
-
       const auth = getAuth();
+
+      // Логика создания пользователя в firebase
       createUserWithEmailAndPassword(auth, data.email, data.confirmPassword)
-        .then(({user}) => {
-          console.log(user);
-          console.log(user.getIdToken);
+        .then(({user}: {user: any}) => {
           dispatch(
             setUser({
               email: user.email,
@@ -91,11 +88,13 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
 
   return (
     <form
+      autoComplete="on"
       className={FORM_STYLES} onSubmit={handleSubmit(onSubmit)}
       ref={ref} {...props}
     >
       <h2 className={TITLE_STYLES}>Создать аккаунт</h2>
       <input
+        autoComplete="on"
         className={REQUIRED_STYLES}
         {...register("email", {
           pattern: {
@@ -111,6 +110,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
       {errors.email && <span className={ERRORS_STYLES}>{errors.email.message}</span>}
 
       <input
+        autoComplete="on"
         className={REQUIRED_STYLES}
         {...register("password", {
           minLength: {
@@ -127,6 +127,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
 
       <div className={INPUT_STYLES}>
         <input
+          autoComplete="on"
           className={REQUIRED_STYLES}
           {...register("confirmPassword", {
             minLength: {
@@ -134,7 +135,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
               message: "Минимум 8 символов",
             },
             required: "Это поле обязательно",
-            validate: (value) => value === password,
+            validate: (value: string) => value === password,
           })}
           type={type}
           placeholder="Повторите пароль"

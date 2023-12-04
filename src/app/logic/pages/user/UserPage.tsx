@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-import {useCallback, memo, useState, useEffect} from "react";
+import {memo, useState, useCallback} from "react";
 import {useDispatch} from "react-redux";
 import {collection, query, where, orderBy, limit, getDocs} from "firebase/firestore";
 import {db} from "src/firebase";
 import {
   ApplicationState,
+  addAppLastVisible,
   addApplication,
   clearApplication,
-  addAppLastVisible,
 } from "src/app/store/applications/slices/applicationSlice";
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
 import {useAuth, UserState} from "src/app/hooks/useAuth";
@@ -18,6 +18,8 @@ import {APPLICATION_USER_URL} from "src/app/logic/pages/user/ApplicationUser";
 import {Spinner} from "src/app/components/spinner/Spinner";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/user/UserPage.module.scss";
+import {REGISTRATION_PAGE_PATH} from "src/app/components/registration/Registration";
+import {getFormatDate} from "src/app/utility/getFormatDate";
 
 /**
  *  Path to user page
@@ -39,53 +41,55 @@ export const UserPage = memo((): any => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Получение данных из Firestore по условию с лимитом по 6 записей
-  const appData = query(collection(db, "applications"), where("author", "==", email), orderBy("date", "desc"), limit(6));
   const [loading, setLoading] = useState(false);
 
   const getApplicationData = useCallback(async (): Promise<void> => {
     setLoading(true);
+
+    // Получение данных из Firestore по условию с лимитом по 6 записей
+    const appData = query(collection(db, "applications"),
+      where("author", "==", email),
+      orderBy("date", "desc"),
+      limit(6));
     const querySnapshot = await getDocs(appData);
 
-    // Получение последних видимых записей
-    const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-    console.log("last", lastVisible);
+    if(querySnapshot.docs.length !== 0) {
+      // Получение последних видимых записей
+      const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
-    // Добавление последних видимых данных заявки в store
-    dispatch(
-      addAppLastVisible(lastVisible),
-    );
-
-    querySnapshot.forEach((doc: any) => {
-      // id заявки
-      const {id}: ApplicationState = doc;
-      const {author, title, description, parlor, comment, status}: ApplicationState = doc.data();
-
-      // Перевод даты из Firestore в строку
-      const dateToString = new Date(doc.data().date.seconds * 1000);
-      const date = dateToString.toLocaleString();
-
-      // Добавление данных заявки в store
+      // Добавление последних видимых данных заявки в store
       dispatch(
-        addApplication({
-          id,
-          author,
-          title,
-          description,
-          parlor,
-          date,
-          comment,
-          status,
-        }),
+        addAppLastVisible(lastVisible),
       );
-    });
-    setLoading(false);
-  }, [getDocs, dispatch]);
 
-  useEffect(() => {
-    getApplicationData();
-  },
-  [getDocs, dispatch]);
+      querySnapshot.forEach((doc: any) => {
+        // id заявки
+        const {id}: ApplicationState = doc;
+        const {author, title, description, parlor, comment, status}: ApplicationState = doc.data();
+
+        // Перевод даты из Firestore в строку
+        const date = getFormatDate(doc.data().date.seconds);
+
+        // Добавление данных заявки в store
+        dispatch(
+          addApplication({
+            id,
+            author,
+            title,
+            description,
+            parlor,
+            date,
+            comment,
+            status,
+          }),
+        );
+      });
+    } else {
+      console.log("Данных нет");
+    }
+    setLoading(false);
+
+  }, []);
 
   if (isAuth) {
     return (
@@ -105,7 +109,7 @@ export const UserPage = memo((): any => {
               <NavLink
                 to={APPLICATION_USER_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
-                onClick={() => getApplicationData()}
+                onClick={getApplicationData}
               >
                 Мои заявки
               </NavLink>
@@ -115,6 +119,7 @@ export const UserPage = memo((): any => {
             className={BUTTON_STYLES}
             type="button"
             onClick={() => {
+              navigate(REGISTRATION_PAGE_PATH);
               dispatch(removeUser());
               dispatch(clearApplication());
             }}

@@ -9,6 +9,7 @@ import {ApplicationUser, APPLICATION_USER_URL} from "src/app/logic/pages/user/Ap
 import {AdminPage, ADMIN_PAGE_URL} from "src/app/logic/pages/admin/AdminPage";
 import {MainLayout} from "src/app/logic/main/MainLayout";
 import {AppState} from "src/app/store";
+import {ApplicationPage} from "src/app/logic/pages/application/ApplicationPage";
 
 /**
  * The main component in app
@@ -42,6 +43,7 @@ export const App: React.FC = () => {
                 <Route path="/user/" element={<Navigate to={APPLICATION_FORM_URL} />} />
                 <Route path={APPLICATION_FORM_URL} element={<ApplicationForm />} />
                 <Route path={APPLICATION_USER_URL} element={<ApplicationUser />} />
+                <Route path={`${APPLICATION_USER_URL}/:id`} element={<ApplicationPage />} />
               </Route>
             </Route>
             <Route path={ADMIN_PAGE_URL} element={isAdmin ? (<AdminPage />) : (<Navigate to={REGISTRATION_PAGE_PATH} />)} />

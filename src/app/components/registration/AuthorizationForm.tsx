@@ -1,5 +1,4 @@
 import React, {forwardRef, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {setUser} from "src/app/store/user/slices/userSlice";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
@@ -7,8 +6,6 @@ import {Message, UseFormReturn, useForm} from "react-hook-form";
 import {Icon} from "react-icons-kit";
 import {eye} from "react-icons-kit/feather/eye";
 import {eyeOff} from "react-icons-kit/feather/eyeOff";
-import {USER_PAGE_URL} from "src/app/logic/pages/user/UserPage";
-import {ADMIN_PAGE_URL} from "src/app/logic/pages/admin/AdminPage";
 import clsx from "clsx";
 import styles from "src/app/components/registration/Registration.module.scss";
 
@@ -47,7 +44,7 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     // Очищает поля input
@@ -64,18 +61,11 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
           setUser({
             email: user.email,
             id: user.uid,
-            token: "user.getIdToken()",
+            token: user.accessToken,
             isLoggedIn: true,
             isAdmin: isAdminLogged(data.email),
           }),
         );
-
-        // Проверка на вход админа
-        if (isAdminLogged(data.email)) {
-          navigate(ADMIN_PAGE_URL);
-        } else {
-          navigate(USER_PAGE_URL);
-        }
       })
       .catch(() => alert("Пользователь не зарегистрирован или неверно введены данные!"));
   };
@@ -95,11 +85,13 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
   return (
     <form
+      autoComplete="on"
       className={FORM_STYLES} onSubmit={handleSubmit(onSubmit)}
       ref={ref} {...props}
     >
       <h2 className={TITLE_STYLES}>Войти</h2>
       <input
+        autoComplete="on"
         className={REQUIRED_STYLES}
         {...register("email", {
           pattern: {
@@ -116,6 +108,7 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
       <div className={INPUT_STYLES}>
         <input
+          autoComplete="on"
           className={REQUIRED_STYLES}
           {...register("password", {
             minLength: {

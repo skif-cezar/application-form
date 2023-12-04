@@ -32,6 +32,8 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
 
   // user.email - email авторизированного пользователя из store
   const userEmail = useSelector((state: AppState) => state.user.email);
+  // eslint-disable-next-line no-console
+  console.log(userEmail);
 
   const {
     register,
@@ -65,12 +67,14 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
 
   return (
     <form
+      autoComplete="on"
       className={FORM_STYLES}
       onSubmit={handleSubmit(onSubmit)} ref={ref}
       {...props}
     >
       <h2 className={TITLE_STYLES}>Новая заявка</h2>
       <input
+        autoComplete="off"
         className={REQUIRED_STYLES}
         {...register("title", {
           minLength: {
@@ -86,6 +90,7 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
       {errors.title && <span className={ERRORS_STYLES}>{errors.title.message}</span>}
 
       <textarea
+        autoComplete="off"
         className={REQUIRED_STYLES}
         {...register("description", {
           minLength: {
@@ -101,6 +106,7 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
       )}
 
       <input
+        autoComplete="off"
         className={REQUIRED_STYLES}
         {...register("parlor", {
           minLength: {
@@ -116,6 +122,7 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
       {errors.parlor && <span className={ERRORS_STYLES}>{errors.parlor.message}</span>}
 
       <textarea
+        autoComplete="off"
         {...register("comment", {
           minLength: {
             value: 10,

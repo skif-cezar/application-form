@@ -1,4 +1,4 @@
-import React from "react";
+import React, {memo} from "react";
 import clsx from "clsx";
 import styles from "src/app/components/card/Card.module.scss";
 
@@ -16,7 +16,7 @@ export interface CardProps {
 /**
  * Card application component
  */
-export const Card: React.FC<CardProps> = (props: CardProps) => {
+export const Card: React.FC<CardProps> = memo((props: CardProps) => {
   const CARD_STYLES = clsx(styles.card);
   const EMPLOYEE_STYLES = clsx(styles.employee);
   const DATE_STYLES = clsx(styles.date);
@@ -24,6 +24,7 @@ export const Card: React.FC<CardProps> = (props: CardProps) => {
   const PARLOR_STYLES = clsx(styles.parlor);
   const STATUS_STYLES = clsx(styles.status);
   const STATUS_OPEN_STYLES = clsx(styles.status_open);
+  const STATUS_CLOSED_STYLES = clsx(styles.status_closed);
 
   return (
     <div className={CARD_STYLES}>
@@ -32,8 +33,8 @@ export const Card: React.FC<CardProps> = (props: CardProps) => {
       <p className={NAME_STYLES}>{props.name}</p>
       <p className={PARLOR_STYLES}>{props.parlor}</p>
       <p className={STATUS_STYLES}>
-        <span className={STATUS_OPEN_STYLES}>{props.status}</span>
+        <span className={(props.status === "Открыта") ? STATUS_OPEN_STYLES : STATUS_CLOSED_STYLES}>{props.status}</span>
       </p>
     </div>
   );
-};
+});

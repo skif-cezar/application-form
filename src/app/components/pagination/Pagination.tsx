@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React from "react";
 import clsx from "clsx";
 import styles from "src/app/components/pagination/Pagination.module.scss";
 import {db} from "src/firebase";
@@ -21,56 +21,72 @@ export const Pagination: React.FC = () => {
 
   // Получение последних видимых заявок из store
   const lastVisible = useSelector((state: AppState) => state!.applications!.appLastVisible);
+  // eslint-disable-next-line no-console
+  console.log(lastVisible);
 
-  // Получение данных из Firestore по условию с лимитом по 6 записей
-  const nextAppData = query(collection(db, "applications"),
-    where("author", "==", email),
-    orderBy("date", "desc"),
-    startAfter(lastVisible), limit(6));
+  if(!lastVisible) {
+    alert("Это все заявки");
+  }
+  const showNextApps = (): void => {
+    if(lastVisible) {
+      const getNextApps = async (): Promise<void> => {
+      // Получение данных из Firestore по условию с лимитом по 6 записей
+        const nextAppData = query(collection(db, "applications"),
+          where("author", "==", email),
+          orderBy("date", "desc"),
+          startAfter(lastVisible), limit(6));
 
-  const getApplicationData = useCallback(async (): Promise<void> => {
-    const querySnapshot = await getDocs(nextAppData);
+        const querySnapshot = await getDocs(nextAppData);
 
-    querySnapshot.forEach((doc: any) => {
-    // id заявки
-      const {id}: ApplicationState = doc;
-      const {author, title, description, parlor, comment, status}: ApplicationState = doc.data();
+        // Получение последних видимых записей
+        const lastVisibleApps = querySnapshot.docs[querySnapshot.docs.length - 1];
+        // eslint-disable-next-line no-console
+        console.log(querySnapshot.docs.length);
 
-      // Перевод даты из Firestore в строку
-      const dateToString = new Date(doc.data().date.seconds * 1000);
-      const date = dateToString.toLocaleString();
+        // Добавление последних видимых данных заявки в store
+        dispatch(
+          addAppLastVisible(lastVisibleApps),
+        );
 
-      // Добавление данных заявки в store
-      dispatch(
-        addApplication({
-          id,
-          author,
-          title,
-          description,
-          parlor,
-          date,
-          comment,
-          status,
-        }),
-      );
-      // Получение последних видимых записей
-      const lastVisibleNext = querySnapshot.docs[querySnapshot.docs.length - 1];
+        querySnapshot.forEach((doc: any) => {
+        // id заявки
+          const {id}: ApplicationState = doc;
+          const {author, title, description, parlor, comment, status}: ApplicationState = doc.data();
 
-      // Добавление последних видимых данных заявки в store
-      dispatch(
-        addAppLastVisible(lastVisibleNext),
-      );
-    });
-  }, [getDocs, dispatch]);
+          // Перевод даты из Firestore в строку
+          const dateToString = new Date(doc.data().date.seconds * 1000);
+          const date = dateToString.toLocaleString();
+
+          // Добавление данных заявки в store
+          dispatch(
+            addApplication({
+              id,
+              author,
+              title,
+              description,
+              parlor,
+              date,
+              comment,
+              status,
+            }),
+          );
+        });
+      };
+      getNextApps();
+    }
+  };
 
   return (
     <div className={PAGINATION_STYLES}>
-      <button
-        type="button" className={NEXT_STYLES}
-        onClick={() => getApplicationData()}
-      >
-        Показать ещё
-      </button>
+      {lastVisible && (
+        <button
+          type="button" className={NEXT_STYLES}
+          onClick={showNextApps}
+        >
+          Показать ещё
+        </button>
+      )}
     </div>
   );
+
 };

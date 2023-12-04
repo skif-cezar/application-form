@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/typedef */
 import React from "react";
+import {NavLink} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "src/app/store";
 import clsx from "clsx";
@@ -7,6 +8,7 @@ import styles from "src/app/logic/pages/user/UserPage.module.scss";
 import {Card} from "src/app/components/card/Card";
 import {ApplicationState} from "src/app/store/applications/slices/applicationSlice";
 import {Pagination} from "src/app/components/pagination/Pagination";
+import {NotData} from "src/app/components/notData/NotData";
 
 /**
  *  Path to application user
@@ -27,9 +29,13 @@ export const ApplicationUser: React.FC = () => {
   const CONTAINER_STYLES = clsx(styles.container);
 
   // Получение всех заявок пользователя из store
-  const apps = useSelector((state: AppState) => state.applications);
+  const apps = useSelector((state: AppState) => state.applications.applications);
   // eslint-disable-next-line no-console
   console.log(apps);
+
+  const areAnyApps = apps!.length;
+  // eslint-disable-next-line no-console
+  console.log(areAnyApps);
 
   return (
     <>
@@ -42,19 +48,20 @@ export const ApplicationUser: React.FC = () => {
           <p className={TITLE_STATUS_STYLES}>Статус</p>
         </div>
         <div className={CONTAINER_STYLES}>
-          {(apps!.applications!.map((app: ApplicationState) => (
-            <Card
-              key = {app.id}
-              employee={app.author}
-              date={app.date}
-              name={app.title}
-              parlor={app.parlor}
-              status={app.status}
-            />
-          )))}
+          {areAnyApps ? (apps!.map((app: ApplicationState) => (
+            <NavLink to={`${APPLICATION_USER_URL}/${app.id}`} key = {app.id}>
+              <Card
+                employee={app.author}
+                date={app.date}
+                name={app.title}
+                parlor={app.parlor}
+                status={app.status}
+              />
+            </NavLink>
+          ))) : (<NotData />)}
         </div>
       </div>
-      <Pagination />
+      {(areAnyApps === 0) ? "" : <Pagination />}
     </>
   );
 };
