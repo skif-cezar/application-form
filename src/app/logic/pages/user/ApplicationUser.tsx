@@ -51,7 +51,7 @@ export const ApplicationUser: React.FC = () => {
         </div>
         {(!isLoading) ? (
           <div className={CONTAINER_STYLES}>
-            {areAnyApps ? (apps!.map((app: ApplicationState) => (
+            {!areAnyApps ? (<NotData />) : (apps!.map((app: ApplicationState) => (
               <NavLink to={`${APPLICATION_USER_URL}/${app.id}`} key = {app.id}>
                 <Card
                   employee={app.author}
@@ -61,7 +61,7 @@ export const ApplicationUser: React.FC = () => {
                   status={app.status}
                 />
               </NavLink>
-            ))) : (<NotData />)}
+            )))}
           </div>
         ) : (<Spinner />)}
       </div>

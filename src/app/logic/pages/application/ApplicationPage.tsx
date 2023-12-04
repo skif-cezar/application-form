@@ -46,6 +46,7 @@ export const ApplicationPage = (): any => {
 
   useEffect(() => {
     getApplicationById();
+    console.log(app);
   }, []);
 
   if(loading) {
@@ -70,7 +71,7 @@ export const ApplicationPage = (): any => {
               <p>{app["title"]}</p>
               <p>{app["description"]}</p>
               <p>{app["parlor"]}</p>
-              <p>{getFormatDate(app["date"])}</p>
+              <p>{getFormatDate(app["date"].seconds)}</p>
               <p>
                 <span className={(app["status"] === "Открыта") ? STATUS_OPEN_STYLES : STATUS_CLOSED_STYLES}>{app["status"]}</span>
               </p>
