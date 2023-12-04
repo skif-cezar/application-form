@@ -1,11 +1,16 @@
-import React from "react";
+import React, {useEffect} from "react";
 import clsx from "clsx";
 import styles from "src/app/components/pagination/Pagination.module.scss";
 import {db} from "src/firebase";
 import {collection, getDocs, limit, orderBy, query, startAfter, where} from "firebase/firestore";
 import {AppState} from "src/app/store";
 import {useDispatch, useSelector} from "react-redux";
-import {ApplicationState, addAppLastVisible, addApplication} from "src/app/store/applications/slices/applicationSlice";
+import {
+  ApplicationState,
+  addAppLastVisible,
+  addApplication,
+  addIsShowAlert,
+} from "src/app/store/applications/slices/applicationSlice";
 
 /**
  * Pagination component
@@ -21,16 +26,24 @@ export const Pagination: React.FC = () => {
 
   // Получение последних видимых заявок из store
   const lastVisible = useSelector((state: AppState) => state!.applications!.appLastVisible);
+  // Получение информации о показе alert из store
+  const isShowAlert = useSelector((state: AppState) => state!.applications!.isShowAlert);
   // eslint-disable-next-line no-console
   console.log(lastVisible);
 
-  if(!lastVisible) {
-    alert("Это все заявки");
-  }
+  useEffect(() => {
+    if(!lastVisible && !isShowAlert) {
+      dispatch(
+        addIsShowAlert(true),
+      );
+      alert("Это все заявки");
+    }
+  }, [lastVisible]);
+
   const showNextApps = (): void => {
     if(lastVisible) {
       const getNextApps = async (): Promise<void> => {
-      // Получение данных из Firestore по условию с лимитом по 6 записей
+        // Получение данных из Firestore по условию с лимитом по 6 записей
         const nextAppData = query(collection(db, "applications"),
           where("author", "==", email),
           orderBy("date", "desc"),

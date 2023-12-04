@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/typedef */
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {AppState} from "src/app/store";
@@ -9,6 +9,7 @@ import {Card} from "src/app/components/card/Card";
 import {ApplicationState} from "src/app/store/applications/slices/applicationSlice";
 import {Pagination} from "src/app/components/pagination/Pagination";
 import {NotData} from "src/app/components/notData/NotData";
+import {Spinner} from "src/app/components/spinner/Spinner";
 
 /**
  *  Path to application user
@@ -28,14 +29,15 @@ export const ApplicationUser: React.FC = () => {
   const TITLE_STATUS_STYLES = clsx(styles.title_status);
   const CONTAINER_STYLES = clsx(styles.container);
 
+  const [isLoading, setIsLoading] = useState(true);
   // Получение всех заявок пользователя из store
   const apps = useSelector((state: AppState) => state.applications.applications);
-  // eslint-disable-next-line no-console
-  console.log(apps);
 
   const areAnyApps = apps!.length;
-  // eslint-disable-next-line no-console
-  console.log(areAnyApps);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
 
   return (
     <>
@@ -47,19 +49,21 @@ export const ApplicationUser: React.FC = () => {
           <p className={TITLE_PARLOR_STYLES}>Кабинет</p>
           <p className={TITLE_STATUS_STYLES}>Статус</p>
         </div>
-        <div className={CONTAINER_STYLES}>
-          {areAnyApps ? (apps!.map((app: ApplicationState) => (
-            <NavLink to={`${APPLICATION_USER_URL}/${app.id}`} key = {app.id}>
-              <Card
-                employee={app.author}
-                date={app.date}
-                name={app.title}
-                parlor={app.parlor}
-                status={app.status}
-              />
-            </NavLink>
-          ))) : (<NotData />)}
-        </div>
+        {(!isLoading) ? (
+          <div className={CONTAINER_STYLES}>
+            {areAnyApps ? (apps!.map((app: ApplicationState) => (
+              <NavLink to={`${APPLICATION_USER_URL}/${app.id}`} key = {app.id}>
+                <Card
+                  employee={app.author}
+                  date={app.date}
+                  name={app.title}
+                  parlor={app.parlor}
+                  status={app.status}
+                />
+              </NavLink>
+            ))) : (<NotData />)}
+          </div>
+        ) : (<Spinner />)}
       </div>
       {(areAnyApps === 0) ? "" : <Pagination />}
     </>
