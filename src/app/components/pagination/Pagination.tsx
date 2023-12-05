@@ -23,6 +23,8 @@ export const Pagination: React.FC = () => {
 
   // Получение email юзера из store
   const email = useSelector((state: AppState) => state!.user!.email);
+  // Админ или обычный юзер из store
+  const isAdmin = useSelector((state: AppState) => state!.user!.isAdmin);
 
   // Получение последних видимых заявок из store
   const lastVisible = useSelector((state: AppState) => state!.applications!.appLastVisible);
@@ -44,10 +46,17 @@ export const Pagination: React.FC = () => {
     if(lastVisible) {
       const getNextApps = async (): Promise<void> => {
         // Получение данных из Firestore по условию с лимитом по 6 записей
-        const nextAppData = query(collection(db, "applications"),
-          where("author", "==", email),
-          orderBy("date", "desc"),
-          startAfter(lastVisible), limit(6));
+        let nextAppData;
+        if(isAdmin) {
+          nextAppData = query(collection(db, "applications"),
+            orderBy("date", "desc"),
+            startAfter(lastVisible), limit(6));
+        } else {
+          nextAppData = query(collection(db, "applications"),
+            where("author", "==", email),
+            orderBy("date", "desc"),
+            startAfter(lastVisible), limit(6));
+        }
 
         const querySnapshot = await getDocs(nextAppData);
 

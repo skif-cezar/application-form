@@ -31,7 +31,11 @@ export const applicationsSlice = createSlice({
       }
     },
     removeApplication(state: any, action: PayloadAction<ApplicationState>) {
-      state.applications = state.applications.filter((app: ApplicationState) => app.id !== action.payload.id);
+      state.applications = state.applications.filter((app: any) => app.id !== action.payload);
+    },
+    updateApplication(state: any, action: PayloadAction<ApplicationState>) {
+      const {id, status}: ApplicationState = action.payload;
+      state.applications = state.applications.map((app: ApplicationState) => app.id === id ? {...app, status} : app);
     },
     clearApplication(state: any) {
       state.applications = [];
@@ -48,6 +52,13 @@ export const applicationsSlice = createSlice({
 });
 
 // eslint-disable-next-line @typescript-eslint/typedef
-export const {addApplication, removeApplication, clearApplication, addAppLastVisible, addIsShowAlert} = applicationsSlice.actions;
+export const {
+  addApplication,
+  removeApplication,
+  clearApplication,
+  addAppLastVisible,
+  addIsShowAlert,
+  updateApplication,
+} = applicationsSlice.actions;
 
 export default applicationsSlice.reducer;
