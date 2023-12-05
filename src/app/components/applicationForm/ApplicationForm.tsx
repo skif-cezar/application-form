@@ -32,8 +32,6 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
 
   // user.email - email авторизированного пользователя из store
   const userEmail = useSelector((state: AppState) => state.user.email);
-  // eslint-disable-next-line no-console
-  console.log(userEmail);
 
   const {
     register,

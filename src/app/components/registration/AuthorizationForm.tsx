@@ -44,8 +44,6 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
   const dispatch = useDispatch();
 
-  // const navigate = useNavigate();
-
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     // Очищает поля input
     reset();
@@ -55,8 +53,6 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
     // Логика авторизации пользователя и добавления его данных в store
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(({user}: {user: any}) => {
-        // eslint-disable-next-line no-console
-        console.log(user);
         dispatch(
           setUser({
             email: user.email,

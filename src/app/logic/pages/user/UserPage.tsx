@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {memo, useState, useCallback} from "react";
 import {useDispatch} from "react-redux";
 import {collection, query, where, orderBy, limit, getDocs} from "firebase/firestore";
@@ -85,7 +84,7 @@ export const UserPage = memo((): any => {
         );
       });
     } else {
-      console.log("Данных нет");
+      alert("Заявок нет");
     }
     setLoading(false);
 

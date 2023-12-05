@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 import {memo, useState, useCallback, useEffect} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {collection, query, orderBy, limit, getDocs} from "firebase/firestore";
 import {db} from "src/firebase";
 import {
@@ -20,6 +19,7 @@ import styles from "src/app/logic/pages/user/UserPage.module.scss";
 import {REGISTRATION_PAGE_PATH} from "src/app/components/registration/Registration";
 import {getFormatDate} from "src/app/utility/getFormatDate";
 import {APPLICATIONS_URL} from "src/app/logic/pages/admin/ApplicationsAll";
+import {AppState} from "src/app/store";
 
 /**
  *  Path to admin page
@@ -42,6 +42,9 @@ export const AdminPage = memo((): any => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+
+  // Получение всех заявок пользователя из store
+  const apps = useSelector((state: AppState) => state.applications.applications);
 
   const getApplicationData = useCallback(async (): Promise<void> => {
     setLoading(true);
@@ -84,7 +87,7 @@ export const AdminPage = memo((): any => {
         );
       });
     } else {
-      console.log("Данных нет");
+      alert("Заявок нет");
     }
     setLoading(false);
 
@@ -92,7 +95,7 @@ export const AdminPage = memo((): any => {
 
   useEffect(() => {
     getApplicationData();
-  }, []);
+  }, [apps!.length]);
 
   if (isAuth) {
     return (

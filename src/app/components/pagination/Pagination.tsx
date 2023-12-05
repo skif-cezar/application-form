@@ -30,8 +30,6 @@ export const Pagination: React.FC = () => {
   const lastVisible = useSelector((state: AppState) => state!.applications!.appLastVisible);
   // Получение информации о показе alert из store
   const isShowAlert = useSelector((state: AppState) => state!.applications!.isShowAlert);
-  // eslint-disable-next-line no-console
-  console.log(lastVisible);
 
   useEffect(() => {
     if(!lastVisible && !isShowAlert) {
@@ -62,8 +60,6 @@ export const Pagination: React.FC = () => {
 
         // Получение последних видимых записей
         const lastVisibleApps = querySnapshot.docs[querySnapshot.docs.length - 1];
-        // eslint-disable-next-line no-console
-        console.log(querySnapshot.docs.length);
 
         // Добавление последних видимых данных заявки в store
         dispatch(
