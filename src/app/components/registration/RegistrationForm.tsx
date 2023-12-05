@@ -10,6 +10,8 @@ import {eyeOff} from "react-icons-kit/feather/eyeOff";
 import {USER_PAGE_URL} from "src/app/logic/pages/user/UserPage";
 import clsx from "clsx";
 import styles from "src/app/components/registration/Registration.module.scss";
+import {addDoc, collection} from "firebase/firestore";
+import {db} from "src/firebase";
 
 export type FieldsForm = {
   email: string;
@@ -57,15 +59,37 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
       // Логика создания пользователя в firebase
       createUserWithEmailAndPassword(auth, data.email, data.confirmPassword)
         .then(({user}: {user: any}) => {
-          dispatch(
-            setUser({
-              email: user.email,
-              id: user.uid,
-              token: "user.getIdToken()",
-              isLoggedIn: true,
-              isAdmin: false,
-            }),
-          );
+          try {
+            // Добавление данных в Firestore db
+            const addUser = async (): Promise<void> => {
+              const docRef = await addDoc(collection(db, "users"), {
+                email: user.email,
+                id: user.uid,
+                isAdmin: false,
+                role: "Пользователь",
+              });
+
+              // eslint-disable-next-line no-console
+              console.log("Заявка создана с ID: ", docRef.id);
+            };
+
+            // Добавление пользователя в store
+            dispatch(
+              setUser({
+                email: user.email,
+                id: user.uid,
+                token: user.accessToken,
+                isLoggedIn: true,
+                isAdmin: false,
+                role: "Пользователь",
+              }),
+            );
+
+            addUser();
+
+          } catch (e) {
+            console.error("Ошибка добавления документа: ", e);
+          }
           navigate(USER_PAGE_URL);
         })
         .catch(console.error);

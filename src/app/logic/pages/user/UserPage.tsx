@@ -84,7 +84,8 @@ export const UserPage = memo((): any => {
         );
       });
     } else {
-      alert("Заявок нет");
+      // eslint-disable-next-line no-console
+      console.log("Заявок нет");
     }
     setLoading(false);
 

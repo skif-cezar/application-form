@@ -1,6 +1,6 @@
 import React, {forwardRef, useState} from "react";
 import {useDispatch} from "react-redux";
-import {setUser} from "src/app/store/user/slices/userSlice";
+import {UserState, setUser} from "src/app/store/user/slices/userSlice";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {Message, UseFormReturn, useForm} from "react-hook-form";
 import {Icon} from "react-icons-kit";
@@ -8,6 +8,8 @@ import {eye} from "react-icons-kit/feather/eye";
 import {eyeOff} from "react-icons-kit/feather/eyeOff";
 import clsx from "clsx";
 import styles from "src/app/components/registration/Registration.module.scss";
+import {collection, getDocs, query, where} from "firebase/firestore";
+import {db} from "src/firebase";
 
 export type FieldsForm = {
   email: string;
@@ -27,14 +29,6 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
   const SHOW_ICON_STYLES = clsx(styles.icon);
   const BUTTON_STYLES = clsx(styles.button);
 
-  // Проверка на вход админа
-  const isAdminLogged = (userEmail: string): boolean => {
-    if (userEmail === "admin@mail.ru") {
-      return true;
-    }
-    return false;
-  };
-
   const {
     register,
     handleSubmit,
@@ -50,18 +44,37 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
     const auth = getAuth();
 
+    // Получение данных user по email из Firestore
+    const userData = query(collection(db, "users"), where("email", "==", data.email));
+    const querySnapshot = await getDocs(userData);
+    // eslint-disable-next-line no-console
+    console.log(querySnapshot.docs);
+
     // Логика авторизации пользователя и добавления его данных в store
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(({user}: {user: any}) => {
-        dispatch(
-          setUser({
-            email: user.email,
-            id: user.uid,
-            token: user.accessToken,
-            isLoggedIn: true,
-            isAdmin: isAdminLogged(data.email),
-          }),
-        );
+        // eslint-disable-next-line no-console
+        console.log(user.uid);
+
+        if(querySnapshot.docs.length !== 0) {
+          querySnapshot.forEach((doc: any) => {
+            const {email, isAdmin, role}: UserState = doc.data();
+
+            // Добавление пользователя в store
+            dispatch(
+              setUser({
+                email,
+                id: user.uid,
+                token: user.accessToken,
+                isLoggedIn: true,
+                isAdmin,
+                role,
+              }),
+            );
+          });
+        } else {
+          alert("Пользователь не найден");
+        }
       })
       .catch(() => alert("Пользователь не зарегистрирован или неверно введены данные!"));
   };

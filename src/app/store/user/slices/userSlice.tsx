@@ -6,6 +6,7 @@ export interface UserState {
   id: string | null;
   isLoggedIn: boolean;
   isAdmin: boolean;
+  role: string | null;
 }
 
 const initialState: UserState = {
@@ -14,6 +15,7 @@ const initialState: UserState = {
   id: null,
   isLoggedIn: false,
   isAdmin: false,
+  role: null,
 };
 
 export const userSlice = createSlice({
@@ -26,6 +28,7 @@ export const userSlice = createSlice({
       state.id = action.payload.id;
       state.isLoggedIn = action.payload.isLoggedIn;
       state.isAdmin = action.payload.isAdmin;
+      state.role = action.payload.role;
     },
     removeUser(state: any) {
       state.email = null;
@@ -33,6 +36,7 @@ export const userSlice = createSlice({
       state.id = null;
       state.isLoggedIn = false;
       state.isAdmin = false;
+      state.role = null;
     },
   },
 });
