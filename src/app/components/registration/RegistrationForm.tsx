@@ -14,6 +14,9 @@ import {addDoc, collection} from "firebase/firestore";
 import {db} from "src/firebase";
 
 export type FieldsForm = {
+  firstName: string;
+  surname: string;
+  lastName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -38,7 +41,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
     reset,
     watch,
     setError,
-    formState: {errors},
+    formState: {errors, isValid},
   }: UseFormReturn<FieldsForm> = useForm<FieldsForm>({mode: "onBlur"});
 
   const dispatch = useDispatch();
@@ -60,9 +63,14 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
       createUserWithEmailAndPassword(auth, data.email, data.confirmPassword)
         .then(({user}: {user: any}) => {
           try {
+            // eslint-disable-next-line no-console
+            console.log(data);
             // Добавление данных в Firestore db
             const addUser = async (): Promise<void> => {
               const docRef = await addDoc(collection(db, "users"), {
+                firstName: data.firstName,
+                surname: data.surname,
+                lastName: data.lastName,
                 email: user.email,
                 id: user.uid,
                 isAdmin: false,
@@ -76,6 +84,9 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
             // Добавление пользователя в store
             dispatch(
               setUser({
+                firstName: data.firstName,
+                surname: data.surname,
+                lastName: data.lastName,
                 email: user.email,
                 id: user.uid,
                 token: user.accessToken,
@@ -97,8 +108,38 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
   };
 
   const password = watch("password");
+  const [currentStep, setCurrentStep] = useState(1);
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eyeOff);
+
+  const nextStep = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    e.preventDefault();
+    const nextStepValue = currentStep + 1;
+    setCurrentStep(nextStepValue);
+  };
+
+  const renderButton = (): JSX.Element => {
+    if(currentStep === 1) {
+      return (
+        <button
+          disabled={!isValid}
+          className={BUTTON_STYLES} type="button"
+          // eslint-disable-next-line no-restricted-globals
+          onClick={nextStep}
+        >
+          Далее
+        </button>
+      );
+    }
+    return (
+      <button
+        className={BUTTON_STYLES} type="submit"
+      >
+        Зарегистрироваться
+      </button>
+    );
+
+  };
 
   const handleToggle = (): void => {
     if (type === "password") {
@@ -117,66 +158,120 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
       ref={ref} {...props}
     >
       <h2 className={TITLE_STYLES}>Создать аккаунт</h2>
-      <input
-        autoComplete="on"
-        className={REQUIRED_STYLES}
-        {...register("email", {
-          pattern: {
-            value: /^\S+@\S+$/i,
-            message: "Некорректный email",
-          },
-          required: "Это поле обязательно",
-        })}
-        type="text"
-        placeholder="Email"
-        maxLength={60}
-      />
-      {errors.email && <span className={ERRORS_STYLES}>{errors.email.message}</span>}
+      {(currentStep === 1) && (
+        <>
+          <input
+            autoComplete="on"
+            className={REQUIRED_STYLES}
+            {...register("firstName", {
+              minLength: {
+                value: 2,
+                message: "Минимум 2 символа",
+              },
+              required: "Это поле обязательно",
+            })}
+            type="text"
+            placeholder="Имя"
+            maxLength={40}
+          />
+          {errors.firstName && <span className={ERRORS_STYLES}>{errors.firstName.message}</span>}
 
-      <input
-        autoComplete="on"
-        className={REQUIRED_STYLES}
-        {...register("password", {
-          minLength: {
-            value: 8,
-            message: "Минимум 8 символов",
-          },
-          required: "Это поле обязательно",
-        })}
-        type="password"
-        placeholder="Пароль"
-        maxLength={40}
-      />
-      {errors.password && <span className={ERRORS_STYLES}>{errors.password.message}</span>}
+          <input
+            autoComplete="on"
+            className={REQUIRED_STYLES}
+            {...register("surname", {
+              minLength: {
+                value: 2,
+                message: "Минимум 2 символа",
+              },
+              required: "Это поле обязательно",
+            })}
+            type="text"
+            placeholder="Отчество"
+            maxLength={40}
+          />
+          {errors.surname && <span className={ERRORS_STYLES}>{errors.surname.message}</span>}
 
-      <div className={INPUT_STYLES}>
-        <input
-          autoComplete="on"
-          className={REQUIRED_STYLES}
-          {...register("confirmPassword", {
-            minLength: {
-              value: 8,
-              message: "Минимум 8 символов",
-            },
-            required: "Это поле обязательно",
-            validate: (value: string) => value === password,
-          })}
-          type={type}
-          placeholder="Повторите пароль"
-          maxLength={40}
-        />
-        <span
-          className={SHOW_ICON_STYLES} onClick={handleToggle}
-          aria-hidden="true"
-        >
-          <Icon icon={icon} size={20} />
-        </span>
-        {errors.confirmPassword && <span className={ERRORS_STYLES}>Пароли не совпадают</span>}
-      </div>
+          <div className={INPUT_STYLES}>
+            <input
+              autoComplete="on"
+              className={REQUIRED_STYLES}
+              {...register("lastName", {
+                minLength: {
+                  value: 2,
+                  message: "Минимум 2 символа",
+                },
+                required: "Это поле обязательно",
+              })}
+              type="text"
+              placeholder="Фамилия"
+              maxLength={60}
+            />
+            {errors.lastName && <span className={ERRORS_STYLES}>{errors.lastName.message}</span>}
+          </div>
+        </>
+      )}
+      {(currentStep === 2) && (
+        <>
+          <input
+            autoComplete="on"
+            className={REQUIRED_STYLES}
+            {...register("email", {
+              pattern: {
+                value: /^\S+@\S+$/i,
+                message: "Некорректный email",
+              },
+              required: "Это поле обязательно",
+            })}
+            type="text"
+            placeholder="Email"
+            maxLength={60}
+          />
+          {errors.email && <span className={ERRORS_STYLES}>{errors.email.message}</span>}
 
-      <button className={BUTTON_STYLES} type="submit">
-        Зарегистрироваться
-      </button>
+          <input
+            autoComplete="on"
+            className={REQUIRED_STYLES}
+            {...register("password", {
+              minLength: {
+                value: 8,
+                message: "Минимум 8 символов",
+              },
+              required: "Это поле обязательно",
+            })}
+            type="password"
+            placeholder="Пароль"
+            maxLength={40}
+          />
+          {errors.password && <span className={ERRORS_STYLES}>{errors.password.message}</span>}
+
+          <div className={INPUT_STYLES}>
+            <input
+              autoComplete="on"
+              className={REQUIRED_STYLES}
+              {...register("confirmPassword", {
+                minLength: {
+                  value: 8,
+                  message: "Минимум 8 символов",
+                },
+                required: "Это поле обязательно",
+                validate: (value: string) => value === password,
+              })}
+              type={type}
+              placeholder="Повторите пароль"
+              maxLength={40}
+            />
+            <span
+              className={SHOW_ICON_STYLES} onClick={handleToggle}
+              aria-hidden="true"
+            >
+              <Icon icon={icon} size={20} />
+            </span>
+            {errors.confirmPassword && <span className={ERRORS_STYLES}>Пароли не совпадают</span>}
+          </div>
+        </>
+      )}
+      {renderButton()}
     </form>
   );
 });

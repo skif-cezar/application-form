@@ -1,6 +1,9 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export interface UserState {
+  firstName: string | null;
+  surname: string | null;
+  lastName: string | null;
   email: string | null;
   token: string | null;
   id: string | null;
@@ -10,6 +13,9 @@ export interface UserState {
 }
 
 const initialState: UserState = {
+  firstName: null,
+  surname: null,
+  lastName: null,
   email: null,
   token: null,
   id: null,
@@ -23,6 +29,9 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser(state: any, action: PayloadAction<UserState>) {
+      state.firstName = action.payload.firstName;
+      state.surname = action.payload.surname;
+      state.lastName = action.payload.lastName;
       state.email = action.payload.email;
       state.token = action.payload.token;
       state.id = action.payload.id;
@@ -31,6 +40,9 @@ export const userSlice = createSlice({
       state.role = action.payload.role;
     },
     removeUser(state: any) {
+      state.firstName = null;
+      state.surname = null;
+      state.lastName = null;
       state.email = null;
       state.token = null;
       state.id = null;
