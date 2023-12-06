@@ -30,6 +30,7 @@ export const ADMIN_PAGE_URL = "/admin";
  * Admin page
  */
 export const AdminPage = memo((): any => {
+  const NAME_USER_STYLES = clsx(styles.user);
   const BUTTON_STYLES = clsx(styles.button);
   const MENU_STYLES = clsx(styles.menu);
   const LIST_STYLES = clsx(styles.list);
@@ -45,14 +46,17 @@ export const AdminPage = memo((): any => {
 
   // Получение всех заявок пользователя из store
   const apps = useSelector((state: AppState) => state.applications.applications);
+  // Получение данных о user из store
+  const user = useSelector((state: AppState) => state.user);
+  const userFullName = `${user.lastName} ${user.firstName} ${user.surname}`;
 
   const getApplicationData = useCallback(async (): Promise<void> => {
     setLoading(true);
 
-    // Получение данных из Firestore по условию с лимитом по 6 записей
+    // Получение данных из Firestore по условию с лимитом по 10 записей
     const appData = query(collection(db, "applications"),
       orderBy("date", "desc"),
-      limit(6));
+      limit(10));
     const querySnapshot = await getDocs(appData);
 
     if(querySnapshot.docs.length !== 0) {
@@ -67,7 +71,7 @@ export const AdminPage = memo((): any => {
       querySnapshot.forEach((doc: any) => {
         // id заявки
         const {id}: ApplicationState = doc;
-        const {author, title, description, parlor, comment, status}: ApplicationState = doc.data();
+        const {author, email, title, description, parlor, comment, status}: ApplicationState = doc.data();
 
         // Перевод даты из Firestore в строку
         const date = getFormatDate(doc.data().date.seconds);
@@ -77,6 +81,7 @@ export const AdminPage = memo((): any => {
           addApplication({
             id,
             author,
+            email,
             title,
             description,
             parlor,
@@ -102,6 +107,10 @@ export const AdminPage = memo((): any => {
     return (
       <>
         <nav className={MENU_STYLES}>
+          <div className={NAME_USER_STYLES}>
+            <span>{`${user.role}:`}</span>
+            <span>{userFullName}</span>
+          </div>
           <ul className={LIST_STYLES}>
             <li className={ITEM_STYLES}>
               <NavLink

@@ -1,8 +1,16 @@
+.user {
+  font-size: 0.875rem;
+  font-weight: 600;
+  & span {
+    display: block;
+  }
+}
+
 .menu {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   width: 100%;
-  max-width: 768px;
+  max-width: 1200px;
   margin: 0 auto;
   padding-top: 15px;
   padding-bottom: 15px;
@@ -12,6 +20,8 @@
   display: flex;
   align-items: center;
   height: 40px;
+  margin-left: 40px;
+  margin-right: auto;
 }
 
 .item {
@@ -74,11 +84,11 @@
   align-items: center;
   height: auto;
   margin: auto;
-  width: 900px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 1200px;
+  min-width: 900px;
   padding-bottom: 2px;
   color: #000;
-  background-color: #fff;
   transition: all 1s ease;
 
   &__heder {
@@ -86,8 +96,9 @@
     width: 100%;
     height: 56px;
     color: #000;
+    background-color: #f7f6fe;
     font-size: 0.75rem;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
     box-shadow: 0px 1px 1px 0px #c9cfda;
@@ -103,24 +114,30 @@
 }
 
 .title_employee {
-  width: 290px;
+  flex: 30.2%;
+  min-width: 290px;
 }
 .title_date {
-  width: 150px;
+  flex: 12.5%;
+  min-width: 150px;
 }
 .title_name {
-  width: 230px;
+  flex: 38.2%;
+  min-width: 230px;
 }
 .title_parlor {
-  width: 130px;
+  flex: 10.8%;
+  min-width: 130px;
 }
 .title_status {
-  width: 100px;
+  flex: 8.3%;
+  min-width: 100px;
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  row-gap: 10px;
+  row-gap: 8px;
   width: 100%;
+  padding-top: 8px;
 }

@@ -43,17 +43,17 @@ export const Pagination: React.FC = () => {
   const showNextApps = (): void => {
     if(lastVisible) {
       const getNextApps = async (): Promise<void> => {
-        // Получение данных из Firestore по условию с лимитом по 6 записей
+        // Получение данных из Firestore по условию с лимитом по 10 записей
         let nextAppData;
         if(isAdmin) {
           nextAppData = query(collection(db, "applications"),
             orderBy("date", "desc"),
-            startAfter(lastVisible), limit(6));
+            startAfter(lastVisible), limit(10));
         } else {
           nextAppData = query(collection(db, "applications"),
-            where("author", "==", email),
+            where("email", "==", email),
             orderBy("date", "desc"),
-            startAfter(lastVisible), limit(6));
+            startAfter(lastVisible), limit(10));
         }
 
         const querySnapshot = await getDocs(nextAppData);
@@ -80,6 +80,7 @@ export const Pagination: React.FC = () => {
             addApplication({
               id,
               author,
+              email,
               title,
               description,
               parlor,

@@ -47,14 +47,10 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
     // Получение данных user по email из Firestore
     const userData = query(collection(db, "users"), where("email", "==", data.email));
     const querySnapshot = await getDocs(userData);
-    // eslint-disable-next-line no-console
-    console.log(querySnapshot.docs);
 
     // Логика авторизации пользователя и добавления его данных в store
     signInWithEmailAndPassword(auth, data.email, data.password)
       .then(({user}: {user: any}) => {
-        // eslint-disable-next-line no-console
-        console.log(user.uid);
 
         if(querySnapshot.docs.length !== 0) {
           querySnapshot.forEach((doc: any) => {

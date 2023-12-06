@@ -48,13 +48,22 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
 
   const navigate = useNavigate();
 
+  // Переводит строку в формат 1-я заглавна, остальные - нижний регистр
+  const toCapitalize = (str: string): string => {
+    const lowerCaseStr = str.toLowerCase();
+    if (!lowerCaseStr) {
+      return lowerCaseStr;
+    }
+    return lowerCaseStr[0]!.toUpperCase() + lowerCaseStr.slice(1);
+
+  };
+
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     // Очистить поля input
     reset();
 
     // Проверка на совпадение паролей
     if (data.password !== data.confirmPassword) {
-      alert("Пароли не совпадают");
       setError("confirmPassword", {type: "manual", message: "Пароли не совпадают"});
     } else {
       const auth = getAuth();
@@ -63,14 +72,12 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
       createUserWithEmailAndPassword(auth, data.email, data.confirmPassword)
         .then(({user}: {user: any}) => {
           try {
-            // eslint-disable-next-line no-console
-            console.log(data);
             // Добавление данных в Firestore db
             const addUser = async (): Promise<void> => {
               const docRef = await addDoc(collection(db, "users"), {
-                firstName: data.firstName,
-                surname: data.surname,
-                lastName: data.lastName,
+                firstName: toCapitalize(data.firstName),
+                surname: toCapitalize(data.surname),
+                lastName: data.lastName.toUpperCase(),
                 email: user.email,
                 id: user.uid,
                 isAdmin: false,
@@ -84,9 +91,9 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
             // Добавление пользователя в store
             dispatch(
               setUser({
-                firstName: data.firstName,
-                surname: data.surname,
-                lastName: data.lastName,
+                firstName: toCapitalize(data.firstName),
+                surname: toCapitalize(data.surname),
+                lastName: data.lastName.toUpperCase(),
                 email: user.email,
                 id: user.uid,
                 token: user.accessToken,
@@ -112,6 +119,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
   const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eyeOff);
 
+  // Увеличивает значение текущего шага ргистрации
   const nextStep = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
     const nextStepValue = currentStep + 1;
@@ -124,7 +132,6 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
         <button
           disabled={!isValid}
           className={BUTTON_STYLES} type="button"
-          // eslint-disable-next-line no-restricted-globals
           onClick={nextStep}
         >
           Далее
@@ -163,6 +170,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
           <input
             autoComplete="on"
             className={REQUIRED_STYLES}
+            style={{textTransform: "capitalize"}}
             {...register("firstName", {
               minLength: {
                 value: 2,
@@ -179,6 +187,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
           <input
             autoComplete="on"
             className={REQUIRED_STYLES}
+            style={{textTransform: "capitalize"}}
             {...register("surname", {
               minLength: {
                 value: 2,
@@ -196,6 +205,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
             <input
               autoComplete="on"
               className={REQUIRED_STYLES}
+              style={{textTransform: "uppercase"}}
               {...register("lastName", {
                 minLength: {
                   value: 2,

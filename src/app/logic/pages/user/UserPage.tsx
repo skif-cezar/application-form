@@ -1,5 +1,5 @@
 import {memo, useState, useCallback} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {collection, query, where, orderBy, limit, getDocs} from "firebase/firestore";
 import {db} from "src/firebase";
 import {
@@ -19,6 +19,7 @@ import clsx from "clsx";
 import styles from "src/app/logic/pages/user/UserPage.module.scss";
 import {REGISTRATION_PAGE_PATH} from "src/app/components/registration/Registration";
 import {getFormatDate} from "src/app/utility/getFormatDate";
+import {AppState} from "src/app/store";
 
 /**
  *  Path to user page
@@ -29,6 +30,7 @@ export const USER_PAGE_URL = "/user";
  * User page
  */
 export const UserPage = memo((): any => {
+  const NAME_USER_STYLES = clsx(styles.user);
   const BUTTON_STYLES = clsx(styles.button);
   const MENU_STYLES = clsx(styles.menu);
   const LIST_STYLES = clsx(styles.list);
@@ -42,14 +44,18 @@ export const UserPage = memo((): any => {
 
   const [loading, setLoading] = useState(false);
 
+  // Получение данных о user из store
+  const user = useSelector((state: AppState) => state.user);
+  const userFullName = `${user.lastName} ${user.firstName} ${user.surname}`;
+
   const getApplicationData = useCallback(async (): Promise<void> => {
     setLoading(true);
 
-    // Получение данных из Firestore по условию с лимитом по 6 записей
+    // Получение данных из Firestore по условию с лимитом по 10 записей
     const appData = query(collection(db, "applications"),
-      where("author", "==", email),
+      where("email", "==", email),
       orderBy("date", "desc"),
-      limit(6));
+      limit(10));
     const querySnapshot = await getDocs(appData);
 
     if(querySnapshot.docs.length !== 0) {
@@ -74,6 +80,7 @@ export const UserPage = memo((): any => {
           addApplication({
             id,
             author,
+            email,
             title,
             description,
             parlor,
@@ -95,6 +102,10 @@ export const UserPage = memo((): any => {
     return (
       <>
         <nav className={MENU_STYLES}>
+          <div className={NAME_USER_STYLES}>
+            <span>{`${user.role}:`}</span>
+            <span>{userFullName}</span>
+          </div>
           <ul className={LIST_STYLES}>
             <li className={ITEM_STYLES}>
               <NavLink

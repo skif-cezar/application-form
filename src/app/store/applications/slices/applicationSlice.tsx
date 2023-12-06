@@ -3,6 +3,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 export interface ApplicationState {
   id: string | null;
   author: string | null;
+  email: string | null;
   title: string | null;
   description: string | null;
   parlor: string | null;

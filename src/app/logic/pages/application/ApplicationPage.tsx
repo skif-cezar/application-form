@@ -46,7 +46,7 @@ export const ApplicationPage = (): any => {
       // Записываем данные заявки в state
       setApp(snap.data());
 
-      const {author, title, description, parlor, comment, status}: any = snap.data();
+      const {author, email, title, description, parlor, comment, status}: any = snap.data();
 
       if (status === "Открыта") {
         setIsOpenApp(true);
@@ -61,6 +61,7 @@ export const ApplicationPage = (): any => {
         updateApplication({
           id,
           author,
+          email,
           title,
           description,
           parlor,

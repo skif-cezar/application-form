@@ -30,8 +30,10 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
   const REQUIRED_STYLES = clsx(styles.required);
   const BUTTON_STYLES = clsx(styles.button);
 
-  // user.email - email авторизированного пользователя из store
-  const userEmail = useSelector((state: AppState) => state.user.email);
+  // Данные пользователя из store
+  const user = useSelector((state: AppState) => state.user);
+  const userEmail = user.email;
+  const userFullName = `${user.lastName} ${user.firstName} ${user.surname}`;
 
   const {
     register,
@@ -47,7 +49,8 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
     try {
       // Добавление данных в Firestore db
       const docRef = await addDoc(collection(db, "applications"), {
-        author: userEmail,
+        author: userFullName,
+        email: userEmail,
         title: data.title,
         description: data.description,
         parlor: data.parlor,

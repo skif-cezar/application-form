@@ -1,13 +1,13 @@
 .card {
   display: flex;
   align-items: center;
-  height: 79px;
+  height: 44px;
   width: 100%;
   color: #000;
   font-size: 0.875rem;
   font-weight: 400;
   letter-spacing: 1px;
-  background-color: #f7f6fe;
+  background-color: #fff;
   box-shadow: 0px 1px 1px 0px #c9cfda;
   transition: all 0.15s ease;
   cursor: pointer;
@@ -31,24 +31,29 @@
 }
 
 .status {
-  width: 100px;
+  flex: 8.3%;
+  min-width: 100px;
   padding: 12px 0px;
 }
 
 .employee {
-  width: 290px;
+  flex: 30.2%;
+  min-width: 290px;
 }
 
 .date {
-  width: 150px;
+  flex: 12.5%;
+  min-width: 150px;
 }
 
 .name {
-  width: 230px;
+  flex: 38.2%;
+  min-width: 230px;
 }
 
 .parlor {
-  width: 130px;
+  flex: 10.8%;
+  min-width: 130px;
 }
 
 .status_open,
