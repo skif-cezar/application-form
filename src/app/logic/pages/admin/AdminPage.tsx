@@ -11,8 +11,7 @@ import {
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
 import {useAuth, UserState} from "src/app/hooks/useAuth";
 import {MAIN_PAGE_PATH} from "src/app/logic/layout/Layout";
-import {removeUser} from "src/app/store/user/slices/userSlice";
-import {APPLICATION_USER_URL} from "src/app/logic/pages/user/ApplicationUser";
+import {addEmploye, addUserLastVisible, clearEmployees, removeUser} from "src/app/store/user/slices/userSlice";
 import {Spinner} from "src/app/components/spinner/Spinner";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/user/UserPage.module.scss";
@@ -20,6 +19,7 @@ import {REGISTRATION_PAGE_PATH} from "src/app/components/registration/Registrati
 import {getFormatDate} from "src/app/utility/getFormatDate";
 import {APPLICATIONS_URL} from "src/app/logic/pages/admin/ApplicationsAll";
 import {AppState} from "src/app/store";
+import {EMPLOYEES_PAGE_URL} from "src/app/logic/pages/employees/EmployeesPage";
 
 /**
  *  Path to admin page
@@ -44,11 +44,9 @@ export const AdminPage = memo((): any => {
 
   const [loading, setLoading] = useState(false);
 
-  // Получение всех заявок пользователя из store
-  const apps = useSelector((state: AppState) => state.applications.applications);
   // Получение данных о user из store
-  const user = useSelector((state: AppState) => state.user);
-  const userFullName = `${user.lastName} ${user.firstName} ${user.surname}`;
+  const user = useSelector((state: AppState) => state.users.user);
+  const userFullName = `${user!.lastName} ${user!.firstName} ${user!.surname}`;
 
   const getApplicationData = useCallback(async (): Promise<void> => {
     setLoading(true);
@@ -99,16 +97,50 @@ export const AdminPage = memo((): any => {
 
   }, []);
 
+  const getEmployees = useCallback(async (): Promise<void> => {
+    setLoading(true);
+
+    // Получение данных из Firestore по условию с лимитом по 10 записей
+    const appData = query(collection(db, "users"),
+      orderBy("lastName", "desc"),
+      limit(10));
+    const querySnapshot = await getDocs(appData);
+
+    if(querySnapshot.docs.length !== 0) {
+      // Получение последних видимых записей
+      const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+      // Добавление последних видимых данных user в store
+      dispatch(
+        addUserLastVisible(lastVisible),
+      );
+
+      querySnapshot.forEach((doc: any) => {
+        const {firstName, surname, lastName, email, token, id, isLoggedIn, isAdmin, role}: any = doc.data();
+
+        // Добавление данных заявки в store
+        dispatch(
+          addEmploye({firstName, surname, lastName, email, token, id, isLoggedIn, isAdmin, role}),
+        );
+      });
+    } else {
+      // eslint-disable-next-line no-console
+      console.log("Пользователей нет");
+    }
+    setLoading(false);
+
+  }, []);
+
   useEffect(() => {
     getApplicationData();
-  }, [apps!.length]);
+  }, []);
 
   if (isAuth) {
     return (
       <>
         <nav className={MENU_STYLES}>
           <div className={NAME_USER_STYLES}>
-            <span>{`${user.role}:`}</span>
+            <span>{`${user!.role}:`}</span>
             <span>{userFullName}</span>
           </div>
           <ul className={LIST_STYLES}>
@@ -116,17 +148,23 @@ export const AdminPage = memo((): any => {
               <NavLink
                 to={APPLICATIONS_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
+                onClick={() => {
+                  getApplicationData();
+                  dispatch(clearEmployees());
+                }}
               >
                 Все заявки
               </NavLink>
             </li>
             <li className={ITEM_STYLES}>
               <NavLink
-                to={APPLICATION_USER_URL}
+                to={EMPLOYEES_PAGE_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
-                onClick={() => dispatch(clearApplication())}
+                onClick={() => {
+                  getEmployees();
+                }}
               >
-                Статистика
+                Сотрудники
               </NavLink>
             </li>
           </ul>

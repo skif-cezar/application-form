@@ -12,48 +12,100 @@ export interface UserState {
   role: string | null;
 }
 
-const initialState: UserState = {
-  firstName: null,
-  surname: null,
-  lastName: null,
-  email: null,
-  token: null,
-  id: null,
-  isLoggedIn: false,
-  isAdmin: false,
-  role: null,
+export interface EmployeesState {
+  employees: UserState[] | null;
+  user: any | null;
+  userLastVisible: any | undefined;
+  isShowAlert: boolean;
+}
+
+const initialState: EmployeesState = {
+  employees: [],
+  user: {
+    firstName: null,
+    surname: null,
+    lastName: null,
+    email: null,
+    token: null,
+    id: null,
+    isLoggedIn: false,
+    isAdmin: false,
+    role: null,
+  },
+  userLastVisible: null,
+  isShowAlert: false,
 };
 
 export const userSlice = createSlice({
-  name: "user",
+  name: "users",
   initialState,
   reducers: {
+    addEmploye(state: any, action: PayloadAction<UserState>) {
+      const isDuplicate = state.employees.some((employe: UserState) => employe.id === action.payload.id);
+
+      if (!isDuplicate) {
+        state.employees = [...state.employees, action.payload];
+      }
+    },
+    removeEmploye(state: any, action: PayloadAction<UserState>) {
+      state.employees = state.employees.filter((employe: any) => employe.id !== action.payload);
+    },
+    updateEmploye(state: any, action: PayloadAction<UserState>) {
+      const {id, role}: UserState = action.payload;
+      state.employees = state.employees.map((employe: UserState) => employe.id === id ? {...employe, role} : employe);
+    },
+    addUserLastVisible(state: any, action: PayloadAction<any>) {
+      state.userLastVisible = action.payload;
+    },
+    clearUsers(state: any) {
+      state.employees = [];
+      state.user = null;
+      state.userLastVisible = null;
+    },
+    clearEmployees(state: any) {
+      state.employees = [];
+      state.userLastVisible = null;
+      state.isShowAlert = false;
+    },
     setUser(state: any, action: PayloadAction<UserState>) {
-      state.firstName = action.payload.firstName;
-      state.surname = action.payload.surname;
-      state.lastName = action.payload.lastName;
-      state.email = action.payload.email;
-      state.token = action.payload.token;
-      state.id = action.payload.id;
-      state.isLoggedIn = action.payload.isLoggedIn;
-      state.isAdmin = action.payload.isAdmin;
-      state.role = action.payload.role;
+      state.user.firstName = action.payload.firstName;
+      state.user.surname = action.payload.surname;
+      state.user.lastName = action.payload.lastName;
+      state.user.email = action.payload.email;
+      state.user.token = action.payload.token;
+      state.user.id = action.payload.id;
+      state.user.isLoggedIn = action.payload.isLoggedIn;
+      state.user.isAdmin = action.payload.isAdmin;
+      state.user.role = action.payload.role;
     },
     removeUser(state: any) {
-      state.firstName = null;
-      state.surname = null;
-      state.lastName = null;
-      state.email = null;
-      state.token = null;
-      state.id = null;
-      state.isLoggedIn = false;
-      state.isAdmin = false;
-      state.role = null;
+      state.user.firstName = null;
+      state.user.surname = null;
+      state.user.lastName = null;
+      state.user.email = null;
+      state.user.token = null;
+      state.user.id = null;
+      state.user.isLoggedIn = false;
+      state.user.isAdmin = false;
+      state.user.role = null;
+    },
+    addIsShowEmployees(state: any, action: PayloadAction<any>) {
+      state.isShowAlert = action.payload;
     },
   },
 });
 
 // eslint-disable-next-line @typescript-eslint/typedef
-export const {setUser, removeUser} = userSlice.actions;
+export const {
+  addEmploye,
+  removeEmploye,
+  updateEmploye,
+  clearUsers,
+  setUser,
+  removeUser,
+  addUserLastVisible,
+  clearEmployees,
+  addIsShowEmployees,
+} = userSlice.actions;
 
 export default userSlice.reducer;

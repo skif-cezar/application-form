@@ -1,15 +1,15 @@
 import {configureStore} from "@reduxjs/toolkit";
-import userReducer, {UserState} from "src/app/store/user/slices/userSlice";
+import userReducer, {EmployeesState} from "src/app/store/user/slices/userSlice";
 import applicationsReducer, {ApplicationArrState} from "src/app/store/applications/slices/applicationSlice";
 import {CurriedGetDefaultMiddleware} from "@reduxjs/toolkit/dist/getDefaultMiddleware";
 
 export interface AppState {
-  user: UserState;
+  users: EmployeesState;
   applications: ApplicationArrState;
 }
 
 export const store = configureStore({
-  reducer: {user: userReducer, applications: applicationsReducer},
+  reducer: {users: userReducer, applications: applicationsReducer},
   middleware: (getDefaultMiddleware: CurriedGetDefaultMiddleware) =>
     getDefaultMiddleware({serializableCheck: false}),
 });

@@ -20,6 +20,7 @@ import styles from "src/app/logic/pages/user/UserPage.module.scss";
 import {REGISTRATION_PAGE_PATH} from "src/app/components/registration/Registration";
 import {getFormatDate} from "src/app/utility/getFormatDate";
 import {AppState} from "src/app/store";
+import {ProfilLink} from "src/app/components/profilLink/ProfilLink";
 
 /**
  *  Path to user page
@@ -30,8 +31,6 @@ export const USER_PAGE_URL = "/user";
  * User page
  */
 export const UserPage = memo((): any => {
-  const NAME_USER_STYLES = clsx(styles.user);
-  const BUTTON_STYLES = clsx(styles.button);
   const MENU_STYLES = clsx(styles.menu);
   const LIST_STYLES = clsx(styles.list);
   const ITEM_STYLES = clsx(styles.item);
@@ -45,8 +44,8 @@ export const UserPage = memo((): any => {
   const [loading, setLoading] = useState(false);
 
   // Получение данных о user из store
-  const user = useSelector((state: AppState) => state.user);
-  const userFullName = `${user.lastName} ${user.firstName} ${user.surname}`;
+  const user = useSelector((state: AppState) => state.users.user);
+  const userFullName = `${user!.lastName} ${user!.firstName} ${user!.surname}`;
 
   const getApplicationData = useCallback(async (): Promise<void> => {
     setLoading(true);
@@ -102,10 +101,6 @@ export const UserPage = memo((): any => {
     return (
       <>
         <nav className={MENU_STYLES}>
-          <div className={NAME_USER_STYLES}>
-            <span>{`${user.role}:`}</span>
-            <span>{userFullName}</span>
-          </div>
           <ul className={LIST_STYLES}>
             <li className={ITEM_STYLES}>
               <NavLink
@@ -126,17 +121,14 @@ export const UserPage = memo((): any => {
               </NavLink>
             </li>
           </ul>
-          <button
-            className={BUTTON_STYLES}
-            type="button"
+          <ProfilLink
+            fullName={userFullName} role={user!.role}
             onClick={() => {
               navigate(REGISTRATION_PAGE_PATH);
               dispatch(removeUser());
               dispatch(clearApplication());
             }}
-          >
-            Выйти из аккаунта
-          </button>
+          />
         </nav>
         {loading ? (<Spinner />) : (<Outlet />)}
       </>

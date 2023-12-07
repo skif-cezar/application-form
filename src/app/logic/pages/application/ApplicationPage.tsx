@@ -25,7 +25,7 @@ export const ApplicationPage = (): any => {
   const BUTTON_OPEN_STYLES = clsx(styles.status_open, styles.status_btn);
   const BUTTON_CLOSE_STYLES = clsx(styles.status_closed, styles.status_btn);
 
-  const isAdmin = useSelector((state: AppState) => state!.user!.isAdmin);
+  const isAdmin = useSelector((state: AppState) => state.users.user!.isAdmin);
   const {id}: any = useParams<{id?: string}>();
   const [app, setApp] = useState<DocumentData>();
   const [loading, setLoading] = useState(false);

@@ -9,7 +9,7 @@ export interface UserState {
 
 export const useAuth = (): UserState => {
   const {email, token, id}: { email: string; token: string; id: string } = useSelector(
-    (state: any) => state.user,
+    (state: any) => state.users.user,
   );
   return {
     isAuth: !!email,

@@ -11,15 +11,18 @@ import {MainLayout} from "src/app/logic/main/MainLayout";
 import {AppState} from "src/app/store";
 import {ApplicationPage} from "src/app/logic/pages/application/ApplicationPage";
 import {ApplicationsAll, APPLICATIONS_URL} from "src/app/logic/pages/admin/ApplicationsAll";
+import {EmployeesPage, EMPLOYEES_PAGE_URL} from "src/app/logic/pages/employees/EmployeesPage";
 
 /**
  * The main component in app
  */
 export const App: React.FC = () => {
+  // Получение данных о user из store
+  const user = useSelector((state: AppState) => state.users.user);
   // Авторизирован ли пользователь
-  const isLoggedIn = useSelector((state: AppState) => state.user.isLoggedIn);
+  const isLoggedIn = user && user.isLoggedIn;
   // Админ или обычный юзер
-  const isAdmin = useSelector((state: AppState) => state.user.isAdmin);
+  const isAdmin = user && user.isAdmin;
 
   return (
     <BrowserRouter>
@@ -52,6 +55,10 @@ export const App: React.FC = () => {
                 <Route path="/admin/" element={<Navigate to={APPLICATIONS_URL} />} />
                 <Route path={APPLICATIONS_URL} element={<ApplicationsAll />} />
                 <Route path={`${APPLICATIONS_URL}/:id`} element={<ApplicationPage />} />
+              </Route>
+              <Route element={<MainLayout />}>
+                <Route path={EMPLOYEES_PAGE_URL} element={<EmployeesPage />} />
+                <Route path={`${EMPLOYEES_PAGE_URL}/:id`} element={<ApplicationPage />} />
               </Route>
             </Route>
           </Route>

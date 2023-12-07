@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, {forwardRef, useState} from "react";
 import {useDispatch} from "react-redux";
 import {UserState, setUser} from "src/app/store/user/slices/userSlice";
@@ -54,6 +55,7 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
         if(querySnapshot.docs.length !== 0) {
           querySnapshot.forEach((doc: any) => {
+            console.log(doc.data());
             const {firstName, surname, lastName, email, isAdmin, role}: UserState = doc.data();
 
             // Добавление пользователя в store
@@ -75,7 +77,11 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
           alert("Пользователь не найден");
         }
       })
-      .catch(() => alert("Пользователь не зарегистрирован или неверно введены данные!"));
+      .catch((error: any) => {
+        // eslint-disable-next-line no-console
+        console.log(error);
+        alert("Пользователь не зарегистрирован или неверно введены данные!");
+      });
   };
 
   const [type, setType] = useState("password");

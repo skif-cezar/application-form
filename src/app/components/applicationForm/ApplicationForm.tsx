@@ -31,9 +31,9 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
   const BUTTON_STYLES = clsx(styles.button);
 
   // Данные пользователя из store
-  const user = useSelector((state: AppState) => state.user);
-  const userEmail = user.email;
-  const userFullName = `${user.lastName} ${user.firstName} ${user.surname}`;
+  const user = useSelector((state: AppState) => state.users.user);
+  const userEmail = user!.email;
+  const userFullName = `${user!.lastName} ${user!.firstName} ${user!.surname}`;
 
   const {
     register,
