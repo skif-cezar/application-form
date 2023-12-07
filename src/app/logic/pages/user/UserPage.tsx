@@ -50,11 +50,11 @@ export const UserPage = memo((): any => {
   const getApplicationData = useCallback(async (): Promise<void> => {
     setLoading(true);
 
-    // Получение данных из Firestore по условию с лимитом по 10 записей
+    // Получение данных из Firestore по условию с лимитом по 8 записей
     const appData = query(collection(db, "applications"),
       where("email", "==", email),
       orderBy("date", "desc"),
-      limit(10));
+      limit(8));
     const querySnapshot = await getDocs(appData);
 
     if(querySnapshot.docs.length !== 0) {

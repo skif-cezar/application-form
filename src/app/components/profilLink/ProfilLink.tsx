@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import AvatarSrc from "src/resources/avatar.png";
 import clsx from "clsx";
 import styles from "src/app/components/profilLink/ProfilLink.module.scss";
+import {NavLink} from "react-router-dom";
+import {PERSONAL_USER_PAGE_PATH} from "src/app/logic/pages/personal/PersonalPage";
 
 /**
  * ProfilLink props
@@ -63,7 +65,11 @@ export const ProfilLink: React.FC<ProfilLinkProps> = (props: ProfilLinkProps) =>
             </div>
           </div>
         </div>
-        <a href="#!" className={SETTINS_STYLES}>Настройки</a>
+        <NavLink
+          to={PERSONAL_USER_PAGE_PATH} className={SETTINS_STYLES}
+        >
+          Настройки
+        </NavLink>
         <a
           href="#!" onClick={props.onClick}
           className={LOGOUT_STYLES}

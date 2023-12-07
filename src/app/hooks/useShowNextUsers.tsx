@@ -24,10 +24,10 @@ export function useShowNextUsers(): any {
 
   if(lastVisible) {
     const getNextUsers = async (): Promise<void> => {
-      // Получение данных из Firestore по условию с лимитом по 10 записей
+      // Получение данных из Firestore по условию с лимитом по 8 записей
       const nextUserData = query(collection(db, "users"),
         orderBy("lastName", "desc"),
-        startAfter(lastVisible), limit(10));
+        startAfter(lastVisible), limit(8));
 
       const querySnapshot = await getDocs(nextUserData);
 

@@ -34,17 +34,17 @@ export function useShowNextApps(): any {
 
   if(lastVisible) {
     const getNextApps = async (): Promise<void> => {
-      // Получение данных из Firestore по условию с лимитом по 10 записей
+      // Получение данных из Firestore по условию с лимитом по 8 записей
       let nextAppData;
       if(isAdmin) {
         nextAppData = query(collection(db, "applications"),
           orderBy("date", "desc"),
-          startAfter(lastVisible), limit(10));
+          startAfter(lastVisible), limit(8));
       } else {
         nextAppData = query(collection(db, "applications"),
           where("email", "==", email),
           orderBy("date", "desc"),
-          startAfter(lastVisible), limit(10));
+          startAfter(lastVisible), limit(8));
       }
 
       const querySnapshot = await getDocs(nextAppData);

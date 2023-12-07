@@ -12,6 +12,7 @@ import {AppState} from "src/app/store";
 import {ApplicationPage} from "src/app/logic/pages/application/ApplicationPage";
 import {ApplicationsAll, APPLICATIONS_URL} from "src/app/logic/pages/admin/ApplicationsAll";
 import {EmployeesPage, EMPLOYEES_PAGE_URL} from "src/app/logic/pages/employees/EmployeesPage";
+import {PERSONAL_USER_PAGE_PATH, PersonalPage} from "src/app/logic/pages/personal/PersonalPage";
 
 /**
  * The main component in app
@@ -42,12 +43,17 @@ export const App: React.FC = () => {
                 )
                 : (<Registration />)}
             />
-            <Route path={USER_PAGE_URL} element={<UserPage />}>
+            <Route path={USER_PAGE_URL} element={isLoggedIn ? (<UserPage />) : (<Navigate to={REGISTRATION_PAGE_PATH} />)}>
               <Route element={<MainLayout />}>
                 <Route path="/user/" element={<Navigate to={APPLICATION_FORM_URL} />} />
                 <Route path={APPLICATION_FORM_URL} element={<ApplicationForm />} />
                 <Route path={APPLICATION_USER_URL} element={<ApplicationUser />} />
                 <Route path={`${APPLICATION_USER_URL}/:id`} element={<ApplicationPage />} />
+                <Route
+                  path={PERSONAL_USER_PAGE_PATH} element={isLoggedIn ?
+                    (<PersonalPage />) :
+                    (<Navigate to={REGISTRATION_PAGE_PATH} />)}
+                />
               </Route>
             </Route>
             <Route path={ADMIN_PAGE_URL} element={isAdmin ? (<AdminPage />) : (<Navigate to={REGISTRATION_PAGE_PATH} />)}>

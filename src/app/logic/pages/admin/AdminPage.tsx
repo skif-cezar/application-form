@@ -51,10 +51,10 @@ export const AdminPage = memo((): any => {
   const getApplicationData = useCallback(async (): Promise<void> => {
     setLoading(true);
 
-    // Получение данных из Firestore по условию с лимитом по 10 записей
+    // Получение данных из Firestore по условию с лимитом по 8 записей
     const appData = query(collection(db, "applications"),
       orderBy("date", "desc"),
-      limit(10));
+      limit(8));
     const querySnapshot = await getDocs(appData);
 
     if(querySnapshot.docs.length !== 0) {
@@ -100,10 +100,10 @@ export const AdminPage = memo((): any => {
   const getEmployees = useCallback(async (): Promise<void> => {
     setLoading(true);
 
-    // Получение данных из Firestore по условию с лимитом по 10 записей
+    // Получение данных из Firestore по условию с лимитом по 8 записей
     const appData = query(collection(db, "users"),
       orderBy("lastName", "desc"),
-      limit(10));
+      limit(8));
     const querySnapshot = await getDocs(appData);
 
     if(querySnapshot.docs.length !== 0) {
