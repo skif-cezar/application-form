@@ -9,12 +9,14 @@ import {
   addApplication,
   addIsShowAlert,
 } from "src/app/store/applications/slices/applicationSlice";
+import {UserState} from "src/app/store/user/slices/userSlice";
 
 export function useShowNextApps(): any {
   const dispatch = useDispatch();
 
-  // Получение email юзера из store
-  const email = useSelector((state: AppState) => state.users.user!.email);
+  // Получение данных user из store
+  const user = useSelector((state: AppState) => state.users.user);
+  const {email}: UserState = user;
   // Админ или обычный юзер из store
   const isAdmin = useSelector((state: AppState) => state.users.user!.isAdmin);
 
@@ -42,7 +44,7 @@ export function useShowNextApps(): any {
           startAfter(lastVisible), limit(8));
       } else {
         nextAppData = query(collection(db, "applications"),
-          where("email", "==", email),
+          where("idUser", "==", user.idUser),
           orderBy("date", "desc"),
           startAfter(lastVisible), limit(8));
       }
@@ -60,7 +62,7 @@ export function useShowNextApps(): any {
       querySnapshot.forEach((doc: any) => {
         // id заявки
         const {id}: ApplicationState = doc;
-        const {author, title, description, parlor, comment, status}: ApplicationState = doc.data();
+        const {idUser, author, title, description, parlor, comment, status}: ApplicationState = doc.data();
 
         // Перевод даты из Firestore в строку
         const dateToString = new Date(doc.data().date.seconds * 1000);
@@ -70,6 +72,7 @@ export function useShowNextApps(): any {
         dispatch(
           addApplication({
             id,
+            idUser,
             author,
             email,
             title,

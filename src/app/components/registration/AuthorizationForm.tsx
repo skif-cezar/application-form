@@ -65,7 +65,7 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
                 surname,
                 lastName,
                 email,
-                id: user.uid,
+                idUser: user.uid,
                 token: user.accessToken,
                 isLoggedIn: true,
                 isAdmin,

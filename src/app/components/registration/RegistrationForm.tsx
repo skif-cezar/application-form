@@ -79,7 +79,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
                 surname: toCapitalize(data.surname),
                 lastName: data.lastName.toUpperCase(),
                 email: user.email,
-                id: user.uid,
+                idUser: user.uid,
                 isAdmin: false,
                 role: "Пользователь",
               });
@@ -95,7 +95,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
                 surname: toCapitalize(data.surname),
                 lastName: data.lastName.toUpperCase(),
                 email: user.email,
-                id: user.uid,
+                idUser: user.uid,
                 token: user.accessToken,
                 isLoggedIn: true,
                 isAdmin: false,
@@ -110,7 +110,10 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
           }
           navigate(USER_PAGE_URL);
         })
-        .catch(console.error);
+        .catch((error: any) => {
+          console.error(error);
+          alert("Пользователь уже зарегистрирован!");
+        });
     }
   };
 

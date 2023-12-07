@@ -52,12 +52,21 @@ export const UserPage = memo((): any => {
 
     // Получение данных из Firestore по условию с лимитом по 8 записей
     const appData = query(collection(db, "applications"),
-      where("email", "==", email),
+      where("idUser", "==", user.idUser),
       orderBy("date", "desc"),
       limit(8));
-    const querySnapshot = await getDocs(appData);
 
-    if(querySnapshot.docs.length !== 0) {
+    // Получение данных user из Firestore по условию
+    const userData = query(collection(db, "users"),
+      where("idUser", "==", user.idUser));
+
+    const querySnapshot = await getDocs(appData);
+    const querySnapshotUser = await getDocs(userData);
+
+    if(querySnapshot.docs.length !== 0 && !querySnapshotUser.empty) {
+      const docUser = querySnapshotUser.docs[0]!.data();
+      const author = `${docUser["lastName"]} ${docUser["firstName"]} ${docUser["surname"]}`;
+
       // Получение последних видимых записей
       const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
 
@@ -69,7 +78,7 @@ export const UserPage = memo((): any => {
       querySnapshot.forEach((doc: any) => {
         // id заявки
         const {id}: ApplicationState = doc;
-        const {author, title, description, parlor, comment, status}: ApplicationState = doc.data();
+        const {idUser, title, description, parlor, comment, status}: ApplicationState = doc.data();
 
         // Перевод даты из Firestore в строку
         const date = getFormatDate(doc.data().date.seconds);
@@ -78,6 +87,7 @@ export const UserPage = memo((): any => {
         dispatch(
           addApplication({
             id,
+            idUser,
             author,
             email,
             title,

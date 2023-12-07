@@ -6,7 +6,7 @@ export interface UserState {
   lastName: string | null;
   email: string | null;
   token: string | null;
-  id: string | null;
+  idUser: string | null;
   isLoggedIn: boolean;
   isAdmin: boolean;
   role: string | null;
@@ -27,7 +27,7 @@ const initialState: EmployeesState = {
     lastName: null,
     email: null,
     token: null,
-    id: null,
+    idUser: null,
     isLoggedIn: false,
     isAdmin: false,
     role: null,
@@ -41,18 +41,18 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     addEmploye(state: any, action: PayloadAction<UserState>) {
-      const isDuplicate = state.employees.some((employe: UserState) => employe.id === action.payload.id);
+      const isDuplicate = state.employees.some((employe: UserState) => employe.idUser === action.payload.idUser);
 
       if (!isDuplicate) {
         state.employees = [...state.employees, action.payload];
       }
     },
     removeEmploye(state: any, action: PayloadAction<UserState>) {
-      state.employees = state.employees.filter((employe: any) => employe.id !== action.payload);
+      state.employees = state.employees.filter((employe: any) => employe.idUser !== action.payload);
     },
     updateEmploye(state: any, action: PayloadAction<UserState>) {
-      const {id, role}: UserState = action.payload;
-      state.employees = state.employees.map((employe: UserState) => employe.id === id ? {...employe, role} : employe);
+      const {idUser, role}: UserState = action.payload;
+      state.employees = state.employees.map((employe: UserState) => employe.idUser === idUser ? {...employe, role} : employe);
     },
     addUserLastVisible(state: any, action: PayloadAction<any>) {
       state.userLastVisible = action.payload;
@@ -73,7 +73,7 @@ export const userSlice = createSlice({
       state.user.lastName = action.payload.lastName;
       state.user.email = action.payload.email;
       state.user.token = action.payload.token;
-      state.user.id = action.payload.id;
+      state.user.idUser = action.payload.idUser;
       state.user.isLoggedIn = action.payload.isLoggedIn;
       state.user.isAdmin = action.payload.isAdmin;
       state.user.role = action.payload.role;
@@ -84,10 +84,13 @@ export const userSlice = createSlice({
       state.user.lastName = null;
       state.user.email = null;
       state.user.token = null;
-      state.user.id = null;
+      state.user.idUser = null;
       state.user.isLoggedIn = false;
       state.user.isAdmin = false;
       state.user.role = null;
+    },
+    updateUser: (state: any, action: PayloadAction<any>) => {
+      state.user = {...state.user, ...action.payload};
     },
     addIsShowEmployees(state: any, action: PayloadAction<any>) {
       state.isShowAlert = action.payload;
@@ -106,6 +109,7 @@ export const {
   addUserLastVisible,
   clearEmployees,
   addIsShowEmployees,
+  updateUser,
 } = userSlice.actions;
 
 export default userSlice.reducer;

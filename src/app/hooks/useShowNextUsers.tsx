@@ -40,11 +40,11 @@ export function useShowNextUsers(): any {
       );
 
       querySnapshot.forEach((doc: any) => {
-        const {firstName, surname, lastName, email, token, id, isLoggedIn, isAdmin, role}: any = doc.data();
+        const {firstName, surname, lastName, email, token, idUser, isLoggedIn, isAdmin, role}: any = doc.data();
 
         // Добавление данных заявки в store
         dispatch(
-          addEmploye({firstName, surname, lastName, email, token, id, isLoggedIn, isAdmin, role}),
+          addEmploye({firstName, surname, lastName, email, token, idUser, isLoggedIn, isAdmin, role}),
         );
       });
     };

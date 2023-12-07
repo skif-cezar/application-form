@@ -3,8 +3,12 @@ import AvatarSrc from "src/resources/avatar.png";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/personal/PersonalePage.module.scss";
 import {Message, UseFormReturn, useForm} from "react-hook-form";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "src/app/store";
+import {query, collection, where, getDocs, updateDoc} from "firebase/firestore";
+import {db} from "src/firebase";
+import {updateUser} from "src/app/store/user/slices/userSlice";
+// import {getAuth} from "firebase/auth";
 
 export type FieldsForm = {
   firstName: string;
@@ -37,6 +41,12 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
   // Получение данных о user из store
   const user = useSelector((state: AppState) => state.users.user);
   const userFullName = `${user!.lastName} ${user!.firstName} ${user!.surname}`;
+  const dispatch = useDispatch();
+  // const auth = getAuth();
+
+  // Получение данных user из Firestore по условию
+  const userData = query(collection(db, "users"),
+    where("idUser", "==", user.idUser));
 
   const {
     register,
@@ -54,12 +64,55 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
     setValue("role", user.role);
   }, [user, setValue]);
 
+  // Переводит строку в формат 1-я заглавна, остальные - нижний регистр
+  const toCapitalize = (str: string): string => {
+    const lowerCaseStr = str.toLowerCase();
+    if (!lowerCaseStr) {
+      return lowerCaseStr;
+    }
+    return lowerCaseStr[0]!.toUpperCase() + lowerCaseStr.slice(1);
+
+  };
+
   const onSubmit = async (data: FieldsForm): Promise<void> => {
 
     try {
+      /* updateEmail(auth.currentUser, data.email).then(() => {
+        // Email updated!
+      }).catch((error: any) => {
+        console.error("Ошибка обновления Email", error);
+      }); */
+      const querySnapshot = await getDocs(userData);
 
-      // eslint-disable-next-line no-console
-      console.log("Датнные ", data);
+      // Обновить данные user
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0];
+        const docUser = doc!.data();
+
+        if(doc) {
+          await updateDoc(doc.ref, {
+            email: data.email,
+            firstName: toCapitalize(data.firstName),
+            surname: toCapitalize(data.surname),
+            lastName: data.lastName.toUpperCase(),
+          });
+
+          // Добавление пользователя в store
+          dispatch(
+            updateUser({
+              firstName: toCapitalize(data.firstName),
+              surname: toCapitalize(data.surname),
+              lastName: data.lastName.toUpperCase(),
+              email: data.email,
+              role: docUser["role"],
+            }),
+          );
+          alert("Данные успешно обновлены");
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        console.log("No matching documents.");
+      }
     } catch (e) {
       console.error("Ошибка изменения данных: ", e);
     }
@@ -86,6 +139,7 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
           <input
             autoComplete="off"
             className={REQUIRED_STYLES}
+            style={{textTransform: "capitalize"}}
             {...register("firstName", {
               minLength: {
                 value: 2,
@@ -102,6 +156,7 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
           <input
             autoComplete="off"
             className={REQUIRED_STYLES}
+            style={{textTransform: "capitalize"}}
             {...register("surname", {
               minLength: {
                 value: 2,
@@ -118,6 +173,7 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
           <input
             autoComplete="off"
             className={REQUIRED_STYLES}
+            style={{textTransform: "uppercase"}}
             {...register("lastName", {
               minLength: {
                 value: 2,
@@ -148,6 +204,7 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
         <div className={INPUT_STYLES}>
           <h5>Роль</h5>
           <input
+            disabled={!(user.isAdmin)}
             autoComplete="off"
             className={REQUIRED_STYLES}
             {...register("role", {

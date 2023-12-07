@@ -47,7 +47,7 @@ export const EmployeesPage: React.FC = () => {
         {(!isLoading) ? (
           <div className={CONTAINER_STYLES}>
             {!areAnyUsers ? (<NotData />) : (users!.map((user: UserState) => (
-              <NavLink to={`${EMPLOYEES_PAGE_URL}/${user.id}`} key = {user.id}>
+              <NavLink to={`${EMPLOYEES_PAGE_URL}/${user.idUser}`} key = {user.idUser}>
                 <p className={TITLE_EMPLOYEE_STYLES}>{`${user.lastName} ${user.firstName} ${user.surname}`}</p>
                 <p className={TITLE_DATE_STYLES}>{user.email}</p>
                 <p className={TITLE_NAME_STYLES}>{user.role}</p>

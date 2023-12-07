@@ -1,14 +1,16 @@
+/* eslint-disable no-console */
 import {useCallback, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/application/ApplicationPage.module.scss";
-import {getDoc, doc, DocumentData, updateDoc, deleteDoc} from "firebase/firestore";
+import {getDoc, doc, DocumentData, updateDoc, deleteDoc, query, collection, where, getDocs} from "firebase/firestore";
 import {db} from "src/firebase";
 import {Spinner} from "src/app/components/spinner/Spinner";
 import {getFormatDate} from "src/app/utility/getFormatDate";
 import {AppState} from "src/app/store";
 import {useDispatch, useSelector} from "react-redux";
 import {removeApplication, updateApplication} from "src/app/store/applications/slices/applicationSlice";
+import {UserState} from "src/app/store/user/slices/userSlice";
 
 /**
  * Application page
@@ -25,7 +27,8 @@ export const ApplicationPage = (): any => {
   const BUTTON_OPEN_STYLES = clsx(styles.status_open, styles.status_btn);
   const BUTTON_CLOSE_STYLES = clsx(styles.status_closed, styles.status_btn);
 
-  const isAdmin = useSelector((state: AppState) => state.users.user!.isAdmin);
+  const user = useSelector((state: AppState) => state.users.user);
+  const {isAdmin}: UserState = (user);
   const {id}: any = useParams<{id?: string}>();
   const [app, setApp] = useState<DocumentData>();
   const [loading, setLoading] = useState(false);
@@ -34,6 +37,7 @@ export const ApplicationPage = (): any => {
   const navigate = useNavigate();
   // Кнопка назад
   const goBack = (): void => navigate(-1);
+  const fullNameUser = `${user!.lastName} ${user!.firstName} ${user!.surname}`;
 
   // Получение данных заявки по id
   const getApplicationById = useCallback(async (): Promise<void> => {
@@ -43,29 +47,43 @@ export const ApplicationPage = (): any => {
     const snap = await getDoc(doc(db, "applications", id));
 
     if (snap.exists()) {
-      // Записываем данные заявки в state
-      setApp(snap.data());
+      const {idUser, email, title, description, parlor, comment, status, date}: any = snap.data();
 
-      const {author, email, title, description, parlor, comment, status}: any = snap.data();
+      // Получение данных user из Firestore по условию
+      const userData = query(collection(db, "users"),
+        where("idUser", "==", idUser));
+      const querySnapshotUser = await getDocs(userData);
+
+      if(!querySnapshotUser.empty) {
+        const docUser = querySnapshotUser.docs[0]!.data();
+        const author = `${docUser["lastName"]} ${docUser["firstName"]} ${docUser["surname"]}`;
+        // Перевод даты из Firestore в строку
+        const dateString = getFormatDate(date.seconds);
+
+        // Записываем данные заявки в state
+        setApp({idUser, author, email, title, description, parlor, comment, status, date: dateString});
+      }
 
       if (status === "Открыта") {
         setIsOpenApp(true);
       } else {
         setIsOpenApp(false);
       }
-      // Перевод даты из Firestore в строку
-      const date = getFormatDate(snap.data()["date"].seconds);
+
+      // Перевод даты в строку
+      const dateString = getFormatDate(date.seconds);
 
       // Добавление данных заявки в store
       dispatch(
         updateApplication({
           id,
-          author,
+          idUser,
+          author: fullNameUser,
           email,
           title,
           description,
           parlor,
-          date,
+          date: dateString,
           comment,
           status,
         }),
@@ -144,7 +162,7 @@ export const ApplicationPage = (): any => {
               <p>{app["title"]}</p>
               <p>{app["description"]}</p>
               <p>{app["parlor"]}</p>
-              <p>{getFormatDate(app["date"].seconds)}</p>
+              <p>{app["date"]}</p>
               <p>
                 <span className={(app["status"] === "Открыта") ? STATUS_OPEN_STYLES : STATUS_CLOSED_STYLES}>{app["status"]}</span>
               </p>
