@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {memo, useState, useCallback} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {collection, query, where, orderBy, limit, getDocs} from "firebase/firestore";
@@ -38,6 +39,7 @@ export const UserPage = memo((): any => {
   const LINK_ACTIVE__STYLES = clsx(styles.link, styles.active);
 
   const {isAuth}: UserState = useAuth();
+  console.log(isAuth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
