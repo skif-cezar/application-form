@@ -8,6 +8,8 @@ import {addEmploye, addIsShowEmployees, addUserLastVisible} from "src/app/store/
 export function useShowNextUsers(): any {
   const dispatch = useDispatch();
 
+  // Получение данных о user из store
+  const user = useSelector((state: AppState) => state.users.user);
   // Получение последних видимых заявок из store
   const lastVisible = useSelector((state: AppState) => state.users.userLastVisible);
   // Получение информации о показе alert из store
@@ -44,7 +46,7 @@ export function useShowNextUsers(): any {
 
         // Добавление данных заявки в store
         dispatch(
-          addEmploye({firstName, surname, lastName, token, idUser, isLoggedIn, isAdmin, role}),
+          addEmploye({firstName, surname, lastName, token, idUser, email: user.email, isLoggedIn, isAdmin, role}),
         );
       });
     };

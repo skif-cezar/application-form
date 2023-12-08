@@ -120,7 +120,7 @@ export const AdminPage = memo((): any => {
 
         // Добавление данных заявки в store
         dispatch(
-          addEmploye({firstName, surname, lastName, token, idUser, isLoggedIn, isAdmin, role}),
+          addEmploye({firstName, surname, lastName, token, idUser, email: user.email, isLoggedIn, isAdmin, role}),
         );
       });
     } else {

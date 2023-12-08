@@ -96,11 +96,12 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
                 firstName: toCapitalize(data.firstName),
                 surname: toCapitalize(data.surname),
                 lastName: data.lastName.toUpperCase(),
+                email: data.email,
                 role: docUser["role"],
               }),
             );
-            alert("Данные успешно обновлены");
-            // window.location.reload();
+            alert("Данные успешно обновлены. Авторизируйтесь сново");
+            window.location.reload();
           }
         } else {
         // eslint-disable-next-line no-console
