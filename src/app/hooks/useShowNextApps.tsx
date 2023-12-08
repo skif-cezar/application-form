@@ -9,14 +9,12 @@ import {
   addApplication,
   addIsShowAlert,
 } from "src/app/store/applications/slices/applicationSlice";
-import {UserState} from "src/app/store/user/slices/userSlice";
 
 export function useShowNextApps(): any {
   const dispatch = useDispatch();
 
   // Получение данных user из store
   const user = useSelector((state: AppState) => state.users.user);
-  const {email}: UserState = user;
   // Админ или обычный юзер из store
   const isAdmin = useSelector((state: AppState) => state.users.user!.isAdmin);
 
@@ -74,7 +72,6 @@ export function useShowNextApps(): any {
             id,
             idUser,
             author,
-            email,
             title,
             description,
             parlor,

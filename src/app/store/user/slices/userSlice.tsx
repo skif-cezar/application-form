@@ -4,7 +4,6 @@ export interface UserState {
   firstName: string | null;
   surname: string | null;
   lastName: string | null;
-  email: string | null;
   token: string | null;
   idUser: string | null;
   isLoggedIn: boolean;
@@ -25,7 +24,6 @@ const initialState: EmployeesState = {
     firstName: null,
     surname: null,
     lastName: null,
-    email: null,
     token: null,
     idUser: null,
     isLoggedIn: false,
@@ -71,7 +69,6 @@ export const userSlice = createSlice({
       state.user.firstName = action.payload.firstName;
       state.user.surname = action.payload.surname;
       state.user.lastName = action.payload.lastName;
-      state.user.email = action.payload.email;
       state.user.token = action.payload.token;
       state.user.idUser = action.payload.idUser;
       state.user.isLoggedIn = action.payload.isLoggedIn;
@@ -82,7 +79,6 @@ export const userSlice = createSlice({
       state.user.firstName = null;
       state.user.surname = null;
       state.user.lastName = null;
-      state.user.email = null;
       state.user.token = null;
       state.user.idUser = null;
       state.user.isLoggedIn = false;

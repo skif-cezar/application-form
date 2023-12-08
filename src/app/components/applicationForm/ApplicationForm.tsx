@@ -32,7 +32,6 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
 
   // Данные пользователя из store
   const user = useSelector((state: AppState) => state.users.user);
-  const userEmail = user!.email;
 
   const {
     register,
@@ -49,7 +48,6 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
       // Добавление данных в Firestore db
       const docRef = await addDoc(collection(db, "applications"), {
         idUser: user.idUser,
-        email: userEmail,
         title: data.title,
         description: data.description,
         parlor: data.parlor,

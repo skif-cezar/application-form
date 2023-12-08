@@ -69,7 +69,7 @@ export const AdminPage = memo((): any => {
       querySnapshot.forEach((doc: any) => {
         // id заявки
         const {id}: ApplicationState = doc;
-        const {idUser, author, email, title, description, parlor, comment, status}: ApplicationState = doc.data();
+        const {idUser, author, title, description, parlor, comment, status}: ApplicationState = doc.data();
 
         // Перевод даты из Firestore в строку
         const date = getFormatDate(doc.data().date.seconds);
@@ -80,7 +80,6 @@ export const AdminPage = memo((): any => {
             id,
             idUser,
             author,
-            email,
             title,
             description,
             parlor,
@@ -117,11 +116,11 @@ export const AdminPage = memo((): any => {
       );
 
       querySnapshot.forEach((doc: any) => {
-        const {firstName, surname, lastName, email, token, idUser, isLoggedIn, isAdmin, role}: any = doc.data();
+        const {firstName, surname, lastName, token, idUser, isLoggedIn, isAdmin, role}: any = doc.data();
 
         // Добавление данных заявки в store
         dispatch(
-          addEmploye({firstName, surname, lastName, email, token, idUser, isLoggedIn, isAdmin, role}),
+          addEmploye({firstName, surname, lastName, token, idUser, isLoggedIn, isAdmin, role}),
         );
       });
     } else {

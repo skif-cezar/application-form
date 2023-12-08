@@ -47,7 +47,7 @@ export const ApplicationPage = (): any => {
     const snap = await getDoc(doc(db, "applications", id));
 
     if (snap.exists()) {
-      const {idUser, email, title, description, parlor, comment, status, date}: any = snap.data();
+      const {idUser, title, description, parlor, comment, status, date}: any = snap.data();
 
       // Получение данных user из Firestore по условию
       const userData = query(collection(db, "users"),
@@ -61,7 +61,7 @@ export const ApplicationPage = (): any => {
         const dateString = getFormatDate(date.seconds);
 
         // Записываем данные заявки в state
-        setApp({idUser, author, email, title, description, parlor, comment, status, date: dateString});
+        setApp({idUser, author, title, description, parlor, comment, status, date: dateString});
       }
 
       if (status === "Открыта") {
@@ -79,7 +79,6 @@ export const ApplicationPage = (): any => {
           id,
           idUser,
           author: fullNameUser,
-          email,
           title,
           description,
           parlor,

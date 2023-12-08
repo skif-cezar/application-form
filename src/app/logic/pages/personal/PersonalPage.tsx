@@ -8,7 +8,9 @@ import {AppState} from "src/app/store";
 import {query, collection, where, getDocs, updateDoc} from "firebase/firestore";
 import {db} from "src/firebase";
 import {updateUser} from "src/app/store/user/slices/userSlice";
-// import {getAuth} from "firebase/auth";
+import {toCapitalize} from "src/app/utility/toCapitalize";
+import {getAuth, verifyBeforeUpdateEmail} from "firebase/auth";
+import {useAuth} from "src/app/hooks/useAuth";
 
 export type FieldsForm = {
   firstName: string;
@@ -42,7 +44,8 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
   const user = useSelector((state: AppState) => state.users.user);
   const userFullName = `${user!.lastName} ${user!.firstName} ${user!.surname}`;
   const dispatch = useDispatch();
-  // const auth = getAuth();
+  const {isAuth}: {isAuth: boolean} = useAuth();
+  const auth = getAuth();
 
   // Получение данных user из Firestore по условию
   const userData = query(collection(db, "users"),
@@ -64,54 +67,45 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
     setValue("role", user.role);
   }, [user, setValue]);
 
-  // Переводит строку в формат 1-я заглавна, остальные - нижний регистр
-  const toCapitalize = (str: string): string => {
-    const lowerCaseStr = str.toLowerCase();
-    if (!lowerCaseStr) {
-      return lowerCaseStr;
-    }
-    return lowerCaseStr[0]!.toUpperCase() + lowerCaseStr.slice(1);
-
-  };
-
   const onSubmit = async (data: FieldsForm): Promise<void> => {
 
     try {
-      /* updateEmail(auth.currentUser, data.email).then(() => {
+      const userIsLoggedIn = auth.currentUser;
+
+      if(isAuth && userIsLoggedIn) {
+        await verifyBeforeUpdateEmail(userIsLoggedIn, data.email);
         // Email updated!
-      }).catch((error: any) => {
-        console.error("Ошибка обновления Email", error);
-      }); */
-      const querySnapshot = await getDocs(userData);
 
-      // Обновить данные user
-      if (!querySnapshot.empty) {
-        const doc = querySnapshot.docs[0];
-        const docUser = doc!.data();
+        const querySnapshot = await getDocs(userData);
 
-        if(doc) {
-          await updateDoc(doc.ref, {
-            email: data.email,
-            firstName: toCapitalize(data.firstName),
-            surname: toCapitalize(data.surname),
-            lastName: data.lastName.toUpperCase(),
-          });
+        // Обновить данные user
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          const docUser = doc!.data();
 
-          // Добавление пользователя в store
-          dispatch(
-            updateUser({
+          if(doc) {
+            await updateDoc(doc.ref, {
               firstName: toCapitalize(data.firstName),
               surname: toCapitalize(data.surname),
               lastName: data.lastName.toUpperCase(),
-              email: data.email,
-              role: docUser["role"],
-            }),
-          );
-          alert("Данные успешно обновлены");
-        }
-      } else {
+            });
+
+            // Добавление пользователя в store
+            dispatch(
+              updateUser({
+                firstName: toCapitalize(data.firstName),
+                surname: toCapitalize(data.surname),
+                lastName: data.lastName.toUpperCase(),
+                role: docUser["role"],
+              }),
+            );
+            alert("Данные успешно обновлены");
+            // window.location.reload();
+          }
+        } else {
         // eslint-disable-next-line no-console
-        console.log("No matching documents.");
+          console.log("No matching documents.");
+        }
       }
     } catch (e) {
       console.error("Ошибка изменения данных: ", e);
@@ -186,7 +180,7 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
           {errors.lastName && <span className={ERRORS_STYLES}>{errors.lastName.message}</span>}
         </div>
         <div className={INPUT_STYLES}>
-          <h5>Email</h5>
+          <h5>Логин (Email)</h5>
           <input
             autoComplete="on"
             className={REQUIRED_STYLES}

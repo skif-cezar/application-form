@@ -12,6 +12,7 @@ import clsx from "clsx";
 import styles from "src/app/components/registration/Registration.module.scss";
 import {addDoc, collection} from "firebase/firestore";
 import {db} from "src/firebase";
+import {toCapitalize} from "src/app/utility/toCapitalize";
 
 export type FieldsForm = {
   firstName: string;
@@ -48,16 +49,6 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
 
   const navigate = useNavigate();
 
-  // Переводит строку в формат 1-я заглавна, остальные - нижний регистр
-  const toCapitalize = (str: string): string => {
-    const lowerCaseStr = str.toLowerCase();
-    if (!lowerCaseStr) {
-      return lowerCaseStr;
-    }
-    return lowerCaseStr[0]!.toUpperCase() + lowerCaseStr.slice(1);
-
-  };
-
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     // Очистить поля input
     reset();
@@ -78,7 +69,6 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
                 firstName: toCapitalize(data.firstName),
                 surname: toCapitalize(data.surname),
                 lastName: data.lastName.toUpperCase(),
-                email: user.email,
                 idUser: user.uid,
                 isAdmin: false,
                 role: "Пользователь",
@@ -94,7 +84,6 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
                 firstName: toCapitalize(data.firstName),
                 surname: toCapitalize(data.surname),
                 lastName: data.lastName.toUpperCase(),
-                email: user.email,
                 idUser: user.uid,
                 token: user.accessToken,
                 isLoggedIn: true,

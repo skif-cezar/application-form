@@ -45,43 +45,40 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
     const auth = getAuth();
 
-    // Получение данных user по email из Firestore
-    const userData = query(collection(db, "users"), where("email", "==", data.email));
-    const querySnapshot = await getDocs(userData);
-
     // Логика авторизации пользователя и добавления его данных в store
-    signInWithEmailAndPassword(auth, data.email, data.password)
-      .then(({user}: {user: any}) => {
+    try {
+      const userCredentialImpl = await signInWithEmailAndPassword(auth, data.email, data.password);
+      const {user}: any = userCredentialImpl;
+      // Получение данных user по id из Firestore
+      const userData = query(collection(db, "users"), where("idUser", "==", user.uid));
+      const querySnapshot = await getDocs(userData);
 
-        if(querySnapshot.docs.length !== 0) {
-          querySnapshot.forEach((doc: any) => {
-            console.log(doc.data());
-            const {firstName, surname, lastName, email, isAdmin, role}: UserState = doc.data();
+      if(querySnapshot.docs.length !== 0) {
+        querySnapshot.forEach((doc: any) => {
+          const {firstName, surname, lastName, isAdmin, role}: UserState = doc.data();
 
-            // Добавление пользователя в store
-            dispatch(
-              setUser({
-                firstName,
-                surname,
-                lastName,
-                email,
-                idUser: user.uid,
-                token: user.accessToken,
-                isLoggedIn: true,
-                isAdmin,
-                role,
-              }),
-            );
-          });
-        } else {
-          alert("Пользователь не найден");
-        }
-      })
-      .catch((error: any) => {
-        // eslint-disable-next-line no-console
-        console.log(error);
-        alert("Пользователь не зарегистрирован или неверно введены данные!");
-      });
+          // Добавление пользователя в store
+          dispatch(
+            setUser({
+              firstName,
+              surname,
+              lastName,
+              idUser: user.uid,
+              token: user.accessToken,
+              isLoggedIn: true,
+              isAdmin,
+              role,
+            }),
+          );
+        });
+
+      } else {
+        alert("Пользователь не найден");
+      }
+    } catch(error) {
+      console.log(error);
+      alert("Пользователь не зарегистрирован или неверно введены данные!");
+    }
   };
 
   const [type, setType] = useState("password");

@@ -37,7 +37,7 @@ export const UserPage = memo((): any => {
   const LINK_STYLES = clsx(styles.link);
   const LINK_ACTIVE__STYLES = clsx(styles.link, styles.active);
 
-  const {isAuth, email}: UserState = useAuth();
+  const {isAuth}: UserState = useAuth();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -89,7 +89,6 @@ export const UserPage = memo((): any => {
             id,
             idUser,
             author,
-            email,
             title,
             description,
             parlor,
