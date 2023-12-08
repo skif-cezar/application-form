@@ -77,7 +77,7 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
         alert("Пользователь не найден");
       }
     } catch(error) {
-      console.log(error);
+      console.error(error);
       alert("Пользователь не зарегистрирован или неверно введены данные!");
     }
   };

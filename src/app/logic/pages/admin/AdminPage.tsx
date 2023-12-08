@@ -90,8 +90,7 @@ export const AdminPage = memo((): any => {
         );
       });
     } else {
-      // eslint-disable-next-line no-console
-      console.log("Заявок нет");
+      alert("Заявок нет");
     }
     setLoading(false);
 
@@ -124,8 +123,7 @@ export const AdminPage = memo((): any => {
         );
       });
     } else {
-      // eslint-disable-next-line no-console
-      console.log("Пользователей нет");
+      alert("Пользователей нет");
     }
     setLoading(false);
 

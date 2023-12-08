@@ -65,7 +65,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
           try {
             // Добавление данных в Firestore db
             const addUser = async (): Promise<void> => {
-              const docRef = await addDoc(collection(db, "users"), {
+              await addDoc(collection(db, "users"), {
                 firstName: toCapitalize(data.firstName),
                 surname: toCapitalize(data.surname),
                 lastName: data.lastName.toUpperCase(),
@@ -73,9 +73,6 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
                 isAdmin: false,
                 role: "Пользователь",
               });
-
-              // eslint-disable-next-line no-console
-              console.log("Заявка создана с ID: ", docRef.id);
             };
 
             // Добавление пользователя в store

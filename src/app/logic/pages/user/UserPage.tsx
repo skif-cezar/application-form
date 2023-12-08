@@ -99,8 +99,7 @@ export const UserPage = memo((): any => {
         );
       });
     } else {
-      // eslint-disable-next-line no-console
-      console.log("Заявок нет");
+      alert("Заявок нет");
     }
     setLoading(false);
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, {forwardRef, memo, useEffect} from "react";
 import AvatarSrc from "src/resources/avatar.png";
 import clsx from "clsx";
@@ -68,7 +67,6 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
   }, [user, setValue]);
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
-    console.log(data);
 
     try {
       const userIsLoggedIn = auth.currentUser;
@@ -110,8 +108,7 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
             }
           }
         } else {
-        // eslint-disable-next-line no-console
-          console.log("No matching documents.");
+          alert("Нет данных.");
         }
       }
     } catch (e) {

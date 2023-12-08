@@ -46,7 +46,7 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
 
     try {
       // Добавление данных в Firestore db
-      const docRef = await addDoc(collection(db, "applications"), {
+      await addDoc(collection(db, "applications"), {
         idUser: user.idUser,
         title: data.title,
         description: data.description,
@@ -55,9 +55,6 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
         comment: data.comment,
         status: "Открыта",
       });
-
-      // eslint-disable-next-line no-console
-      console.log("Заявка создана с ID: ", docRef.id);
     } catch (e) {
       console.error("Ошибка добавления документа: ", e);
     }
