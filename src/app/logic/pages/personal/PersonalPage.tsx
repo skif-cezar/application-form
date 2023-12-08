@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, {forwardRef, memo, useEffect} from "react";
 import AvatarSrc from "src/resources/avatar.png";
 import clsx from "clsx";
@@ -64,24 +65,26 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
     setValue("surname", user.surname);
     setValue("lastName", user.lastName);
     setValue("email", user.email);
-    setValue("role", user.role);
   }, [user, setValue]);
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
+    console.log(data);
 
     try {
       const userIsLoggedIn = auth.currentUser;
+      const isChangeEmail = (user.email !== data.email);
 
       if(isAuth && userIsLoggedIn) {
-        await verifyBeforeUpdateEmail(userIsLoggedIn, data.email);
-        // Email updated!
+        if(isChangeEmail) {
+          await verifyBeforeUpdateEmail(userIsLoggedIn, data.email);
+          // Email updated!
+        }
 
         const querySnapshot = await getDocs(userData);
 
         // Обновить данные user
         if (!querySnapshot.empty) {
           const doc = querySnapshot.docs[0];
-          const docUser = doc!.data();
 
           if(doc) {
             await updateDoc(doc.ref, {
@@ -97,11 +100,14 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
                 surname: toCapitalize(data.surname),
                 lastName: data.lastName.toUpperCase(),
                 email: data.email,
-                role: docUser["role"],
               }),
             );
-            alert("Данные успешно обновлены. Авторизируйтесь сново");
-            window.location.reload();
+            if(isChangeEmail) {
+              alert("Данные успешно обновлены. Авторизируйтесь сново");
+              window.location.reload();
+            } else {
+              alert("Данные успешно обновлены.");
+            }
           }
         } else {
         // eslint-disable-next-line no-console
@@ -195,23 +201,6 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
             maxLength={60}
           />
           {errors.email && <span className={ERRORS_STYLES}>{errors.email.message}</span>}
-        </div>
-        <div className={INPUT_STYLES}>
-          <h5>Роль</h5>
-          <input
-            disabled={!(user.isAdmin)}
-            autoComplete="off"
-            className={REQUIRED_STYLES}
-            {...register("role", {
-              minLength: {
-                value: 2,
-                message: "Минимум 2 символа",
-              },
-            })}
-            type="text"
-            maxLength={40}
-          />
-          {errors.role && <span className={ERRORS_STYLES}>{errors.role.message}</span>}
         </div>
 
         <button className={BUTTON_STYLES} type="submit">

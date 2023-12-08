@@ -46,7 +46,12 @@
     color: #6d7885;
   }
 
-  & input {
+  & select {
+    cursor: pointer;
+  }
+
+  & input,
+  & select {
     font-size: 1rem;
     position: relative;
     background-color: #f3f3f3;
@@ -58,11 +63,13 @@
     transition: all 0.2s ease;
   }
 
-  & input:hover {
+  & input:hover,
+  & select:hover {
     border-color: #d1d1d1;
   }
 
-  & input:focus {
+  & input:focus,
+  & select:focus {
     border-color: #000;
   }
 

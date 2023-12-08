@@ -67,6 +67,7 @@ export const ProfilLink: React.FC<ProfilLinkProps> = (props: ProfilLinkProps) =>
         </div>
         <NavLink
           to={PERSONAL_USER_PAGE_PATH} className={SETTINS_STYLES}
+          onClick={showMenu}
         >
           Настройки
         </NavLink>
