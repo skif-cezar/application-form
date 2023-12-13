@@ -123,6 +123,15 @@
 .title_status {
   flex: 11.083%;
   min-width: 133px;
+  background-color: #f7f6fe;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  & option {
+    text-transform: none;
+  }
 }
 
 .container {

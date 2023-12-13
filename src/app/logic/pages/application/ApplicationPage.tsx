@@ -173,7 +173,7 @@ export const ApplicationPage = (): any => {
           </div>
           {user.role === "Специалист" ? (
             <button
-              className={(statusApp === "Выполнена") ? BUTTON_CLOSE_STYLES : BUTTON_OPEN_STYLES}
+              className={(statusApp === "Выполнена") ? "Стиль поменять" : BUTTON_OPEN_STYLES}
               type="button" onClick={() => {updateStatus();}}
             >
               {(statusApp === "Выполнена") ? "Открыть заявку" : "Закрыть заявку"}

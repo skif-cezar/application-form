@@ -30,7 +30,7 @@ export function useShowNextApps(): any {
       );
       alert("Это все заявки");
     }
-  }, [lastVisible]);
+  }, [dispatch, lastVisible]);
 
   if(lastVisible) {
     const getNextApps = async (): Promise<void> => {

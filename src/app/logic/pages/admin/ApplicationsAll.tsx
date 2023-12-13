@@ -1,15 +1,25 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/typedef */
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "src/app/store";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/user/UserPage.module.scss";
 import {Card} from "src/app/components/card/Card";
-import {ApplicationState} from "src/app/store/applications/slices/applicationSlice";
+import {
+  ApplicationState,
+  addAppLastVisible,
+  addApplication,
+  clearApplication,
+} from "src/app/store/applications/slices/applicationSlice";
 import {Pagination} from "src/app/components/pagination/Pagination";
 import {NotData} from "src/app/components/notData/NotData";
 import {Spinner} from "src/app/components/spinner/Spinner";
+import {collection, getDocs, limit, orderBy, query, where} from "firebase/firestore";
+import {db} from "src/firebase";
+import {getFormatDate} from "src/app/utility/getFormatDate";
+import {UserState} from "src/app/store/user/slices/userSlice";
 
 /**
  *  Path to applications all
@@ -29,15 +39,84 @@ export const ApplicationsAll: React.FC = () => {
   const TITLE_STATUS_STYLES = clsx(styles.title_status);
   const CONTAINER_STYLES = clsx(styles.container);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+  // Состояние выбора статуса заявки для фильтрации
+  const [selectedStatus, setSelectedStatus] = useState("Все статусы");
   // Получение всех заявок пользователя из store
   const apps = useSelector((state: AppState) => state.applications.applications);
 
   const areAnyApps = apps!.length;
 
+  const getApplicationData = useCallback(async (): Promise<void> => {
+    let appData;
+    // Очистить данные о заявках и в store
+    dispatch(
+      clearApplication(),
+    );
+
+    if(selectedStatus === "Все статусы") {
+      // Получение всех заявок из Firestore по условию с лимитом по 8 записей
+      appData = query(collection(db, "applications"),
+        orderBy("date", "desc"),
+        limit(8));
+    } else {
+      // Получение заявок из Firestore по условию выбора статуса заявки с лимитом по 8 записей
+      appData = query(collection(db, "applications"),
+        where("status", "==", selectedStatus),
+        orderBy("date", "desc"),
+        limit(8));
+    }
+
+    const querySnapshot = await getDocs(appData);
+
+    if(querySnapshot.docs.length !== 0) {
+      // Получение последних видимых записей
+      const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+      // Добавление последних видимых данных заявки в store
+      dispatch(
+        addAppLastVisible(lastVisible),
+      );
+
+      querySnapshot.forEach(async(doc: any) => {
+        // id заявки
+        const {id}: ApplicationState = doc;
+        const {idUser, title, description, parlor, comment, status}: ApplicationState = doc.data();
+        // Перевод даты из Firestore в строку
+        const date = getFormatDate(doc.data().date.seconds);
+
+        // Получение данных user из Firestore по условию
+        const userData = query(collection(db, "users"),
+          where("idUser", "==", idUser));
+
+        const querySnapshotUser = await getDocs(userData);
+
+        querySnapshotUser.forEach((userDoc: any) => {
+          const {firstName, lastName, surname}: UserState = userDoc.data();
+          const author = `${lastName} ${firstName} ${surname}`;
+
+          // Добавление данных заявки в store
+          dispatch(
+            addApplication({
+              id,
+              idUser,
+              author,
+              title,
+              description,
+              parlor,
+              date,
+              comment,
+              status,
+            }),
+          );
+        });
+      });
+    }
+  }, [selectedStatus]);
+
   useEffect(() => {
-    setIsLoading(false);
-  }, [apps]);
+    getApplicationData();
+  }, [selectedStatus]);
 
   return (
     <>
@@ -47,9 +126,20 @@ export const ApplicationsAll: React.FC = () => {
           <p className={TITLE_DATE_STYLES}>Дата</p>
           <p className={TITLE_NAME_STYLES}>Тема заявки</p>
           <p className={TITLE_PARLOR_STYLES}>Кабинет</p>
-          <p className={TITLE_STATUS_STYLES}>Статус</p>
+          <select
+            className={TITLE_STATUS_STYLES}
+            value={selectedStatus}
+            onChange={(e) =>
+              setSelectedStatus(e.target.value)
+            }
+          >
+            <option value="Все статусы">Все статусы</option>
+            <option value="Новая">Новая</option>
+            <option value="В работе">В работе</option>
+            <option value="Выполнена">Выполнена</option>
+          </select>
         </div>
-        {(!isLoading) ? (
+        {(areAnyApps) ? (
           <div className={CONTAINER_STYLES}>
             {!areAnyApps ? (<NotData />) : (apps!.map((app: ApplicationState) => (
               <NavLink to={`${APPLICATIONS_URL}/${app.id}`} key = {app.id}>
