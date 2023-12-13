@@ -3,7 +3,9 @@ import AvatarSrc from "src/resources/avatar.png";
 import clsx from "clsx";
 import styles from "src/app/components/profilLink/ProfilLink.module.scss";
 import {NavLink} from "react-router-dom";
-import {PERSONAL_USER_PAGE_PATH} from "src/app/logic/pages/personal/PersonalPage";
+import {PERSONAL_ADMIN_PAGE_PATH, PERSONAL_USER_PAGE_PATH} from "src/app/logic/pages/personal/PersonalPage";
+import {useSelector} from "react-redux";
+import {AppState} from "src/app/store";
 
 /**
  * ProfilLink props
@@ -31,6 +33,9 @@ export const ProfilLink: React.FC<ProfilLinkProps> = (props: ProfilLinkProps) =>
   const SETTINS_STYLES = clsx(styles.settings);
   const LOGOUT_STYLES = clsx(styles.logout);
   const HIDE_STYLES = clsx(styles.hide);
+
+  // Получение данных о user из store
+  const user = useSelector((state: AppState) => state.users.user);
 
   const [isShow, setIsShow] = useState(false);
 
@@ -66,7 +71,7 @@ export const ProfilLink: React.FC<ProfilLinkProps> = (props: ProfilLinkProps) =>
           </div>
         </div>
         <NavLink
-          to={PERSONAL_USER_PAGE_PATH} className={SETTINS_STYLES}
+          to={(user.isAdmin) ? PERSONAL_ADMIN_PAGE_PATH : PERSONAL_USER_PAGE_PATH} className={SETTINS_STYLES}
           onClick={showMenu}
         >
           Настройки

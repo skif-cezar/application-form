@@ -1,6 +1,7 @@
 import React, {memo} from "react";
 import clsx from "clsx";
 import styles from "src/app/components/card/Card.module.scss";
+import {setStatusStyle} from "src/app/utility/setStatusStyle";
 
 /**
  * Card props
@@ -10,7 +11,7 @@ export interface CardProps {
   date: string | null;
   name: string | null;
   parlor: string | null;
-  status: string | null;
+  status: string | null | undefined;
 }
 
 /**
@@ -23,8 +24,6 @@ export const Card: React.FC<CardProps> = memo((props: CardProps) => {
   const NAME_STYLES = clsx(styles.name);
   const PARLOR_STYLES = clsx(styles.parlor);
   const STATUS_STYLES = clsx(styles.status);
-  const STATUS_OPEN_STYLES = clsx(styles.status_open);
-  const STATUS_CLOSED_STYLES = clsx(styles.status_closed);
 
   return (
     <div className={CARD_STYLES}>
@@ -33,7 +32,7 @@ export const Card: React.FC<CardProps> = memo((props: CardProps) => {
       <p className={NAME_STYLES}>{props.name}</p>
       <p className={PARLOR_STYLES}>{props.parlor}</p>
       <p className={STATUS_STYLES}>
-        <span className={(props.status === "Открыта") ? STATUS_OPEN_STYLES : STATUS_CLOSED_STYLES}>{props.status}</span>
+        <span className={setStatusStyle(props.status)}>{props.status}</span>
       </p>
     </div>
   );

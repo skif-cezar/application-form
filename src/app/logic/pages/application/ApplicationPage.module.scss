@@ -36,26 +36,16 @@
   font-weight: 600;
 }
 
-.status_open,
-.status_closed {
-  padding: 8px 12px;
-  border-radius: 22px;
-}
-
 .status_btn {
   margin: 30px auto 0 auto;
   margin-top: 30px;
   padding: 12px 12px;
   border-radius: 22px;
   width: 300px;
+  transition: all 80ms ease-in;
 }
 
-.status_open {
-  color: #1f9254;
-  background-color: #c6ffd2;
-}
-
-.status_closed {
+.btn_delete {
   color: #c54849;
   background-color: #ffb4b5;
 }

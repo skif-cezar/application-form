@@ -38,7 +38,10 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
   }: UseFormReturn<FieldsForm> = useForm<FieldsForm>({mode: "onBlur"});
 
   const dispatch = useDispatch();
+  // Текущий шаг авторизации
   const [currentStep, setCurrentStep] = useState(1);
+  const [type, setType] = useState("password");
+  const [icon, setIcon] = useState(eyeOff);
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     // Очищает поля input
@@ -95,9 +98,6 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
     }
   };
 
-  const [type, setType] = useState("password");
-  const [icon, setIcon] = useState(eyeOff);
-
   const handleToggle = (): void => {
     if (type === "password") {
       setIcon(eye);
@@ -108,7 +108,7 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
     }
   };
 
-  // Увеличивает значение текущего шага ргистрации
+  // Увеличивает значение текущего шага авторизации
   const nextStep = (e: React.MouseEvent<HTMLAnchorElement>): void => {
     e.preventDefault();
     // Очищает поля input

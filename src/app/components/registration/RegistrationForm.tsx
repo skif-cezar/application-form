@@ -46,8 +46,12 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
   }: UseFormReturn<FieldsForm> = useForm<FieldsForm>({mode: "onBlur"});
 
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
+  const password = watch("password");
+  // Текущий шаг регистрации
+  const [currentStep, setCurrentStep] = useState(1);
+  const [type, setType] = useState("password");
+  const [icon, setIcon] = useState(eyeOff);
 
   const onSubmit = async (data: FieldsForm): Promise<void> => {
     // Очистить поля input
@@ -104,12 +108,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
     }
   };
 
-  const password = watch("password");
-  const [currentStep, setCurrentStep] = useState(1);
-  const [type, setType] = useState("password");
-  const [icon, setIcon] = useState(eyeOff);
-
-  // Увеличивает значение текущего шага ргистрации
+  // Увеличивает значение текущего шага регистрации
   const nextStep = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
     const nextStepValue = currentStep + 1;

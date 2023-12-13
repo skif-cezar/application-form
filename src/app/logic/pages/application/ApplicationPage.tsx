@@ -11,6 +11,7 @@ import {AppState} from "src/app/store";
 import {useDispatch, useSelector} from "react-redux";
 import {removeApplication, updateApplication} from "src/app/store/applications/slices/applicationSlice";
 import {UserState} from "src/app/store/user/slices/userSlice";
+import {setStatusStyle} from "src/app/utility/setStatusStyle";
 
 /**
  * Application page
@@ -21,18 +22,16 @@ export const ApplicationPage = (): any => {
   const CONTAINER_STYLES = clsx(styles.container);
   const TITLE_ROWS_STYLES = clsx(styles.title_rows);
   const TEXT_ROWS_STYLES = clsx(styles.text_rows);
-  const STATUS_OPEN_STYLES = clsx(styles.status_open);
-  const STATUS_CLOSED_STYLES = clsx(styles.status_closed);
   const BUTTON_STYLES = clsx(styles.button);
+  const BUTTON_DELETE_STYLES = clsx(styles.btn_delete, styles.status_btn);
   const BUTTON_OPEN_STYLES = clsx(styles.status_open, styles.status_btn);
-  const BUTTON_CLOSE_STYLES = clsx(styles.status_closed, styles.status_btn);
 
   const user = useSelector((state: AppState) => state.users.user);
   const {isAdmin}: UserState = (user);
   const {id}: any = useParams<{id?: string}>();
   const [app, setApp] = useState<DocumentData>();
   const [loading, setLoading] = useState(false);
-  const [isOpenApp, setIsOpenApp] = useState(true);
+  const [statusApp, setStatusApp] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // Кнопка назад
@@ -64,10 +63,12 @@ export const ApplicationPage = (): any => {
         setApp({idUser, author, title, description, parlor, comment, status, date: dateString});
       }
 
-      if (status === "Открыта") {
-        setIsOpenApp(true);
-      } else {
-        setIsOpenApp(false);
+      if (status === "Новая") {
+        setStatusApp("Новая");
+      } else if(status === "В работе") {
+        setStatusApp("В работе");
+      } else if(status === "Выполнена") {
+        setStatusApp("Выполнена");
       }
 
       // Перевод даты в строку
@@ -103,10 +104,12 @@ export const ApplicationPage = (): any => {
     const appRef = doc(db, "applications", id);
 
     try {
-      if (isOpenApp) {
-        await updateDoc(appRef, {"status": "Закрыта"});
-      } else {
-        await updateDoc(appRef, {"status": "Открыта"});
+      if (statusApp === "Новая") {
+        await updateDoc(appRef, {"status": "Новая"});
+      } else if(statusApp === "В работе") {
+        await updateDoc(appRef, {"status": "В работе"});
+      } else if(statusApp === "Выполнена") {
+        await updateDoc(appRef, {"status": "Выполнена"});
       }
 
       getApplicationById();
@@ -114,7 +117,7 @@ export const ApplicationPage = (): any => {
     } catch(error) {
       console.error("Error updating status: ", error);
     }
-  }, [isOpenApp]);
+  }, [statusApp]);
 
   // Удаление заявки
   const deleteApp = useCallback(async (): Promise<void> => {
@@ -163,22 +166,22 @@ export const ApplicationPage = (): any => {
               <p>{app["parlor"]}</p>
               <p>{app["date"]}</p>
               <p>
-                <span className={(app["status"] === "Открыта") ? STATUS_OPEN_STYLES : STATUS_CLOSED_STYLES}>{app["status"]}</span>
+                <span className={setStatusStyle(app["status"])}>{app["status"]}</span>
               </p>
               <p>{app["comment"]}</p>
             </div>
           </div>
-          {isAdmin ? (
+          {user.role === "Специалист" ? (
             <button
-              className={(isOpenApp) ? BUTTON_CLOSE_STYLES : BUTTON_OPEN_STYLES}
+              className={(statusApp === "Выполнена") ? BUTTON_CLOSE_STYLES : BUTTON_OPEN_STYLES}
               type="button" onClick={() => {updateStatus();}}
             >
-              {isOpenApp ? "Закрыть заявку" : "Открыть заявку"}
+              {(statusApp === "Выполнена") ? "Открыть заявку" : "Закрыть заявку"}
             </button>
           ) : null}
           {isAdmin ? (
             <button
-              className={BUTTON_CLOSE_STYLES}
+              className={BUTTON_DELETE_STYLES}
               type="button" onClick={() => {deleteApp();}}
             >
               Удалить заявку

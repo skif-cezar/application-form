@@ -25,6 +25,7 @@ export type FieldsForm = {
  *  Path to personal page
  */
 export const PERSONAL_USER_PAGE_PATH = "/user/personal";
+export const PERSONAL_ADMIN_PAGE_PATH = "/admin/personal";
 
 /**
  * Personal page

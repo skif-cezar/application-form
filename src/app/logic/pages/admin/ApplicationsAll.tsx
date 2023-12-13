@@ -37,7 +37,7 @@ export const ApplicationsAll: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(false);
-  }, []);
+  }, [apps]);
 
   return (
     <>

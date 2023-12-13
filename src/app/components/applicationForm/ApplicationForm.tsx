@@ -53,7 +53,7 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
         parlor: data.parlor,
         date: serverTimestamp(),
         comment: data.comment,
-        status: "Открыта",
+        status: "Новая",
       });
     } catch (e) {
       console.error("Ошибка добавления документа: ", e);

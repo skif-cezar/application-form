@@ -31,8 +31,8 @@
 }
 
 .status {
-  flex: 8.3%;
-  min-width: 100px;
+  flex: 11.083%;
+  min-width: 133px;
   padding: 12px 0px;
 }
 
@@ -42,32 +42,38 @@
 }
 
 .date {
-  flex: 12.5%;
-  min-width: 150px;
+  flex: 10.5%;
+  min-width: 126px;
 }
 
 .name {
-  flex: 38.2%;
+  flex: 37.387%;
   min-width: 230px;
 }
 
 .parlor {
-  flex: 10.8%;
+  flex: 10.83%;
   min-width: 130px;
 }
 
-.status_open,
-.status_closed {
-  padding: 8px 12px;
-  border-radius: 22px;
+.status_working,
+.status_new,
+.status_completed {
+  padding: 5px 18px;
+  border-radius: 5px;
 }
 
-.status_open {
+.status_working {
   color: #1f9254;
   background-color: #c6ffd2;
 }
 
-.status_closed {
+.status_new {
   color: #c54849;
   background-color: #ffb4b5;
+}
+
+.status_completed {
+  color: #484ac5;
+  background-color: #b5b4ff;
 }

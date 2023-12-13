@@ -1,6 +1,6 @@
 import {memo, useState, useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {collection, query, orderBy, limit, getDocs} from "firebase/firestore";
+import {collection, query, orderBy, limit, getDocs, where} from "firebase/firestore";
 import {db} from "src/firebase";
 import {
   ApplicationState,
@@ -9,9 +9,9 @@ import {
   clearApplication,
 } from "src/app/store/applications/slices/applicationSlice";
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
-import {useAuth, UserState} from "src/app/hooks/useAuth";
+import {useAuth} from "src/app/hooks/useAuth";
 import {MAIN_PAGE_PATH} from "src/app/logic/layout/Layout";
-import {addEmploye, addUserLastVisible, clearEmployees, removeUser} from "src/app/store/user/slices/userSlice";
+import {UserState, addEmploye, addUserLastVisible, clearEmployees, removeUser} from "src/app/store/user/slices/userSlice";
 import {Spinner} from "src/app/components/spinner/Spinner";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/user/UserPage.module.scss";
@@ -20,6 +20,7 @@ import {getFormatDate} from "src/app/utility/getFormatDate";
 import {APPLICATIONS_URL} from "src/app/logic/pages/admin/ApplicationsAll";
 import {AppState} from "src/app/store";
 import {EMPLOYEES_PAGE_URL} from "src/app/logic/pages/employees/EmployeesPage";
+import {ProfilLink} from "src/app/components/profilLink/ProfilLink";
 
 /**
  *  Path to admin page
@@ -30,15 +31,13 @@ export const ADMIN_PAGE_URL = "/admin";
  * Admin page
  */
 export const AdminPage = memo((): any => {
-  const NAME_USER_STYLES = clsx(styles.user);
-  const BUTTON_STYLES = clsx(styles.button);
   const MENU_STYLES = clsx(styles.menu);
   const LIST_STYLES = clsx(styles.list);
   const ITEM_STYLES = clsx(styles.item);
   const LINK_STYLES = clsx(styles.link);
   const LINK_ACTIVE__STYLES = clsx(styles.link, styles.active);
 
-  const {isAuth}: UserState = useAuth();
+  const {isAuth}: any = useAuth();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -51,7 +50,7 @@ export const AdminPage = memo((): any => {
   const getApplicationData = useCallback(async (): Promise<void> => {
     setLoading(true);
 
-    // Получение данных из Firestore по условию с лимитом по 8 записей
+    // Получение заявок из Firestore по условию с лимитом по 8 записей
     const appData = query(collection(db, "applications"),
       orderBy("date", "desc"),
       limit(8));
@@ -66,31 +65,39 @@ export const AdminPage = memo((): any => {
         addAppLastVisible(lastVisible),
       );
 
-      querySnapshot.forEach((doc: any) => {
+      querySnapshot.forEach(async(doc: any) => {
         // id заявки
         const {id}: ApplicationState = doc;
-        const {idUser, author, title, description, parlor, comment, status}: ApplicationState = doc.data();
-
+        const {idUser, title, description, parlor, comment, status}: ApplicationState = doc.data();
         // Перевод даты из Firestore в строку
         const date = getFormatDate(doc.data().date.seconds);
 
-        // Добавление данных заявки в store
-        dispatch(
-          addApplication({
-            id,
-            idUser,
-            author,
-            title,
-            description,
-            parlor,
-            date,
-            comment,
-            status,
-          }),
-        );
+        // Получение данных user из Firestore по условию
+        const userData = query(collection(db, "users"),
+          where("idUser", "==", idUser));
+
+        const querySnapshotUser = await getDocs(userData);
+
+        querySnapshotUser.forEach((userDoc: any) => {
+          const {firstName, lastName, surname}: UserState = userDoc.data();
+          const author = `${lastName} ${firstName} ${surname}`;
+
+          // Добавление данных заявки в store
+          dispatch(
+            addApplication({
+              id,
+              idUser,
+              author,
+              title,
+              description,
+              parlor,
+              date,
+              comment,
+              status,
+            }),
+          );
+        });
       });
-    } else {
-      alert("Заявок нет");
     }
     setLoading(false);
 
@@ -137,10 +144,6 @@ export const AdminPage = memo((): any => {
     return (
       <>
         <nav className={MENU_STYLES}>
-          <div className={NAME_USER_STYLES}>
-            <span>{`${user!.role}:`}</span>
-            <span>{userFullName}</span>
-          </div>
           <ul className={LIST_STYLES}>
             <li className={ITEM_STYLES}>
               <NavLink
@@ -166,17 +169,14 @@ export const AdminPage = memo((): any => {
               </NavLink>
             </li>
           </ul>
-          <button
-            className={BUTTON_STYLES}
-            type="button"
+          <ProfilLink
+            fullName={userFullName} role={user!.role}
             onClick={() => {
               navigate(REGISTRATION_PAGE_PATH);
               dispatch(removeUser());
               dispatch(clearApplication());
             }}
-          >
-            Выйти из аккаунта
-          </button>
+          />
         </nav>
         {loading ? (<Spinner />) : (<Outlet />)}
       </>

@@ -12,7 +12,7 @@ import {AppState} from "src/app/store";
 import {ApplicationPage} from "src/app/logic/pages/application/ApplicationPage";
 import {ApplicationsAll, APPLICATIONS_URL} from "src/app/logic/pages/admin/ApplicationsAll";
 import {EmployeesPage, EMPLOYEES_PAGE_URL} from "src/app/logic/pages/employees/EmployeesPage";
-import {PERSONAL_USER_PAGE_PATH, PersonalPage} from "src/app/logic/pages/personal/PersonalPage";
+import {PERSONAL_ADMIN_PAGE_PATH, PERSONAL_USER_PAGE_PATH, PersonalPage} from "src/app/logic/pages/personal/PersonalPage";
 
 /**
  * The main component in app
@@ -61,6 +61,11 @@ export const App: React.FC = () => {
                 <Route path="/admin/" element={<Navigate to={APPLICATIONS_URL} />} />
                 <Route path={APPLICATIONS_URL} element={<ApplicationsAll />} />
                 <Route path={`${APPLICATIONS_URL}/:id`} element={<ApplicationPage />} />
+                <Route
+                  path={PERSONAL_ADMIN_PAGE_PATH} element={isLoggedIn ?
+                    (<PersonalPage />) :
+                    (<Navigate to={REGISTRATION_PAGE_PATH} />)}
+                />
               </Route>
               <Route element={<MainLayout />}>
                 <Route path={EMPLOYEES_PAGE_URL} element={<EmployeesPage />} />

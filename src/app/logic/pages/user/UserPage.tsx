@@ -9,8 +9,6 @@ import {
   clearApplication,
 } from "src/app/store/applications/slices/applicationSlice";
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
-import {useAuth, UserState} from "src/app/hooks/useAuth";
-import {MAIN_PAGE_PATH} from "src/app/logic/layout/Layout";
 import {removeUser} from "src/app/store/user/slices/userSlice";
 import {APPLICATION_FORM_URL} from "src/app/components/applicationForm/ApplicationForm";
 import {APPLICATION_USER_URL} from "src/app/logic/pages/user/ApplicationUser";
@@ -37,7 +35,6 @@ export const UserPage = memo((): any => {
   const LINK_STYLES = clsx(styles.link);
   const LINK_ACTIVE__STYLES = clsx(styles.link, styles.active);
 
-  const {isAuth}: UserState = useAuth();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -98,49 +95,44 @@ export const UserPage = memo((): any => {
           }),
         );
       });
-    } else {
-      alert("Заявок нет");
     }
     setLoading(false);
 
   }, []);
 
-  if (isAuth) {
-    return (
-      <>
-        <nav className={MENU_STYLES}>
-          <ul className={LIST_STYLES}>
-            <li className={ITEM_STYLES}>
-              <NavLink
-                to={APPLICATION_FORM_URL}
-                className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
-                onClick={() => dispatch(clearApplication())}
-              >
-                Новая заявка
-              </NavLink>
-            </li>
-            <li className={ITEM_STYLES}>
-              <NavLink
-                to={APPLICATION_USER_URL}
-                className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
-                onClick={getApplicationData}
-              >
-                Мои заявки
-              </NavLink>
-            </li>
-          </ul>
-          <ProfilLink
-            fullName={userFullName} role={user!.role}
-            onClick={() => {
-              navigate(REGISTRATION_PAGE_PATH);
-              dispatch(removeUser());
-              dispatch(clearApplication());
-            }}
-          />
-        </nav>
-        {loading ? (<Spinner />) : (<Outlet />)}
-      </>
-    );
-  }
-  return navigate(MAIN_PAGE_PATH);
+  return (
+    <>
+      <nav className={MENU_STYLES}>
+        <ul className={LIST_STYLES}>
+          <li className={ITEM_STYLES}>
+            <NavLink
+              to={APPLICATION_FORM_URL}
+              className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
+              onClick={() => dispatch(clearApplication())}
+            >
+              Новая заявка
+            </NavLink>
+          </li>
+          <li className={ITEM_STYLES}>
+            <NavLink
+              to={APPLICATION_USER_URL}
+              className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
+              onClick={getApplicationData}
+            >
+              Мои заявки
+            </NavLink>
+          </li>
+        </ul>
+        <ProfilLink
+          fullName={userFullName} role={user!.role}
+          onClick={() => {
+            navigate(REGISTRATION_PAGE_PATH);
+            dispatch(removeUser());
+            dispatch(clearApplication());
+          }}
+        />
+      </nav>
+      {loading ? (<Spinner />) : (<Outlet />)}
+    </>
+  );
 });
