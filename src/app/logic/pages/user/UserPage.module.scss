@@ -105,32 +105,42 @@
 }
 
 .title_employee {
-  flex: 30.2%;
-  min-width: 290px;
-}
-.title_date {
-  flex: 10.5%;
-  min-width: 126px;
-}
-.title_name {
-  flex: 37.387%;
+  flex: 34.48%;
   min-width: 230px;
 }
+.title_date {
+  flex: 11.8%;
+  min-width: 127px;;
+}
+.title_name {
+  flex: 29%;
+  min-width: 250px;
+}
 .title_parlor {
-  flex: 10.83%;
+  flex: 12.08%;
   min-width: 130px;
 }
 .title_status {
-  flex: 11.083%;
-  min-width: 133px;
-  background-color: #f7f6fe;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  cursor: pointer;
+  position: relative;
+  padding: 0;
+  line-height: 56px;
+  flex: 12.64%;
+  min-width: 136px;
+
+  & > select {
+    height: 100%;
+    width: 100%;
+    background-color: #f7f6fe;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
 
   & option {
     text-transform: none;
+    font-size: 0.875rem;
+    padding: 15px 0;
   }
 }
 

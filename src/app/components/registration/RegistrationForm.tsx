@@ -74,6 +74,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
                 surname: toCapitalize(data.surname),
                 lastName: data.lastName.toUpperCase(),
                 idUser: user.uid,
+                email: user.email,
                 isAdmin: false,
                 role: "Пользователь",
               });

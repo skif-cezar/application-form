@@ -86,6 +86,14 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
           const doc = querySnapshot.docs[0];
 
           if(doc) {
+            if(isChangeEmail) {
+              await updateDoc(doc.ref, {
+                firstName: toCapitalize(data.firstName),
+                surname: toCapitalize(data.surname),
+                lastName: data.lastName.toUpperCase(),
+                email: data.email,
+              });
+            }
             await updateDoc(doc.ref, {
               firstName: toCapitalize(data.firstName),
               surname: toCapitalize(data.surname),

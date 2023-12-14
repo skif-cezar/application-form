@@ -49,7 +49,7 @@ export const ApplicationsAll: React.FC = () => {
 
   const getApplicationData = useCallback(async (): Promise<void> => {
     let appData;
-    // Очистить данные о заявках и в store
+    // Очистить данные о заявках в store
     dispatch(
       clearApplication(),
     );
@@ -126,18 +126,20 @@ export const ApplicationsAll: React.FC = () => {
           <p className={TITLE_DATE_STYLES}>Дата</p>
           <p className={TITLE_NAME_STYLES}>Тема заявки</p>
           <p className={TITLE_PARLOR_STYLES}>Кабинет</p>
-          <select
-            className={TITLE_STATUS_STYLES}
-            value={selectedStatus}
-            onChange={(e) =>
-              setSelectedStatus(e.target.value)
-            }
-          >
-            <option value="Все статусы">Все статусы</option>
-            <option value="Новая">Новая</option>
-            <option value="В работе">В работе</option>
-            <option value="Выполнена">Выполнена</option>
-          </select>
+          <div className={TITLE_STATUS_STYLES}>
+            <select
+              value={selectedStatus}
+              onChange={(e) =>
+                setSelectedStatus(e.target.value)
+              }
+            >
+              <option value="Все статусы">Все статусы</option>
+              <option value="Новая">Новая</option>
+              <option value="В работе">В работе</option>
+              <option value="Выполнена">Выполнена</option>
+            </select>
+          </div>
+
         </div>
         {(areAnyApps) ? (
           <div className={CONTAINER_STYLES}>

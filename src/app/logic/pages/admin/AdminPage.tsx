@@ -1,13 +1,10 @@
-import {memo, useState, useCallback} from "react";
+import {memo} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {collection, query, orderBy, limit, getDocs} from "firebase/firestore";
-import {db} from "src/firebase";
 import {clearApplication} from "src/app/store/applications/slices/applicationSlice";
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
 import {useAuth} from "src/app/hooks/useAuth";
 import {MAIN_PAGE_PATH} from "src/app/logic/layout/Layout";
-import {addEmploye, addUserLastVisible, clearEmployees, removeUser} from "src/app/store/user/slices/userSlice";
-import {Spinner} from "src/app/components/spinner/Spinner";
+import {clearEmployees, removeUser} from "src/app/store/user/slices/userSlice";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/user/UserPage.module.scss";
 import {REGISTRATION_PAGE_PATH} from "src/app/components/registration/Registration";
@@ -35,44 +32,9 @@ export const AdminPage = memo((): any => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
-
   // Получение данных о user из store
   const user = useSelector((state: AppState) => state.users.user);
   const userFullName = `${user!.lastName} ${user!.firstName} ${user!.surname}`;
-
-  const getEmployees = useCallback(async (): Promise<void> => {
-    setLoading(true);
-
-    // Получение данных из Firestore по условию с лимитом по 8 записей
-    const appData = query(collection(db, "users"),
-      orderBy("lastName", "desc"),
-      limit(8));
-    const querySnapshot = await getDocs(appData);
-
-    if(querySnapshot.docs.length !== 0) {
-      // Получение последних видимых записей
-      const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-
-      // Добавление последних видимых данных user в store
-      dispatch(
-        addUserLastVisible(lastVisible),
-      );
-
-      querySnapshot.forEach((doc: any) => {
-        const {firstName, surname, lastName, token, idUser, isLoggedIn, isAdmin, role}: any = doc.data();
-
-        // Добавление данных заявки в store
-        dispatch(
-          addEmploye({firstName, surname, lastName, token, idUser, email: user.email, isLoggedIn, isAdmin, role}),
-        );
-      });
-    } else {
-      alert("Пользователей нет");
-    }
-    setLoading(false);
-
-  }, []);
 
   if (isAuth) {
     return (
@@ -94,9 +56,6 @@ export const AdminPage = memo((): any => {
               <NavLink
                 to={EMPLOYEES_PAGE_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
-                onClick={() => {
-                  getEmployees();
-                }}
               >
                 Сотрудники
               </NavLink>
@@ -111,7 +70,7 @@ export const AdminPage = memo((): any => {
             }}
           />
         </nav>
-        {loading ? (<Spinner />) : (<Outlet />)}
+        <Outlet />
       </>
     );
   }

@@ -20,60 +20,23 @@
 }
 
 .employee,
-.date,
-.name,
-.parlor,
-.status {
+.email,
+.role {
   padding: 14px 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.status {
-  flex: 12.64%;
-  min-width: 136px;
-  padding: 12px 0px;
-}
-
 .employee {
-  flex: 34.48%;
-  min-width: 230px;
+  flex: 42.565%;
+  min-width: 290px;
 }
-
-.date {
-  flex: 11.8%;
-  min-width: 127px;
+.email {
+  flex: 42.565%;
+  min-width: 290px;
 }
-
-.name {
-  flex: 29%;
-  min-width: 250px;
-}
-
-.parlor {
-  flex: 12.08%;
-  min-width: 130px;
-}
-
-.status_working,
-.status_new,
-.status_completed {
-  padding: 5px 18px;
-  border-radius: 5px;
-}
-
-.status_working {
-  color: #1f9254;
-  background-color: #c6ffd2;
-}
-
-.status_new {
-  color: #c54849;
-  background-color: #ffb4b5;
-}
-
-.status_completed {
-  color: #484ac5;
-  background-color: #b5b4ff;
+.role {
+  flex: 14.87%;
+  min-width: 160px;
 }
