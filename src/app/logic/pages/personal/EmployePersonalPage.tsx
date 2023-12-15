@@ -182,6 +182,16 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
           />
           {errors.lastName && <span className={ERRORS_STYLES}>{errors.lastName.message}</span>}
         </div>
+        <div className={INPUT_STYLES}>
+          <h5>Роль</h5>
+          <select
+            {...register("role")}
+          >
+            <option value="Пользователь">Пользователь</option>
+            <option value="Специалист">Специалист</option>
+            <option value="Администратор">Администратор</option>
+          </select>
+        </div>
 
         <button className={BUTTON_STYLES} type="submit">
           Сохранить
