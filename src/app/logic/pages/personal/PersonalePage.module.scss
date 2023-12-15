@@ -111,7 +111,8 @@
   }
 }
 
-.button {
+.button,
+.btn_delete {
   margin: 10px auto 0;
   border-radius: 20px;
   border: 1px solid #7879f1;
@@ -131,4 +132,12 @@
   &:focus {
     border: 1px solid #000;
   }
+}
+
+.btn_delete {
+  font-weight: 600;
+  padding: 6px 12px;
+  border: 1px solid #ffb4b5;
+  color: #c54849;
+  background-color: #ffb4b5;
 }

@@ -6,7 +6,7 @@
   overflow: hidden;
   width: 768px;
   max-width: 100%;
-  padding: 40px 50px;
+  padding: 25px 50px;
   color: #000;
   background-color: #fff;
   border-radius: 10px;
@@ -46,8 +46,25 @@
 }
 
 .btn_delete {
+  margin: 30px auto 0;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border: 1px solid #ffb4b5;
   color: #c54849;
   background-color: #ffb4b5;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    border: 1px solid #000;
+  }
 }
 
 .button {

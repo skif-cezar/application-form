@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/typedef */
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "src/app/store";
@@ -9,7 +9,7 @@ import {Pagination} from "src/app/components/pagination/Pagination";
 import {NotData} from "src/app/components/notData/NotData";
 import {Spinner} from "src/app/components/spinner/Spinner";
 import {UserState, addEmploye, addUserLastVisible} from "src/app/store/user/slices/userSlice";
-import {collection, getDocs, limit, orderBy, query} from "firebase/firestore";
+import {collection, getDocs, limit, orderBy, query, where} from "firebase/firestore";
 import {db} from "src/firebase";
 import {EmployeeCard} from "src/app/components/employeCard/EmployeeCard";
 
@@ -33,10 +33,13 @@ export const EmployeesPage: React.FC = () => {
   // Получение всех пользователей из store
   const users = useSelector((state: AppState) => state.users.employees);
   const areAnyUsers = users!.length;
+  const [isLoading, setIsLoading] = useState(true);
 
   const getEmployees = useCallback(async (): Promise<void> => {
     // Получение данных из Firestore по условию с лимитом по 8 записей
     const userData = query(collection(db, "users"),
+      orderBy("role"),
+      where("role", "!=", "Администратор"),
       orderBy("lastName"),
       limit(8));
 
@@ -71,6 +74,9 @@ export const EmployeesPage: React.FC = () => {
           );
         }
       });
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
@@ -86,7 +92,7 @@ export const EmployeesPage: React.FC = () => {
           <p className={TITLE_EMAIL_STYLES}>Email</p>
           <p className={TITLE_ROLE_STYLES}>Роль</p>
         </div>
-        {(areAnyUsers) ? (
+        {(!isLoading) ? (
           <div className={CONTAINER_STYLES}>
             {!areAnyUsers ? (<NotData />) : (users!.map((user: UserState) => (
               <NavLink to={`${EMPLOYEES_PAGE_URL}/${user.idUser}`} key = {user.idUser}>

@@ -1,15 +1,15 @@
-import React, {forwardRef, memo, useEffect} from "react";
+import React, {forwardRef, memo, useCallback, useEffect} from "react";
 import AvatarSrc from "src/resources/avatar.png";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/personal/PersonalePage.module.scss";
 import {Message, UseFormReturn, useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "src/app/store";
-import {collection, getDocs, query, updateDoc, where} from "firebase/firestore";
+import {collection, deleteDoc, getDocs, query, updateDoc, where} from "firebase/firestore";
 import {db} from "src/firebase";
-import {UserState, updateEmploye} from "src/app/store/user/slices/userSlice";
+import {UserState, removeEmploye, updateEmploye} from "src/app/store/user/slices/userSlice";
 import {toCapitalize} from "src/app/utility/toCapitalize";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 export type FieldsForm = {
   firstName: string;
@@ -37,10 +37,12 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
   const REQUIRED_STYLES = clsx(styles.required);
   const ERRORS_STYLES = clsx(styles.errors);
   const BUTTON_STYLES = clsx(styles.button);
+  const BUTTON_DELETE_STYLES = clsx(styles.btn_delete);
   const INPUT_STYLES = clsx(styles.input);
 
   const {id}: any = useParams<{id?: string}>();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Получение всех сотрудников из store
   const users = useSelector((state: AppState) => state.users.employees);
@@ -114,6 +116,33 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
       console.error("Ошибка изменения данных: ", e);
     }
   };
+
+  // Удаление пользователя
+  const deleteUser = useCallback(async (): Promise<void> => {
+    // Получение данных сотрудника из Firestore
+    const userData = query(collection(db, "users"),
+      where("idUser", "==", id));
+    const querySnapshot = await getDocs(userData);
+    // eslint-disable-next-line no-restricted-globals
+    const isDelete = confirm("Вы действительно хотите удалить пользователя навсегда?");
+
+    // Удалить данные user
+    if (!querySnapshot.empty) {
+      const doc = querySnapshot.docs[0];
+
+      if(doc && isDelete) {
+        try {
+          await deleteDoc(doc.ref);
+          dispatch(
+            removeEmploye(id),
+          );
+        } catch(error) {
+          console.error("Ошибка удаления пользователя: ", error);
+        }
+        navigate(EMPLOYE_PERSONAL_PAGE_PATH);
+      }
+    }
+  }, []);
 
   return (
     <article className={PANEL_STYLES}>
@@ -195,6 +224,12 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
 
         <button className={BUTTON_STYLES} type="submit">
           Сохранить
+        </button>
+        <button
+          className={BUTTON_DELETE_STYLES}
+          type="button" onClick={deleteUser}
+        >
+          Удалить пользователя
         </button>
       </form>
     </article>

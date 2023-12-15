@@ -91,16 +91,34 @@ export const ApplicationsAll: React.FC = () => {
 
         const querySnapshotUser = await getDocs(userData);
 
-        querySnapshotUser.forEach((userDoc: any) => {
-          const {firstName, lastName, surname}: UserState = userDoc.data();
-          const author = `${lastName} ${firstName} ${surname}`;
+        // Проверка на наличие данных
+        if(querySnapshotUser.docs.length) {
+          querySnapshotUser.forEach((userDoc: any) => {
+            const {firstName, lastName, surname}: UserState = userDoc.data();
+            const author = `${lastName} ${firstName} ${surname}`;
 
+            // Добавление данных заявки в store
+            dispatch(
+              addApplication({
+                id,
+                idUser,
+                author,
+                title,
+                description,
+                parlor,
+                date,
+                comment,
+                status,
+              }),
+            );
+          });
+        } else {
           // Добавление данных заявки в store
           dispatch(
             addApplication({
               id,
-              idUser,
-              author,
+              idUser: null,
+              author: "Пользователь был удалён",
               title,
               description,
               parlor,
@@ -109,7 +127,7 @@ export const ApplicationsAll: React.FC = () => {
               status,
             }),
           );
-        });
+        }
       });
     }
   }, [selectedStatus]);

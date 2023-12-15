@@ -23,7 +23,7 @@ export const ApplicationPage = (): any => {
   const TITLE_ROWS_STYLES = clsx(styles.title_rows);
   const TEXT_ROWS_STYLES = clsx(styles.text_rows);
   const BUTTON_STYLES = clsx(styles.button);
-  const BUTTON_DELETE_STYLES = clsx(styles.btn_delete, styles.status_btn);
+  const BUTTON_DELETE_STYLES = clsx(styles.btn_delete);
   const BUTTON_OPEN_STYLES = clsx(styles.status_open, styles.status_btn);
 
   const user = useSelector((state: AppState) => state.users.user);
@@ -53,14 +53,29 @@ export const ApplicationPage = (): any => {
         where("idUser", "==", idUser));
       const querySnapshotUser = await getDocs(userData);
 
-      if(!querySnapshotUser.empty) {
-        const docUser = querySnapshotUser.docs[0]!.data();
-        const author = `${docUser["lastName"]} ${docUser["firstName"]} ${docUser["surname"]}`;
-        // Перевод даты из Firestore в строку
-        const dateString = getFormatDate(date.seconds);
+      // Проверка на наличие данных
+      if(querySnapshotUser.docs.length) {
+        if(!querySnapshotUser.empty) {
+          const docUser = querySnapshotUser.docs[0]!.data();
+          const author = `${docUser["lastName"]} ${docUser["firstName"]} ${docUser["surname"]}`;
+          // Перевод даты из Firestore в строку
+          const dateString = getFormatDate(date.seconds);
 
+          // Записываем данные заявки в state
+          setApp({idUser, author, title, description, parlor, comment, status, date: dateString});
+        }
+      } else {
         // Записываем данные заявки в state
-        setApp({idUser, author, title, description, parlor, comment, status, date: dateString});
+        setApp({
+          idUser: null,
+          author: "Пользователь был удалён",
+          title,
+          description,
+          parlor,
+          comment,
+          status,
+          date: getFormatDate(date.seconds),
+        });
       }
 
       if (status === "Новая") {
