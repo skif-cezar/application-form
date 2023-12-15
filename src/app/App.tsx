@@ -13,6 +13,7 @@ import {ApplicationPage} from "src/app/logic/pages/application/ApplicationPage";
 import {ApplicationsAll, APPLICATIONS_URL} from "src/app/logic/pages/admin/ApplicationsAll";
 import {EmployeesPage, EMPLOYEES_PAGE_URL} from "src/app/logic/pages/employees/EmployeesPage";
 import {PERSONAL_ADMIN_PAGE_PATH, PERSONAL_USER_PAGE_PATH, PersonalPage} from "src/app/logic/pages/personal/PersonalPage";
+import {EMPLOYE_PERSONAL_PAGE_PATH, EmployePersonalPage} from "src/app/logic/pages/personal/EmployePersonalPage";
 
 /**
  * The main component in app
@@ -69,7 +70,7 @@ export const App: React.FC = () => {
               </Route>
               <Route element={<MainLayout />}>
                 <Route path={EMPLOYEES_PAGE_URL} element={<EmployeesPage />} />
-                <Route path={`${EMPLOYEES_PAGE_URL}/:id`} element={<ApplicationPage />} />
+                <Route path={`${EMPLOYE_PERSONAL_PAGE_PATH}/:id`} element={<EmployePersonalPage />} />
               </Route>
             </Route>
           </Route>

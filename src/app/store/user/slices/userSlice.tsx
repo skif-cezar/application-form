@@ -51,8 +51,9 @@ export const userSlice = createSlice({
       state.employees = state.employees.filter((employe: any) => employe.idUser !== action.payload);
     },
     updateEmploye(state: any, action: PayloadAction<UserState>) {
-      const {idUser, role}: UserState = action.payload;
-      state.employees = state.employees.map((employe: UserState) => employe.idUser === idUser ? {...employe, role} : employe);
+      const {idUser, ...updatedFields} : UserState = action.payload;
+      state.employees = state.employees.map((user: UserState) =>
+        user.idUser === idUser ? {...user, ...updatedFields} : user);
     },
     addUserLastVisible(state: any, action: PayloadAction<any>) {
       state.userLastVisible = action.payload;
