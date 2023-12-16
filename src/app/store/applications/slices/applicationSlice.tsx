@@ -15,10 +15,14 @@ export interface ApplicationState {
 export interface ApplicationArrState {
   applications: ApplicationState[] | null;
   appLastVisible: any | undefined;
-  isShowAlert: boolean;
+  selectedStatus: string;
 }
 
-const initialState: ApplicationArrState = {applications: [], appLastVisible: null, isShowAlert: false};
+const initialState: ApplicationArrState = {
+  applications: [],
+  appLastVisible: null,
+  selectedStatus: "Все статусы",
+};
 
 export const applicationsSlice = createSlice({
   name: "applications",
@@ -46,8 +50,8 @@ export const applicationsSlice = createSlice({
     addAppLastVisible(state: any, action: PayloadAction<any>) {
       state.appLastVisible = action.payload;
     },
-    addIsShowAlert(state: any, action: PayloadAction<any>) {
-      state.isShowAlert = action.payload;
+    setStatus(state: any, action: PayloadAction<any>) {
+      state.selectedStatus = action.payload;
     },
   },
 });
@@ -58,8 +62,8 @@ export const {
   removeApplication,
   clearApplication,
   addAppLastVisible,
-  addIsShowAlert,
   updateApplication,
+  setStatus,
 } = applicationsSlice.actions;
 
 export default applicationsSlice.reducer;

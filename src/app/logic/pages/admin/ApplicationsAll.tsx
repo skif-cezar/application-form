@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/typedef */
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "src/app/store";
@@ -12,6 +11,7 @@ import {
   addAppLastVisible,
   addApplication,
   clearApplication,
+  setStatus,
 } from "src/app/store/applications/slices/applicationSlice";
 import {Pagination} from "src/app/components/pagination/Pagination";
 import {NotData} from "src/app/components/notData/NotData";
@@ -40,19 +40,18 @@ export const ApplicationsAll: React.FC = () => {
   const CONTAINER_STYLES = clsx(styles.container);
 
   const dispatch = useDispatch();
-  // Состояние выбора статуса заявки для фильтрации
-  const [selectedStatus, setSelectedStatus] = useState("Все статусы");
+  const [isLoading, setIsLoading] = useState(true);
   // Получение всех заявок пользователя из store
   const apps = useSelector((state: AppState) => state.applications.applications);
+  // Состояние выбора статуса заявки для фильтрации
+  const [selectedStatus, setSelectedStatus] = useState("Все статусы");
 
   const areAnyApps = apps!.length;
 
-  const getApplicationData = useCallback(async (): Promise<void> => {
+  const getApplicationData = async (): Promise<void> => {
     let appData;
-    // Очистить данные о заявках в store
-    dispatch(
-      clearApplication(),
-    );
+    setIsLoading(true);
+    dispatch(clearApplication());
 
     if(selectedStatus === "Все статусы") {
       // Получение всех заявок из Firestore по условию с лимитом по 8 записей
@@ -111,6 +110,7 @@ export const ApplicationsAll: React.FC = () => {
                 status,
               }),
             );
+            setIsLoading(false);
           });
         } else {
           // Добавление данных заявки в store
@@ -127,10 +127,11 @@ export const ApplicationsAll: React.FC = () => {
               status,
             }),
           );
+          setIsLoading(false);
         }
       });
     }
-  }, [selectedStatus]);
+  };
 
   useEffect(() => {
     getApplicationData();
@@ -147,9 +148,10 @@ export const ApplicationsAll: React.FC = () => {
           <div className={TITLE_STATUS_STYLES}>
             <select
               value={selectedStatus}
-              onChange={(e) =>
-                setSelectedStatus(e.target.value)
-              }
+              onChange={(e) => {
+                setSelectedStatus(e.target.value);
+                dispatch(setStatus(e.target.value));
+              }}
             >
               <option value="Все статусы">Все статусы</option>
               <option value="Новая">Новая</option>
@@ -159,9 +161,9 @@ export const ApplicationsAll: React.FC = () => {
           </div>
 
         </div>
-        {(areAnyApps) ? (
+        {(!isLoading) ? (
           <div className={CONTAINER_STYLES}>
-            {!areAnyApps ? (<NotData />) : (apps!.map((app: ApplicationState) => (
+            {areAnyApps ? (apps!.map((app: ApplicationState) => (
               <NavLink to={`${APPLICATIONS_URL}/${app.id}`} key = {app.id}>
                 <Card
                   employee={app.author}
@@ -171,7 +173,7 @@ export const ApplicationsAll: React.FC = () => {
                   status={app.status}
                 />
               </NavLink>
-            )))}
+            ))) : (<NotData />)}
           </div>
         ) : (<Spinner />)}
       </div>

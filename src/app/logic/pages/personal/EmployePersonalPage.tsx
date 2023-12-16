@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, {forwardRef, memo, useCallback, useEffect} from "react";
 import AvatarSrc from "src/resources/avatar.png";
 import clsx from "clsx";
@@ -118,7 +119,7 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
   };
 
   // Удаление пользователя
-  const deleteUser = useCallback(async (): Promise<void> => {
+  const deleteEmploye = useCallback(async (): Promise<void> => {
     // Получение данных сотрудника из Firestore
     const userData = query(collection(db, "users"),
       where("idUser", "==", id));
@@ -131,15 +132,16 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
       const doc = querySnapshot.docs[0];
 
       if(doc && isDelete) {
+        console.log();
         try {
           await deleteDoc(doc.ref);
           dispatch(
             removeEmploye(id),
           );
+          navigate(EMPLOYE_PERSONAL_PAGE_PATH);
         } catch(error) {
           console.error("Ошибка удаления пользователя: ", error);
         }
-        navigate(EMPLOYE_PERSONAL_PAGE_PATH);
       }
     }
   }, []);
@@ -227,7 +229,7 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
         </button>
         <button
           className={BUTTON_DELETE_STYLES}
-          type="button" onClick={deleteUser}
+          type="button" onClick={deleteEmploye}
         >
           Удалить пользователя
         </button>

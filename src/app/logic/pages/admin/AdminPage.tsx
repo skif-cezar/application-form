@@ -56,6 +56,9 @@ export const AdminPage = memo((): any => {
               <NavLink
                 to={EMPLOYEES_PAGE_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
+                onClick={() => {
+                  dispatch(clearApplication());
+                }}
               >
                 Сотрудники
               </NavLink>
@@ -67,6 +70,7 @@ export const AdminPage = memo((): any => {
               navigate(REGISTRATION_PAGE_PATH);
               dispatch(removeUser());
               dispatch(clearApplication());
+              dispatch(clearEmployees());
             }}
           />
         </nav>
