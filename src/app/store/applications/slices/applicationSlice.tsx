@@ -10,6 +10,7 @@ export interface ApplicationState {
   date: string | null;
   comment: string | null | undefined;
   status: string | null;
+  executor: string | null;
 }
 
 export interface ApplicationArrState {
@@ -39,8 +40,9 @@ export const applicationsSlice = createSlice({
       state.applications = state.applications.filter((app: any) => app.id !== action.payload);
     },
     updateApplication(state: any, action: PayloadAction<ApplicationState>) {
-      const {id, status}: ApplicationState = action.payload;
-      state.applications = state.applications.map((app: ApplicationState) => app.id === id ? {...app, status} : app);
+      const {id, ...updatedFields} : ApplicationState = action.payload;
+      state.applications = state.applications.map((app: ApplicationState) =>
+        app.id === id ? {...app, ...updatedFields} : app);
     },
     clearApplication(state: any) {
       state.applications = [];

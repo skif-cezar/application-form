@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {useCallback, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import clsx from "clsx";
@@ -29,6 +30,8 @@ export const ApplicationPage = (): any => {
   const {isAdmin}: UserState = (user);
   const {id}: any = useParams<{id?: string}>();
   const [app, setApp] = useState<DocumentData>();
+  const [employees, setEmployees] = useState<any>([]);
+  const [selectedExecutor, setSelectedExecutor] = useState("Нет");
   const [loading, setLoading] = useState(false);
   const [statusApp, setStatusApp] = useState("");
   const dispatch = useDispatch();
@@ -36,6 +39,26 @@ export const ApplicationPage = (): any => {
   // Кнопка назад
   const goBack = (): void => navigate(-1);
   const fullNameUser = `${user!.lastName} ${user!.firstName} ${user!.surname}`;
+
+  // Получение данных сотрудников "Специалист"
+  const getUserByRole = async (): Promise<void> => {
+    setLoading(true);
+
+    // Получение данных user из Firestore по условию
+    const usersData = query(collection(db, "users"),
+      where("role", "==", "Специалист"));
+    const querySnapshot = await getDocs(usersData);
+
+    // Проверка на наличие данных
+    if(querySnapshot.docs.length) {
+      const newEmployees = querySnapshot.docs.map((docUser: any) => {
+        const {firstName, surname, lastName, idUser}: any = docUser.data();
+        const author = `${lastName} ${firstName} ${surname}`;
+        return {idUser, fullName: author};
+      });
+      setEmployees([...employees, ...newEmployees]);
+    }
+  };
 
   // Получение данных заявки по id
   const getApplicationById = useCallback(async (): Promise<void> => {
@@ -45,7 +68,7 @@ export const ApplicationPage = (): any => {
     const snap = await getDoc(doc(db, "applications", id));
 
     if (snap.exists()) {
-      const {idUser, title, description, parlor, comment, status, date}: any = snap.data();
+      const {idUser, title, description, parlor, comment, status, date, executor}: any = snap.data();
 
       // Получение данных user из Firestore по условию
       const userData = query(collection(db, "users"),
@@ -61,7 +84,8 @@ export const ApplicationPage = (): any => {
           const dateString = getFormatDate(date.seconds);
 
           // Записываем данные заявки в state
-          setApp({idUser, author, title, description, parlor, comment, status, date: dateString});
+          setApp({idUser, author, title, description, parlor, comment, status, date: dateString, executor});
+          console.log(app);
         }
       } else {
         // Записываем данные заявки в state
@@ -74,6 +98,7 @@ export const ApplicationPage = (): any => {
           comment,
           status,
           date: getFormatDate(date.seconds),
+          executor,
         });
       }
 
@@ -100,15 +125,18 @@ export const ApplicationPage = (): any => {
           date: dateString,
           comment,
           status,
+          executor,
         }),
       );
       setLoading(false);
     } else {
+      setLoading(false);
       alert("Заявка не найдена");
     }
   }, []);
 
   useEffect(() => {
+    getUserByRole();
     getApplicationById();
   }, []);
 
@@ -132,6 +160,22 @@ export const ApplicationPage = (): any => {
       console.error("Error updating status: ", error);
     }
   }, [statusApp]);
+  console.log(selectedExecutor);
+
+  // Назначить исполнителя заявки
+  const appointExecutor = async (): Promise<void> => {
+    // Получение заявки по id
+    const appRef = doc(db, "applications", id);
+
+    try {
+      await updateDoc(appRef, {"status": "В работе", "executor": selectedExecutor});
+      alert("Исполнитель успешно назначен!");
+      goBack();
+
+    } catch(error) {
+      console.error("Ошибка назначения исполнителя: ", error);
+    }
+  };
 
   // Удаление заявки
   const deleteApp = useCallback(async (): Promise<void> => {
@@ -171,6 +215,7 @@ export const ApplicationPage = (): any => {
               <p>Кабинет:</p>
               <p>Дата создания:</p>
               <p>Статус:</p>
+              <p>Исполнитель заявки:</p>
               <p>Комментарий к заявке:</p>
             </div>
             <div className={TEXT_ROWS_STYLES}>
@@ -182,6 +227,21 @@ export const ApplicationPage = (): any => {
               <p>
                 <span className={setStatusStyle(app["status"])}>{app["status"]}</span>
               </p>
+              {isAdmin ? (
+                <select
+                  disabled={(app["executor"] !== "Нет")}
+                  value={app["executor"]}
+                  onChange={(e: any) =>
+                    setSelectedExecutor(e.target.value)
+                  }
+                >
+                  <option value={app["executor"]}>{app["executor"]}</option>
+                  {employees!.map((employe: any) =>
+                    <option value={employe.fullName} key={employe.idUser}>{employe.fullName}</option>,
+                  )}
+                </select>
+
+              ) : (<p>{app["executor"]}</p>)}
               <p>{app["comment"]}</p>
             </div>
           </div>
@@ -194,12 +254,20 @@ export const ApplicationPage = (): any => {
             </button>
           ) : null}
           {isAdmin ? (
-            <button
-              className={BUTTON_DELETE_STYLES}
-              type="button" onClick={() => {deleteApp();}}
-            >
-              Удалить заявку
-            </button>
+            <>
+              <button
+                className={BUTTON_DELETE_STYLES}
+                type="button" onClick={appointExecutor}
+              >
+                Сохранить изменения
+              </button>
+              <button
+                className={BUTTON_DELETE_STYLES}
+                type="button" onClick={deleteApp}
+              >
+                Удалить заявку
+              </button>
+            </>
           ) : null}
         </article>
         <div className={BUTTON_STYLES}>

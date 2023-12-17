@@ -81,7 +81,7 @@ export const Pagination: React.FC = () => {
       querySnapshot.forEach(async (doc: any) => {
         // id заявки
         const {id}: ApplicationState = doc;
-        const {idUser, title, description, parlor, comment, status}: ApplicationState = doc.data();
+        const {idUser, title, description, parlor, comment, status, executor}: ApplicationState = doc.data();
         // Перевод даты из Firestore в строку
         const date = getFormatDate(doc.data().date.seconds);
 
@@ -109,6 +109,7 @@ export const Pagination: React.FC = () => {
                 date,
                 comment,
                 status,
+                executor,
               }),
             );
           });
@@ -125,6 +126,7 @@ export const Pagination: React.FC = () => {
               date,
               comment,
               status,
+              executor,
             }),
           );
         }

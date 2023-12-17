@@ -75,7 +75,7 @@ export const UserPage = memo((): any => {
       querySnapshot.forEach((doc: any) => {
         // id заявки
         const {id}: ApplicationState = doc;
-        const {idUser, title, description, parlor, comment, status}: ApplicationState = doc.data();
+        const {idUser, title, description, parlor, comment, status, executor}: ApplicationState = doc.data();
 
         // Перевод даты из Firestore в строку
         const date = getFormatDate(doc.data().date.seconds);
@@ -92,6 +92,7 @@ export const UserPage = memo((): any => {
             date,
             comment,
             status,
+            executor,
           }),
         );
       });
