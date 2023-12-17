@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {useCallback, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import clsx from "clsx";
@@ -205,7 +204,7 @@ export const ApplicationPage = (): any => {
         </article>
         <div className={BUTTON_STYLES}>
           <button
-            type="button" onClick={() => {goBack();}}
+            type="button" onClick={goBack}
           >
             Вернуться назад
           </button>

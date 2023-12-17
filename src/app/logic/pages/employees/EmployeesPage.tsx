@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/typedef */
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {NavLink} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "src/app/store";
@@ -35,13 +35,13 @@ export const EmployeesPage: React.FC = () => {
   const areAnyUsers = users!.length;
   const [isLoading, setIsLoading] = useState(true);
 
-  const getEmployees = useCallback(async (): Promise<void> => {
+  const getEmployees = async (): Promise<void> => {
     // Получение данных из Firestore по условию с лимитом по 8 записей
     const userData = query(collection(db, "users"),
       orderBy("role"),
       where("role", "!=", "Администратор"),
       orderBy("lastName"),
-      limit(8));
+      limit(1));
 
     const querySnapshot = await getDocs(userData);
 
@@ -78,7 +78,7 @@ export const EmployeesPage: React.FC = () => {
     } else {
       setIsLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     getEmployees();

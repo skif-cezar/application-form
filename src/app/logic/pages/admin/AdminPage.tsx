@@ -57,6 +57,7 @@ export const AdminPage = memo((): any => {
                 to={EMPLOYEES_PAGE_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
                 onClick={() => {
+                  dispatch(clearEmployees());
                   dispatch(clearApplication());
                 }}
               >

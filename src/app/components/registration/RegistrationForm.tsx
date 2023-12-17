@@ -105,6 +105,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
         .catch((error: any) => {
           console.error(error);
           alert("Пользователь уже зарегистрирован!");
+          setCurrentStep(1);
         });
     }
   };

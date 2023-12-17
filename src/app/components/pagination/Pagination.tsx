@@ -11,7 +11,7 @@ import {
   addApplication,
 } from "src/app/store/applications/slices/applicationSlice";
 import {getFormatDate} from "src/app/utility/getFormatDate";
-import {UserState} from "src/app/store/user/slices/userSlice";
+import {UserState, addEmploye, addUserLastVisible} from "src/app/store/user/slices/userSlice";
 
 /**
  * Pagination component
@@ -22,16 +22,16 @@ export const Pagination: React.FC = () => {
 
   // Получение последних видимых заявок из store
   const lastVisibleApp = useSelector((state: AppState) => state.applications!.appLastVisible);
+  // Получение последних видимых сотрудников из store
+  const lastVisibleEmploye = useSelector((state: AppState) => state.users.userLastVisible);
   // Получение  заявок из store
   const apps = useSelector((state: AppState) => state.applications!.applications);
-  // Получение последних видимых users из store
-  // const lastVisibleApp = useSelector((state: AppState) => state.users.userLastVisible);
   const dispatch = useDispatch();
 
   // Получение данных user из store
   const user = useSelector((state: AppState) => state.users.user);
   // Админ или обычный юзер из store
-  const isAdmin = useSelector((state: AppState) => state.users.user!.isAdmin);
+  const isAdminUser = useSelector((state: AppState) => state.users.user!.isAdmin);
   // Состояние выбора статуса заявки для фильтрации
   const selectedStatus = useSelector((state: AppState) => state.applications.selectedStatus);
 
@@ -39,10 +39,15 @@ export const Pagination: React.FC = () => {
     if(!lastVisibleApp && apps!.length) {alert("Это все заявки!");}
   }, [lastVisibleApp]);
 
+  useEffect(() => {
+    if(!lastVisibleEmploye && !(apps!.length)) {alert("Это все сотрудники!");}
+  }, [lastVisibleEmploye]);
+
+  // Показать следующие заявки
   const getNextApps = async (): Promise<void> => {
     if(lastVisibleApp) {
       let nextAppData;
-      if(isAdmin) {
+      if(isAdminUser) {
         if(selectedStatus === "Все статусы") {
           // Получение всех заявок из Firestore по условию с лимитом по 8 записей
           nextAppData = query(collection(db, "applications"),
@@ -127,12 +132,61 @@ export const Pagination: React.FC = () => {
     }
   };
 
+  // Показать следующих сотрудников
+  const getNextEmployees = async (): Promise<void> => {
+    if(lastVisibleEmploye) {
+      // Получение данных из Firestore по условию с лимитом по 8 записей
+      const nextUserData = query(collection(db, "users"),
+        orderBy("role"),
+        where("role", "!=", "Администратор"),
+        orderBy("lastName"),
+        startAfter(lastVisibleEmploye), limit(1));
+
+      const querySnapshot = await getDocs(nextUserData);
+
+      // Получение последних видимых сотрудников
+      const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+      // Добавление последних видимых данных user в store
+      dispatch(
+        addUserLastVisible(lastVisible),
+      );
+
+      querySnapshot.forEach((doc: any) => {
+        const {email, firstName, idUser, isAdmin, lastName, role, surname}: UserState = doc.data();
+
+        // Добавление данных заявки в store
+        dispatch(
+          addEmploye({
+            firstName,
+            surname,
+            lastName,
+            token: null,
+            idUser,
+            email,
+            isLoggedIn: false,
+            isAdmin,
+            role,
+          }),
+        );
+      });
+    }
+  };
+
   return (
     <div className={PAGINATION_STYLES}>
       {lastVisibleApp && (
         <button
           type="button" className={NEXT_STYLES}
           onClick={getNextApps}
+        >
+          Показать ещё
+        </button>
+      )}
+      {lastVisibleEmploye && (
+        <button
+          type="button" className={NEXT_STYLES}
+          onClick={getNextEmployees}
         >
           Показать ещё
         </button>

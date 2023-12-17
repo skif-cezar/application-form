@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, {forwardRef, useState} from "react";
 import {useDispatch} from "react-redux";
 import {UserState, setUser} from "src/app/store/user/slices/userSlice";

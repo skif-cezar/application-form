@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, {forwardRef, memo, useCallback, useEffect} from "react";
 import AvatarSrc from "src/resources/avatar.png";
 import clsx from "clsx";
@@ -85,6 +84,7 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
         // Обновить данные user
         if (!querySnapshot.empty) {
           const doc = querySnapshot.docs[0];
+          // Получение последних видимых записей
 
           if(doc) {
             await updateDoc(doc.ref, {
@@ -132,13 +132,12 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
       const doc = querySnapshot.docs[0];
 
       if(doc && isDelete) {
-        console.log();
+        navigate(EMPLOYE_PERSONAL_PAGE_PATH);
         try {
           await deleteDoc(doc.ref);
           dispatch(
             removeEmploye(id),
           );
-          navigate(EMPLOYE_PERSONAL_PAGE_PATH);
         } catch(error) {
           console.error("Ошибка удаления пользователя: ", error);
         }
