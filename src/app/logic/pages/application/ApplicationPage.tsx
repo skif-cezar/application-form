@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {useCallback, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import clsx from "clsx";
@@ -24,6 +23,7 @@ export const ApplicationPage = (): any => {
   const TEXT_ROWS_STYLES = clsx(styles.text_rows);
   const BUTTON_STYLES = clsx(styles.button);
   const BUTTON_DELETE_STYLES = clsx(styles.btn_delete);
+  const BUTTON_SAVE_STYLES = clsx(styles.btn_save);
   const BUTTON_OPEN_STYLES = clsx(styles.status_open, styles.status_btn);
 
   const user = useSelector((state: AppState) => state.users.user);
@@ -85,7 +85,6 @@ export const ApplicationPage = (): any => {
 
           // Записываем данные заявки в state
           setApp({idUser, author, title, description, parlor, comment, status, date: dateString, executor});
-          console.log(app);
         }
       } else {
         // Записываем данные заявки в state
@@ -160,7 +159,6 @@ export const ApplicationPage = (): any => {
       console.error("Error updating status: ", error);
     }
   }, [statusApp]);
-  console.log(selectedExecutor);
 
   // Назначить исполнителя заявки
   const appointExecutor = async (): Promise<void> => {
@@ -227,10 +225,9 @@ export const ApplicationPage = (): any => {
               <p>
                 <span className={setStatusStyle(app["status"])}>{app["status"]}</span>
               </p>
-              {isAdmin ? (
+              {(isAdmin && (app["executor"] === "Нет")) ? (
                 <select
-                  disabled={(app["executor"] !== "Нет")}
-                  value={app["executor"]}
+                  value={selectedExecutor}
                   onChange={(e: any) =>
                     setSelectedExecutor(e.target.value)
                   }
@@ -255,12 +252,14 @@ export const ApplicationPage = (): any => {
           ) : null}
           {isAdmin ? (
             <>
-              <button
-                className={BUTTON_DELETE_STYLES}
-                type="button" onClick={appointExecutor}
-              >
-                Сохранить изменения
-              </button>
+              {(app["executor"] === "Нет") && (
+                <button
+                  className={BUTTON_SAVE_STYLES}
+                  type="button" onClick={appointExecutor}
+                >
+                  Сохранить изменения
+                </button>
+              )}
               <button
                 className={BUTTON_DELETE_STYLES}
                 type="button" onClick={deleteApp}

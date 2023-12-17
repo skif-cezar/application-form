@@ -142,7 +142,7 @@ export const Pagination: React.FC = () => {
         orderBy("role"),
         where("role", "!=", "Администратор"),
         orderBy("lastName"),
-        startAfter(lastVisibleEmploye), limit(1));
+        startAfter(lastVisibleEmploye), limit(8));
 
       const querySnapshot = await getDocs(nextUserData);
 

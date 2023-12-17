@@ -32,6 +32,29 @@
   row-gap: 10px;
 }
 
+.text_rows {
+  & select {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1rem;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    border: none;
+    padding: 3px 6px;
+    width: 100%;
+    border: 1px solid #ebebeb;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    & select:hover {
+      border-color: #d1d1d1;
+    }
+
+    & select:focus {
+      border-color: #000;
+    }
+  }
+}
+
 .title_rows {
   font-weight: 600;
 }
@@ -45,8 +68,9 @@
   transition: all 80ms ease-in;
 }
 
-.btn_delete {
-  margin: 30px auto 0;
+.btn_delete,
+.btn_save {
+  margin: 20px auto 0;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
@@ -65,6 +89,12 @@
   &:focus {
     border: 1px solid #000;
   }
+}
+
+.btn_save {
+  background-color: #7879f1;
+  border-color: #7879f1;
+  color: #fff;
 }
 
 .button {

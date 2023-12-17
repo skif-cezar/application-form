@@ -41,7 +41,7 @@ export const EmployeesPage: React.FC = () => {
       orderBy("role"),
       where("role", "!=", "Администратор"),
       orderBy("lastName"),
-      limit(1));
+      limit(8));
 
     const querySnapshot = await getDocs(userData);
 
