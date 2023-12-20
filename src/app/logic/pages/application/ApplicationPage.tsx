@@ -60,6 +60,15 @@ export const ApplicationPage = (): any => {
     }
   };
 
+  // Получение ФИО специалиста по id
+  const getNameUserById = (uid: string): string => {
+    const employeData = employees.find((u: any) => u.idUser === uid);
+    if(uid === "Нет") {
+      return "Нет";
+    }
+    return employeData.fullName;
+  };
+
   // Получение данных заявки по id
   const getApplicationById = useCallback(async (): Promise<void> => {
     setLoading(true);
@@ -232,13 +241,13 @@ export const ApplicationPage = (): any => {
                     setSelectedExecutor(e.target.value)
                   }
                 >
-                  <option value={app["executor"]}>{app["executor"]}</option>
+                  <option value="Нет">Нет</option>
                   {employees!.map((employe: any) =>
-                    <option value={employe.fullName} key={employe.idUser}>{employe.fullName}</option>,
+                    <option value={employe.idUser} key={employe.idUser}>{employe.fullName}</option>,
                   )}
                 </select>
 
-              ) : (<p>{app["executor"]}</p>)}
+              ) : (<p>{getNameUserById(app["executor"])}</p>)}
               <p>{app["comment"]}</p>
             </div>
           </div>
