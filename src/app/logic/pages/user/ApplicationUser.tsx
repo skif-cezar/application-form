@@ -94,10 +94,9 @@ export const ApplicationUser: React.FC = () => {
             executor,
           }),
         );
+        setIsLoading(false);
       });
     }
-    setIsLoading(false);
-
   }, []);
 
   // Получение назначенных заявок специалисту
@@ -156,10 +155,10 @@ export const ApplicationUser: React.FC = () => {
           dispatch(
             addAppLastVisible(lastVisible),
           );
+          setIsLoading(false);
         }
       });
     }
-    setIsLoading(false);
   }, []);
 
   useEffect(() => {

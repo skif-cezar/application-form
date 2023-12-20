@@ -42,6 +42,9 @@ export const UserPage = memo((): any => {
               <NavLink
                 to={APPLICATION_FORM_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
+                onClick={() => {
+                  dispatch(clearApplication());
+                }}
               >
                 Новая заявка
               </NavLink>
@@ -69,6 +72,9 @@ export const UserPage = memo((): any => {
               <NavLink
                 to={APPLICATION_FORM_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
+                onClick={() => {
+                  dispatch(clearApplication());
+                }}
               >
                 Отчёт
               </NavLink>

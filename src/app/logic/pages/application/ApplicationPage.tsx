@@ -24,7 +24,6 @@ export const ApplicationPage = (): any => {
   const BUTTON_STYLES = clsx(styles.button);
   const BUTTON_DELETE_STYLES = clsx(styles.btn_delete);
   const BUTTON_SAVE_STYLES = clsx(styles.btn_save);
-  const BUTTON_OPEN_STYLES = clsx(styles.status_open, styles.status_btn);
 
   const user = useSelector((state: AppState) => state.users.user);
   const {isAdmin}: UserState = (user);
@@ -154,18 +153,16 @@ export const ApplicationPage = (): any => {
     const appRef = doc(db, "applications", id);
 
     try {
-      if (statusApp === "Новая") {
-        await updateDoc(appRef, {"status": "Новая"});
-      } else if(statusApp === "В работе") {
-        await updateDoc(appRef, {"status": "В работе"});
-      } else if(statusApp === "Выполнена") {
+      if(statusApp === "В работе") {
         await updateDoc(appRef, {"status": "Выполнена"});
+      } else if(statusApp === "Выполнена") {
+        await updateDoc(appRef, {"status": "В работе"});
       }
 
       getApplicationById();
 
     } catch(error) {
-      console.error("Error updating status: ", error);
+      console.error("Ошибка обновления статуса: ", error);
     }
   }, [statusApp]);
 
@@ -253,10 +250,10 @@ export const ApplicationPage = (): any => {
           </div>
           {user.role === "Специалист" ? (
             <button
-              className={(statusApp === "Выполнена") ? "Стиль поменять" : BUTTON_OPEN_STYLES}
-              type="button" onClick={() => {updateStatus();}}
+              className={(statusApp === "Выполнена") ? BUTTON_DELETE_STYLES : BUTTON_SAVE_STYLES}
+              type="button" onClick={updateStatus}
             >
-              {(statusApp === "Выполнена") ? "Открыть заявку" : "Закрыть заявку"}
+              {(statusApp === "Выполнена") ? "Поставить в работу" : "Выполнить"}
             </button>
           ) : null}
           {isAdmin ? (
