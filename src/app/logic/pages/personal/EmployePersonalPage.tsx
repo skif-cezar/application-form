@@ -80,18 +80,20 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
         const userData = query(collection(db, "users"),
           where("idUser", "==", id));
         const querySnapshot = await getDocs(userData);
+        const admin = (data.role === "Администратор");
 
         // Обновить данные user
         if (!querySnapshot.empty) {
           const doc = querySnapshot.docs[0];
-          // Получение последних видимых записей
 
+          // Получение последних видимых записей
           if(doc) {
             await updateDoc(doc.ref, {
               firstName: toCapitalize(data.firstName),
               surname: toCapitalize(data.surname),
               lastName: data.lastName.toUpperCase(),
               role: data.role,
+              isAdmin: admin,
             });
           }
         }
@@ -106,7 +108,7 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
             idUser: id,
             email: user!.email,
             isLoggedIn: false,
-            isAdmin: user!.isAdmin,
+            isAdmin: admin,
             role: data.role,
           }),
         );

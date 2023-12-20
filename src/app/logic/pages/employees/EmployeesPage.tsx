@@ -9,7 +9,7 @@ import {Pagination} from "src/app/components/pagination/Pagination";
 import {NotData} from "src/app/components/notData/NotData";
 import {Spinner} from "src/app/components/spinner/Spinner";
 import {UserState, addEmploye, addUserLastVisible} from "src/app/store/user/slices/userSlice";
-import {collection, getDocs, limit, orderBy, query, where} from "firebase/firestore";
+import {collection, getDocs, limit, orderBy, query} from "firebase/firestore";
 import {db} from "src/firebase";
 import {EmployeeCard} from "src/app/components/employeCard/EmployeeCard";
 
@@ -36,10 +36,9 @@ export const EmployeesPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const getEmployees = async (): Promise<void> => {
-    // Получение данных из Firestore по условию с лимитом по 8 записей
+    // Получение данных из Firestore с лимитом по 8 записей
     const userData = query(collection(db, "users"),
       orderBy("role"),
-      where("role", "!=", "Администратор"),
       orderBy("lastName"),
       limit(8));
 
@@ -57,22 +56,21 @@ export const EmployeesPage: React.FC = () => {
       querySnapshot.forEach(async(doc: any) => {
         const {firstName, surname, lastName, idUser, email, isAdmin, role}: any = doc.data();
 
-        if(!isAdmin) {
-          // Добавление данных заявки в store
-          dispatch(
-            addEmploye({
-              firstName,
-              surname,
-              lastName,
-              token: null,
-              idUser,
-              email,
-              isLoggedIn: false,
-              isAdmin,
-              role,
-            }),
-          );
-        }
+        // Добавление данных заявки в store
+        dispatch(
+          addEmploye({
+            firstName,
+            surname,
+            lastName,
+            token: null,
+            idUser,
+            email,
+            isLoggedIn: false,
+            isAdmin,
+            role,
+          }),
+        );
+
       });
       setIsLoading(false);
     } else {
