@@ -1,8 +1,9 @@
+/* eslint-disable no-console */
 import {useCallback, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import clsx from "clsx";
 import styles from "src/app/logic/pages/application/ApplicationPage.module.scss";
-import {getDoc, doc, DocumentData, updateDoc, deleteDoc, query, collection, where, getDocs} from "firebase/firestore";
+import {getDoc, doc, DocumentData, updateDoc, deleteDoc, query, collection, where, getDocs, increment} from "firebase/firestore";
 import {db} from "src/firebase";
 import {Spinner} from "src/app/components/spinner/Spinner";
 import {getFormatDate} from "src/app/utility/getFormatDate";
@@ -152,11 +153,20 @@ export const ApplicationPage = (): any => {
     // Получение заявки по id
     const appRef = doc(db, "applications", id);
 
+    // Получение данных user из Firestore по условию
+    const userData = query(collection(db, "users"),
+      where("idUser", "==", user.idUser));
+    const querySnapshotUser = await getDocs(userData);
+    const docUser = querySnapshotUser.docs[0];
+    const userRef = doc(db, "users", docUser!.id);
+
     try {
       if(statusApp === "В работе") {
         await updateDoc(appRef, {"status": "Выполнена"});
+        await updateDoc(userRef, {"ordersCompleted": increment(1)});
       } else if(statusApp === "Выполнена") {
         await updateDoc(appRef, {"status": "В работе"});
+        await updateDoc(userRef, {"ordersCompleted": increment(-1)});
       }
 
       getApplicationById();
