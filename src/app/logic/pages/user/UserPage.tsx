@@ -10,6 +10,7 @@ import styles from "src/app/logic/pages/user/UserPage.module.scss";
 import {REGISTRATION_PAGE_PATH} from "src/app/components/registration/Registration";
 import {AppState} from "src/app/store";
 import {ProfilLink} from "src/app/components/profilLink/ProfilLink";
+import {REPORT_PAGE_URL} from "src/app/logic/pages/report/ReportPage";
 
 /**
  *  Path to user page
@@ -64,17 +65,17 @@ export const UserPage = memo((): any => {
               <NavLink
                 to={APPLICATION_USER_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
+                onClick={() => {
+                  dispatch(clearApplication());
+                }}
               >
                 Мои заявки
               </NavLink>
             </li>
             <li className={ITEM_STYLES}>
               <NavLink
-                to={APPLICATION_FORM_URL}
+                to={REPORT_PAGE_URL}
                 className={({isActive}: { isActive: boolean }) => isActive ? LINK_ACTIVE__STYLES : LINK_STYLES}
-                onClick={() => {
-                  dispatch(clearApplication());
-                }}
               >
                 Отчёт
               </NavLink>

@@ -59,7 +59,7 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
 
         if(querySnapshot.docs.length !== 0) {
           querySnapshot.forEach((doc: any) => {
-            const {firstName, surname, lastName, isAdmin, role}: UserState = doc.data();
+            const {firstName, surname, lastName, isAdmin, completedOrders, openOrders, role}: UserState = doc.data();
 
             // Добавление пользователя в store
             dispatch(
@@ -72,6 +72,8 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
                 token: user.accessToken,
                 isLoggedIn: true,
                 isAdmin,
+                completedOrders,
+                openOrders,
                 role,
               }),
             );

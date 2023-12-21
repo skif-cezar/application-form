@@ -76,6 +76,8 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
                 idUser: user.uid,
                 email: user.email,
                 isAdmin: false,
+                completedOrders: 0,
+                openOrders: 0,
                 role: "Пользователь",
               });
             };
@@ -91,6 +93,8 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
                 token: user.accessToken,
                 isLoggedIn: true,
                 isAdmin: false,
+                completedOrders: 0,
+                openOrders: 0,
                 role: "Пользователь",
               }),
             );

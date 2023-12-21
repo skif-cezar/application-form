@@ -155,7 +155,7 @@ export const Pagination: React.FC = () => {
       );
 
       querySnapshot.forEach((doc: any) => {
-        const {email, firstName, idUser, isAdmin, lastName, role, surname}: UserState = doc.data();
+        const {email, firstName, idUser, isAdmin, lastName, role, surname, completedOrders, openOrders}: UserState = doc.data();
 
         // Добавление данных заявки в store
         dispatch(
@@ -168,6 +168,8 @@ export const Pagination: React.FC = () => {
             email,
             isLoggedIn: false,
             isAdmin,
+            completedOrders,
+            openOrders,
             role,
           }),
         );

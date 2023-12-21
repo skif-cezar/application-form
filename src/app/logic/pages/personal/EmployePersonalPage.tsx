@@ -109,6 +109,8 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
             email: user!.email,
             isLoggedIn: false,
             isAdmin: admin,
+            completedOrders: user!.completedOrders,
+            openOrders: user!.openOrders,
             role: data.role,
           }),
         );

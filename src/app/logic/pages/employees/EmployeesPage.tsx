@@ -54,7 +54,7 @@ export const EmployeesPage: React.FC = () => {
       );
 
       querySnapshot.forEach(async(doc: any) => {
-        const {firstName, surname, lastName, idUser, email, isAdmin, role}: any = doc.data();
+        const {firstName, surname, lastName, idUser, email, isAdmin, completedOrders, openOrders, role}: any = doc.data();
 
         // Добавление данных заявки в store
         dispatch(
@@ -67,6 +67,8 @@ export const EmployeesPage: React.FC = () => {
             email,
             isLoggedIn: false,
             isAdmin,
+            completedOrders,
+            openOrders,
             role,
           }),
         );

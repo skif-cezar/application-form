@@ -132,7 +132,10 @@ export const ApplicationsAll: React.FC = () => {
           setIsLoading(false);
         }
       });
+    } else {
+      setIsLoading(false);
     }
+
   };
 
   useEffect(() => {

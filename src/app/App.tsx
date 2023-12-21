@@ -14,6 +14,7 @@ import {ApplicationsAll, APPLICATIONS_URL} from "src/app/logic/pages/admin/Appli
 import {EmployeesPage, EMPLOYEES_PAGE_URL} from "src/app/logic/pages/employees/EmployeesPage";
 import {PERSONAL_ADMIN_PAGE_PATH, PERSONAL_USER_PAGE_PATH, PersonalPage} from "src/app/logic/pages/personal/PersonalPage";
 import {EMPLOYE_PERSONAL_PAGE_PATH, EmployePersonalPage} from "src/app/logic/pages/personal/EmployePersonalPage";
+import {REPORT_PAGE_URL, ReportPage} from "src/app/logic/pages/report/ReportPage";
 
 /**
  * The main component in app
@@ -25,6 +26,8 @@ export const App: React.FC = () => {
   const isLoggedIn = user && user.isLoggedIn;
   // Админ или обычный юзер
   const isAdmin = user && user.isAdmin;
+  // Пользователь или специалист
+  const isSpecilist = user.role === "Специалист";
 
   return (
     <BrowserRouter>
@@ -44,9 +47,21 @@ export const App: React.FC = () => {
                 )
                 : (<Registration />)}
             />
-            <Route path={USER_PAGE_URL} element={isLoggedIn ? (<UserPage />) : (<Navigate to={REGISTRATION_PAGE_PATH} />)}>
+            <Route
+              path={USER_PAGE_URL} element={isLoggedIn ?
+                (<UserPage />) :
+                (<Navigate to={REGISTRATION_PAGE_PATH} />)}
+            >
               <Route element={<MainLayout />}>
-                <Route path="/user/" element={<Navigate to={APPLICATION_FORM_URL} />} />
+                <Route
+                  path="/user/" element={(
+                    <Navigate
+                      to={isSpecilist ?
+                        APPLICATION_USER_URL :
+                        APPLICATION_FORM_URL}
+                    />
+                  )}
+                />
                 <Route path={APPLICATION_FORM_URL} element={<ApplicationForm />} />
                 <Route path={APPLICATION_USER_URL} element={<ApplicationUser />} />
                 <Route path={`${APPLICATION_USER_URL}/:id`} element={<ApplicationPage />} />
@@ -55,6 +70,7 @@ export const App: React.FC = () => {
                     (<PersonalPage />) :
                     (<Navigate to={REGISTRATION_PAGE_PATH} />)}
                 />
+                <Route path={REPORT_PAGE_URL} element={<ReportPage />} />
               </Route>
             </Route>
             <Route path={ADMIN_PAGE_URL} element={isAdmin ? (<AdminPage />) : (<Navigate to={REGISTRATION_PAGE_PATH} />)}>

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {useCallback, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import clsx from "clsx";
@@ -163,10 +162,10 @@ export const ApplicationPage = (): any => {
     try {
       if(statusApp === "В работе") {
         await updateDoc(appRef, {"status": "Выполнена"});
-        await updateDoc(userRef, {"ordersCompleted": increment(1)});
+        await updateDoc(userRef, {"completedOrders": increment(1)});
       } else if(statusApp === "Выполнена") {
         await updateDoc(appRef, {"status": "В работе"});
-        await updateDoc(userRef, {"ordersCompleted": increment(-1)});
+        await updateDoc(userRef, {"completedOrders": increment(-1)});
       }
 
       getApplicationById();
@@ -181,8 +180,16 @@ export const ApplicationPage = (): any => {
     // Получение заявки по id
     const appRef = doc(db, "applications", id);
 
+    // Получение данных исполнителя из Firestore по условию
+    const userData = query(collection(db, "users"),
+      where("idUser", "==", selectedExecutor));
+    const querySnapshotUser = await getDocs(userData);
+    const docUser = querySnapshotUser.docs[0];
+    const userRef = doc(db, "users", docUser!.id);
+
     try {
       await updateDoc(appRef, {"status": "В работе", "executor": selectedExecutor});
+      await updateDoc(userRef, {"openOrders": increment(1)});
       alert("Исполнитель успешно назначен!");
       goBack();
 
@@ -209,7 +216,7 @@ export const ApplicationPage = (): any => {
         goBack();
 
       } catch(error) {
-        console.error("Error updating status: ", error);
+        console.error("Ошибка удаления заявки: ", error);
       }
     }
   }, []);
@@ -276,12 +283,14 @@ export const ApplicationPage = (): any => {
                   Сохранить изменения
                 </button>
               )}
-              <button
-                className={BUTTON_DELETE_STYLES}
-                type="button" onClick={deleteApp}
-              >
-                Удалить заявку
-              </button>
+              {(app["status"] !== "В работе") && (
+                <button
+                  className={BUTTON_DELETE_STYLES}
+                  type="button" onClick={deleteApp}
+                >
+                  Удалить заявку
+                </button>
+              )}
             </>
           ) : null}
         </article>

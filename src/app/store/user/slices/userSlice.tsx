@@ -9,6 +9,8 @@ export interface UserState {
   email: string | null;
   isLoggedIn: boolean;
   isAdmin: boolean;
+  completedOrders: number | null;
+  openOrders: number | null;
   role: string | null;
 }
 
@@ -30,6 +32,8 @@ const initialState: EmployeesState = {
     email: null,
     isLoggedIn: false,
     isAdmin: false,
+    completedOrders: null,
+    openOrders: null,
     role: null,
   },
   userLastVisible: null,
@@ -77,6 +81,8 @@ export const userSlice = createSlice({
       state.user.email = action.payload.email;
       state.user.isLoggedIn = action.payload.isLoggedIn;
       state.user.isAdmin = action.payload.isAdmin;
+      state.user.completedOrders = action.payload.completedOrders;
+      state.user.openOrders = action.payload.openOrders;
       state.user.role = action.payload.role;
     },
     removeUser(state: any) {
@@ -88,6 +94,8 @@ export const userSlice = createSlice({
       state.user.email = null;
       state.user.isLoggedIn = false;
       state.user.isAdmin = false;
+      state.user.completedOrders = null;
+      state.user.openOrders = null;
       state.user.role = null;
     },
     updateUser: (state: any, action: PayloadAction<any>) => {
