@@ -163,9 +163,11 @@ export const ApplicationPage = (): any => {
       if(statusApp === "В работе") {
         await updateDoc(appRef, {"status": "Выполнена"});
         await updateDoc(userRef, {"completedOrders": increment(1)});
+        await updateDoc(userRef, {"openOrders": increment(-1)});
       } else if(statusApp === "Выполнена") {
         await updateDoc(appRef, {"status": "В работе"});
         await updateDoc(userRef, {"completedOrders": increment(-1)});
+        await updateDoc(userRef, {"openOrders": increment(1)});
       }
 
       getApplicationById();
