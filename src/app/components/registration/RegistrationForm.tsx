@@ -103,6 +103,7 @@ export const RegistrationForm: React.FC = forwardRef((props: any, ref: any) => {
 
           } catch (e) {
             console.error("Ошибка добавления документа: ", e);
+            alert("Ошибка добавления документа!");
           }
           navigate(USER_PAGE_URL);
         })

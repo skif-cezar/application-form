@@ -119,6 +119,7 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
 
     } catch (e) {
       console.error("Ошибка изменения данных: ", e);
+      alert("Ошибка изменения данных!");
     }
   };
 
@@ -144,6 +145,7 @@ export const EmployePersonalPage: React.FC = memo(forwardRef((props: any, ref: a
           );
         } catch(error) {
           console.error("Ошибка удаления пользователя: ", error);
+          alert("Ошибка удаления пользователя!");
         }
       }
     }

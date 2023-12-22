@@ -95,6 +95,7 @@ export const AuthorizationForm: React.FC = forwardRef((props: any, ref: any) => 
         })
         .catch((error: any) => {
           console.error(error);
+          alert("Ошибка отправки письма на почту!");
         });
     }
   };

@@ -122,6 +122,7 @@ export const PersonalPage: React.FC = memo(forwardRef((props: any, ref: any) => 
       }
     } catch (e) {
       console.error("Ошибка изменения данных: ", e);
+      alert("Ошибка изменения данных!");
     }
   };
 

@@ -58,6 +58,7 @@ export const ApplicationForm: React.FC = memo(forwardRef((props: any, ref: any) 
       });
     } catch (e) {
       console.error("Ошибка добавления документа: ", e);
+      alert("Ошибка добавления документа!");
     }
   };
 

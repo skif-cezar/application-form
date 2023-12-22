@@ -178,6 +178,7 @@ export const ApplicationPage = (): any => {
 
     } catch(error) {
       console.error("Ошибка обновления статуса: ", error);
+      alert("Ошибка обновления статуса!");
     }
   }, [statusApp]);
 
@@ -201,6 +202,7 @@ export const ApplicationPage = (): any => {
 
     } catch(error) {
       console.error("Ошибка назначения исполнителя: ", error);
+      alert("Ошибка назначения исполнителя!");
     }
   };
 
@@ -223,6 +225,7 @@ export const ApplicationPage = (): any => {
 
       } catch(error) {
         console.error("Ошибка удаления заявки: ", error);
+        alert("Ошибка удаления заявки!");
       }
     }
   }, []);
