@@ -9,7 +9,7 @@ import {getFormatDate} from "src/app/utility/getFormatDate";
 import {AppState} from "src/app/store";
 import {useDispatch, useSelector} from "react-redux";
 import {removeApplication, updateApplication} from "src/app/store/applications/slices/applicationSlice";
-import {UserState} from "src/app/store/user/slices/userSlice";
+import {UserState, updateUser} from "src/app/store/user/slices/userSlice";
 import {setStatusStyle} from "src/app/utility/setStatusStyle";
 
 /**
@@ -164,10 +164,14 @@ export const ApplicationPage = (): any => {
         await updateDoc(appRef, {"status": "Выполнена"});
         await updateDoc(userRef, {"completedOrders": increment(1)});
         await updateDoc(userRef, {"openOrders": increment(-1)});
+        dispatch(updateUser({completedOrders: user.completedOrders + 1}));
+        dispatch(updateUser({openOrders: user.openOrders - 1}));
       } else if(statusApp === "Выполнена") {
         await updateDoc(appRef, {"status": "В работе"});
         await updateDoc(userRef, {"completedOrders": increment(-1)});
         await updateDoc(userRef, {"openOrders": increment(1)});
+        dispatch(updateUser({completedOrders: user.completedOrders - 1}));
+        dispatch(updateUser({openOrders: user.openOrders + 1}));
       }
 
       getApplicationById();
