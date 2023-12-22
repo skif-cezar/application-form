@@ -8,6 +8,9 @@ import {query, collection, where, orderBy, getDocs} from "firebase/firestore";
 import {getFormatDate, convertDateToString} from "src/app/utility/getFormatDate";
 import {db} from "src/firebase";
 import {Spinner} from "src/app/components/spinner/Spinner";
+import clsx from "clsx";
+import styles from "src/app/logic/pages/report/ReportPage.module.scss";
+import {UserState} from "src/app/store/user/slices/userSlice";
 
 /**
  *  Path to report page
@@ -18,13 +21,14 @@ export const REPORT_PAGE_URL = "/user/report";
  * Report page
  */
 export const ReportPage: React.FC = () => {
+  const BUTTON_STYLES = clsx(styles.button);
+  const BUTTONS_STYLES = clsx(styles.buttons);
+
   const user = useSelector((state: AppState) => state.users.user);
   const fullNameUser = `${user!.lastName} ${user!.firstName} ${user!.surname}`;
   const [isLoading, setIsLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState("");
   const [apps, setApps] = useState<any>([]);
-  // eslint-disable-next-line no-console
-  console.log(user);
 
   // Получение назначенных заявок специалисту
   const getApplicationByExecutor = async (): Promise<void> => {
@@ -38,17 +42,30 @@ export const ReportPage: React.FC = () => {
 
     const querySnapshot = await getDocs(appData);
 
-    // Проверка на наличие данных
     if(querySnapshot.docs.length) {
-      const newApps = querySnapshot.docs.map((docApp: any) => {
+      const newArr = await Promise.all(querySnapshot.docs.map(async(docApp: any) => {
         // id заявки
         const idApp = docApp.id;
         const {parlor, title, idUser}: any = docApp.data();
-        const dateApp = getFormatDate(docApp.data().date.seconds);
-        // const author = `${lastName} ${firstName} ${surname}`;
-        return {idApp, idUser, parlor, title, dateApp};
-      });
-      setApps([...apps, ...newApps]);
+        const dateApp = getFormatDate(docApp.data()["date"].seconds);
+        let author;
+
+        // Получение данных user из Firestore по условию
+        const userData = query(collection(db, "users"),
+          where("idUser", "==", idUser));
+
+        const querySnapshotUser = await getDocs(userData);
+
+        // Проверка на наличие данных
+        if(querySnapshotUser.docs.length) {
+          querySnapshotUser.forEach((userDoc: any) => {
+            const {firstName, lastName, surname}: UserState = userDoc.data();
+            author = `${lastName} ${firstName} ${surname}`;
+          });
+        }
+        return {idApp, author, parlor, title, dateApp};
+      }));
+      setApps([...apps, ...newArr]);
       setIsLoading(false);
     }
   };
@@ -75,19 +92,21 @@ export const ReportPage: React.FC = () => {
   }
 
   return (
-    <PDFDownloadLink
-      document={(
-        <InvoicePDF
-          employe={fullNameUser} openOrders={user.openOrders}
-          completedOrders={user.completedOrders}
-          apps={apps} currentDate={currentDate}
-        />
-      )} fileName={`Отчёт ${fullNameUser}.pdf`}
-    >
-      {({loading}: any) =>
-        loading ? "Loading..." : <button type="button">Сформировать отчёт</button>
-      }
-    </PDFDownloadLink>
+    <div className={BUTTONS_STYLES}>
+      <PDFDownloadLink
+        document={(
+          <InvoicePDF
+            employe={fullNameUser} openOrders={user.openOrders}
+            completedOrders={user.completedOrders}
+            apps={apps} currentDate={currentDate}
+          />
+        )} fileName={`Отчёт ${fullNameUser}.pdf`}
+      >
+        {({loading}: any) =>
+          loading ? "Формирование отчёта..." : <button className={BUTTON_STYLES} type="button">Сформировать отчёт</button>
+        }
+      </PDFDownloadLink>
+    </div>
   );
 
 };

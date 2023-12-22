@@ -1,0 +1,29 @@
+.buttons {
+  margin: 80px auto 0 auto;
+  text-align: center;
+
+  & a {
+    display: inline-block;
+    height: 41px;
+  }
+  & .button {
+    border-radius: 20px;
+    border: 1px solid #7879f1;
+    background-color: #7879f1;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &:focus {
+      border: 1px solid #000;
+    }
+  }
+}

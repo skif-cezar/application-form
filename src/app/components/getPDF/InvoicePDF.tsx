@@ -130,50 +130,70 @@ export const InvoicePDF: React.FC<InvoicePDFProps> = (props: InvoicePDFProps) =>
       fontSize: 12,
       fontWeight: 400,
     },
-    label: {width: 60},
     completedOrdersTable: {flexDirection: "column"},
+    titleContainerTable: {
+      flexDirection: "row",
+      justifyContent: "center",
+      marginTop: 26,
+      paddingBottom: 18,
+    },
+    reportTitleTable: {
+      fontSize: 14,
+      textAlign: "center",
+      fontWeight: 500,
+      textTransform: "uppercase",
+    },
     userTitle: {
-      width: "50%",
+      width: "40%",
       borderRightColor: colorBorder,
       borderRightWidth: 1,
     },
     parlorTitle: {
-      width: "15%",
+      width: "8%",
       borderRightColor: colorBorder,
       borderRightWidth: 1,
     },
     themeTitle: {
-      width: "20%",
+      width: "39%",
       borderRightColor: colorBorder,
       borderRightWidth: 1,
     },
-    dateTitle: {width: "15%"},
+    dateTitle: {width: "13%"},
     user: {
-      width: "50%",
+      width: "40%",
       borderRightColor: colorBorder,
       borderRightWidth: 1,
+      paddingLeft: 8,
     },
     parlor: {
-      width: "15%",
+      width: "8%",
       borderRightColor: colorBorder,
       borderRightWidth: 1,
+      textAlign: "center",
     },
     theme: {
-      width: "20%",
+      width: "39%",
       borderRightColor: colorBorder,
       borderRightWidth: 1,
+      paddingLeft: 8,
     },
-    date: {width: "15%"},
+    date: {
+      width: "13%",
+      textAlign: "center",
+    },
   });
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page
+        size="A4" style={styles.page}
+        orientation="landscape"
+      >
         <View style={styles.titleContainer}>
           <Text style={styles.reportTitle}>Отчёт по заявкам сотрудника</Text>
         </View>
         <View style={styles.dateContainer}>
-          <Text style={styles.label}>Дата формирования отчёта: </Text>
+          <Text>Дата формирования отчёта: </Text>
           <Text>{props.currentDate}</Text>
         </View>
         <View style={styles.container}>
@@ -193,27 +213,32 @@ export const InvoicePDF: React.FC<InvoicePDFProps> = (props: InvoicePDFProps) =>
           </View>
         </View>
 
-        <View style={styles.completedOrdersTable}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.reportTitle}>Выполненные заявки</Text>
-          </View>
-          <View style={styles.container}>
-            <View style={styles.rowTitle}>
-              <Text style={styles.userTitle}>Пользователь</Text>
-              <Text style={styles.parlorTitle}>Кабинет</Text>
-              <Text style={styles.themeTitle}>Название заявки</Text>
-              <Text style={styles.dateTitle}>Дата подачи</Text>
+        {(props.apps.length) && (
+          <View style={styles.completedOrdersTable}>
+            <View style={styles.titleContainerTable}>
+              <Text style={styles.reportTitleTable}>Выполненные заявки</Text>
             </View>
-            {props.apps.map((app: any) => (
-              <View style={styles.row} key={app.idApp}>
-                <Text style={styles.user}>{app.idUser}</Text>
-                <Text style={styles.parlor}>{app.parlor}</Text>
-                <Text style={styles.theme}>{app.title}</Text>
-                <Text style={styles.date}>{app.dateApp}</Text>
+            <View style={styles.container}>
+              <View style={styles.rowTitle}>
+                <Text style={styles.userTitle}>Пользователь</Text>
+                <Text style={styles.parlorTitle}>Кабинет</Text>
+                <Text style={styles.themeTitle}>Название заявки</Text>
+                <Text style={styles.dateTitle}>Дата подачи</Text>
               </View>
-            ))}
+              {props.apps.map((app: any) => (
+                <View
+                  style={styles.row} key={app.idApp}
+                  id={app.idApp}
+                >
+                  <Text style={styles.user}>{app.author}</Text>
+                  <Text style={styles.parlor}>{app.parlor}</Text>
+                  <Text style={styles.theme}>{app.title}</Text>
+                  <Text style={styles.date}>{app.dateApp}</Text>
+                </View>
+              ))}
+            </View>
           </View>
-        </View>
+        )}
       </Page>
     </Document>
   );
