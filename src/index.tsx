@@ -1,4 +1,7 @@
 import React from "react";
+import {Provider} from "react-redux";
+import {store} from "src/app/store";
+import "src/firebase";
 import {createRoot} from "react-dom/client";
 import "src/index.scss";
 import {App} from "src/app/App";
@@ -14,6 +17,8 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
 );

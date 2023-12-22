@@ -1,0 +1,122 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  overflow: hidden;
+  width: 768px;
+  max-width: 100%;
+  padding: 25px 50px;
+  color: #000;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  margin-top: 35px;
+  column-gap: 15px;
+}
+
+.title_rows,
+.text_rows {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.text_rows {
+  & select {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1rem;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    border: none;
+    padding: 3px 6px;
+    width: 100%;
+    border: 1px solid #ebebeb;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    & select:hover {
+      border-color: #d1d1d1;
+    }
+
+    & select:focus {
+      border-color: #000;
+    }
+  }
+}
+
+.title_rows {
+  font-weight: 600;
+}
+
+.status_btn {
+  margin: 30px auto 0 auto;
+  margin-top: 30px;
+  padding: 12px 12px;
+  border-radius: 22px;
+  width: 300px;
+  transition: all 80ms ease-in;
+}
+
+.btn_delete,
+.btn_save {
+  margin: 20px auto 0;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border: 1px solid #ffb4b5;
+  color: #c54849;
+  background-color: #ffb4b5;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    border: 1px solid #000;
+  }
+}
+
+.btn_save {
+  background-color: #7879f1;
+  border-color: #7879f1;
+  color: #fff;
+}
+
+.button {
+  display: flex;
+  height: 81px;
+  justify-content: center;
+  padding: 25px 0;
+
+  & button {
+    width: 170px;
+    height: 100%;
+    margin: 0 auto;
+    line-height: 31px;
+    text-align: center;
+    color: #000;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 80ms ease-in;
+
+    &:hover {
+      background-color: #7879f1;
+      color: #fff;
+    }
+  }
+}

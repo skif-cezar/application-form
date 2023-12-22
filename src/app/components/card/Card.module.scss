@@ -1,0 +1,79 @@
+.card {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  width: 100%;
+  color: #000;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+  background-color: #fff;
+  box-shadow: 0px 1px 1px 0px #c9cfda;
+  transition: all 0.15s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60, 64, 67, 0.3),
+      0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  }
+}
+
+.employee,
+.date,
+.name,
+.parlor,
+.status {
+  padding: 14px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status {
+  flex: 12.64%;
+  min-width: 136px;
+  padding: 12px 0px;
+}
+
+.employee {
+  flex: 34.48%;
+  min-width: 230px;
+}
+
+.date {
+  flex: 11.8%;
+  min-width: 129px;
+}
+
+.name {
+  flex: 29%;
+  min-width: 250px;
+}
+
+.parlor {
+  flex: 12.08%;
+  min-width: 130px;
+}
+
+.status_working,
+.status_new,
+.status_completed {
+  padding: 5px 18px;
+  border-radius: 5px;
+}
+
+.status_working {
+  color: #1f9254;
+  background-color: #c6ffd2;
+}
+
+.status_new {
+  color: #c54849;
+  background-color: #ffb4b5;
+}
+
+.status_completed {
+  color: #484ac5;
+  background-color: #b5b4ff;
+}

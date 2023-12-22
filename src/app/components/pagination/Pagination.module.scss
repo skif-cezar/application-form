@@ -1,0 +1,23 @@
+.pagination {
+  display: flex;
+  height: 55px;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.next {
+  width: 170px;
+  height: 100%;
+  margin: 0 auto;
+  line-height: 31px;
+  text-align: center;
+  color: #000;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 80ms ease-in;
+
+  &:hover {
+    background-color: #7879f1;
+    color: #fff;
+  }
+}

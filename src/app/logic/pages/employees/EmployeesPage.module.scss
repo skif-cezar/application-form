@@ -1,0 +1,53 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+  margin: auto;
+  width: 100%;
+  max-width: 1076px;
+  min-width: 900px;
+  padding-bottom: 2px;
+  color: #000;
+  transition: all 1s ease;
+
+  &__heder {
+    display: flex;
+    width: 100%;
+    height: 56px;
+    color: #000;
+    background-color: #f7f6fe;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0px 1px 1px 0px #c9cfda;
+  }
+}
+
+.title_employee,
+.title_email,
+.title_role {
+  padding: 15px 12px;
+}
+
+.title_employee {
+  flex: 42.565%;
+  min-width: 290px;
+}
+.title_email {
+  flex: 42.565%;
+  min-width: 290px;
+}
+.title_role {
+  flex: 14.87%;
+  min-width: 160px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  width: 100%;
+  padding-top: 8px;
+}

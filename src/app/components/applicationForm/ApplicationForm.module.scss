@@ -1,0 +1,120 @@
+.form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  overflow: hidden;
+  width: 768px;
+  max-width: 100%;
+  max-height: 625px;
+  padding: 25px 50px;
+  color: #000;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+
+  & input,
+  & textarea {
+    position: relative;
+    background-color: #eee;
+    border: none;
+    padding: 12px 15px;
+    margin: 10px 0;
+    width: 100%;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  & textarea {
+    height: 120px;
+    resize: none;
+  }
+
+  & textarea::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  & textarea::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  & textarea::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  & textarea::-webkit-scrollbar-thumb {
+    background: #b6b6b6;
+  }
+
+  & input:focus,
+  & textarea:focus {
+    border-color: #000;
+    border-radius: 5px;
+  }
+
+  & input.required::after {
+    content: "*";
+    width: 10px;
+    height: 10px;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.errors {
+  position: relative;
+  background-color: #f37778;
+  margin-top: -10px;
+  font-size: 0.75rem;
+  color: #ffffff;
+  padding: 0 10px;
+  border-radius: 14px;
+
+  &::after {
+    content: "";
+    width: 0;
+    height: 0;
+    display: block;
+    position: absolute;
+    z-index: 10;
+    border: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    margin-left: -10px;
+    left: 50%;
+    border-bottom: 10px solid #f37778;
+    top: -10px;
+  }
+}
+
+.button {
+  margin-top: 10px;
+  border-radius: 20px;
+  border: 1px solid #7879f1;
+  background-color: #7879f1;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    border: 1px solid #000;
+  }
+}

@@ -1,0 +1,155 @@
+.menu {
+  z-index: 99;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1076px;
+  margin: 0 auto;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-right: auto;
+}
+
+.item {
+  transition: all 80ms ease-in;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #7879f1;
+  }
+
+  &:hover .link {
+    color: #fff;
+  }
+}
+
+.link {
+  height: 100%;
+  display: inline-block;
+  padding: 0 20px;
+  line-height: 40px;
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 80ms ease-in;
+
+  &.active {
+    color: #fff;
+    background-color: #7879f1;
+  }
+}
+
+.button {
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #7879f1;
+  background-color: #7879f1;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 25px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    border: 3px solid #000;
+  }
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto;
+  margin: auto;
+  width: 100%;
+  max-width: 1076px;
+  min-width: 900px;
+  padding-bottom: 2px;
+  color: #000;
+  transition: all 1s ease;
+
+  &__heder {
+    display: flex;
+    width: 100%;
+    height: 56px;
+    color: #000;
+    background-color: #f7f6fe;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0px 1px 1px 0px #c9cfda;
+  }
+}
+
+.title_employee,
+.title_date,
+.title_name,
+.title_parlor,
+.title_status {
+  padding: 15px 12px;
+}
+
+.title_employee {
+  flex: 34.48%;
+  min-width: 230px;
+}
+.title_date {
+  flex: 11.8%;
+  min-width: 129px;;
+}
+.title_name {
+  flex: 29%;
+  min-width: 250px;
+}
+.title_parlor {
+  flex: 12.08%;
+  min-width: 130px;
+}
+.title_status {
+  position: relative;
+  padding: 0;
+  line-height: 56px;
+  flex: 12.64%;
+  min-width: 136px;
+
+  & > select {
+    font-family: "Montserrat", sans-serif;
+    height: 100%;
+    width: 100%;
+    background-color: #f7f6fe;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  & option {
+    text-transform: none;
+    font-size: 0.875rem;
+    padding: 15px 0;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  width: 100%;
+  padding-top: 8px;
+}

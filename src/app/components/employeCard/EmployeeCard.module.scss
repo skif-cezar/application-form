@@ -1,0 +1,42 @@
+.card {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  width: 100%;
+  color: #000;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 1px;
+  background-color: #fff;
+  box-shadow: 0px 1px 1px 0px #c9cfda;
+  transition: all 0.15s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60, 64, 67, 0.3),
+      0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  }
+}
+
+.employee,
+.email,
+.role {
+  padding: 14px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.employee {
+  flex: 42.565%;
+  min-width: 290px;
+}
+.email {
+  flex: 42.565%;
+  min-width: 290px;
+}
+.role {
+  flex: 14.87%;
+  min-width: 160px;
+}

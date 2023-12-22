@@ -1,0 +1,143 @@
+.panel {
+  width: 440px;
+  margin: 0 auto;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid rgb(240, 242, 245);
+  background-color: #fff;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.information {
+  display: flex;
+  align-items: center;
+  padding: 16px 16px 2px 16px;
+
+  & > img {
+    width: 84px;
+    height: 84px;
+  }
+}
+
+.user {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  margin-left: 12px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 12px 16px;
+}
+
+.input {
+  width: 392px;
+
+  & h5 {
+    font-size: 14px;
+    color: #6d7885;
+  }
+
+  & select {
+    font-family: "Montserrat", sans-serif;
+    cursor: pointer;
+  }
+
+  & input,
+  & select {
+    font-size: 1rem;
+    position: relative;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    border: none;
+    padding: 6px 6px;
+    width: 100%;
+    border: 1px solid #ebebeb;
+    transition: all 0.2s ease;
+  }
+
+  & input:hover,
+  & select:hover {
+    border-color: #d1d1d1;
+  }
+
+  & input:focus,
+  & select:focus {
+    border-color: #000;
+  }
+
+  & input.required::after {
+    content: "*";
+    width: 10px;
+    height: 10px;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.errors {
+  position: relative;
+  background-color: #f37778;
+  margin-top: -10px;
+  font-size: 0.75rem;
+  color: #ffffff;
+  padding: 0 10px;
+  border-radius: 14px;
+
+  &::after {
+    content: "";
+    width: 0;
+    height: 0;
+    display: block;
+    position: absolute;
+    z-index: 10;
+    border: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    margin-left: -10px;
+    left: 50%;
+    border-bottom: 10px solid #f37778;
+    top: -10px;
+  }
+}
+
+.button,
+.btn_delete {
+  margin: 10px auto 0;
+  border-radius: 20px;
+  border: 1px solid #7879f1;
+  background-color: #7879f1;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &:focus {
+    border: 1px solid #000;
+  }
+}
+
+.btn_delete {
+  font-weight: 600;
+  padding: 6px 12px;
+  border: 1px solid #ffb4b5;
+  color: #c54849;
+  background-color: #ffb4b5;
+}

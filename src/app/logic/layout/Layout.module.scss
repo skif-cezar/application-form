@@ -1,21 +1,7 @@
 .wrapper {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 108px 1fr auto;
-  gap: 0px 0px;
-  grid-template-areas:
-    "header"
-    "main"
-    "footer";
+  height: 100%;
   margin: 0 auto;
-  overflow: hidden;
-}
-
-.main {
-  grid-area: main;
-  grid-row-start: header;
-  grid-row-end: main;
+  padding: 0 20px;
 }
