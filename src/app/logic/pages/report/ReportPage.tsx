@@ -74,7 +74,7 @@ export const ReportPage: React.FC = () => {
     // Дата и время формирования отчета
     async function getDate(): Promise<void> {
       try {
-        const response = await axios.get("http://worldtimeapi.org/api/timezone/Europe/Moscow");
+        const response = await axios.get("https://worldtimeapi.org/api/timezone/Europe/Moscow");
         const {datetime}: any = response.data;
         setCurrentDate(convertDateToString(datetime));
       } catch (error) {
